@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signInServer } from "@/lib/auth-server";
+import authClient from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,18 +45,18 @@ export default function SignInForm() {
   });
 
   async function onSubmit(values: FormValues) {
-    const result = await signInServer({
+    const { data, error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,
     });
 
-    if (!result.ok) {
-      toast.error(result.error || "Failed to sign in");
+    if (error) {
+      toast.error(error.message || "Failed to sign in");
     } else {
       toast.success("Signed in successfully!");
-
-      // Force a hard navigation to ensure cookies are set
-      window.location.href = "/";
+      // Router refresh will trigger useSession to update
+      router.refresh();
+      router.push("/");
     }
   }
 

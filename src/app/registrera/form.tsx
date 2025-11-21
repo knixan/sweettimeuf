@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpServer } from "@/lib/auth-server";
+import authClient from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -59,14 +59,14 @@ export default function SignUpForm() {
   });
 
   async function onSubmit(values: FormValues) {
-    const result = await signUpServer({
+    const { data, error } = await authClient.signUp.email({
       name: values.name,
       email: values.email,
       password: values.password,
     });
 
-    if (!result.ok) {
-      toast.error(result.error || "Failed to sign up");
+    if (error) {
+      toast.error(error.message || "Failed to sign up");
     } else {
       toast.success("Account created successfully! Please sign in.");
       router.push("/logga-in");
