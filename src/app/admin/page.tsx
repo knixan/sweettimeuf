@@ -8,12 +8,15 @@ export default async function AdminPage() {
     headers: await headers(),
   });
 
-  if (!session) {
+  // Redirect if not logged in
+  if (!session?.user) {
     redirect("/logga-in");
   }
 
-  // Check if user is admin
-  if (!session.user || session.user.role !== "admin") {
+  // Check if user is admin - cast to include role field
+  const userRole = (session.user as { role?: string }).role;
+
+  if (userRole !== "admin") {
     redirect("/");
   }
 
