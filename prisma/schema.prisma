@@ -77,3 +77,50 @@ model Verification {
 
   @@map("verification")
 }
+
+model Category {
+  id           String    @id @default(uuid())
+  name         String
+  showInNavbar Boolean   @default(false)
+  products     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("category")
+}
+
+model Product {
+  id                  String   @id @default(uuid())
+  title               String
+  slug                String?  @unique
+  articleNumber       String?
+  summary             String?  @db.Text
+  information         String?  @db.Text
+  prices              Json?    // Array of {quantity: number, price: number}
+  aboutProduct        String?  @db.Text
+  images              String[] // Array of image URLs
+  allowCustomerUpload Boolean  @default(false)
+  categoryId          String?
+  category            Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("product")
+}
+
+model Order {
+  id             String   @id @default(uuid())
+  orderNumber    String   @unique
+  customerName   String
+  customerEmail  String
+  customerPhone  String?
+  customerCompany String?
+  items          Json     // Array of cart items
+  totalPrice     Float
+  status         String   @default("pending") // pending, processing, completed, cancelled
+  notes          String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("order")
+}

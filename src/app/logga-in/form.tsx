@@ -19,32 +19,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import authClient from "@/lib/auth-client";
+import { SignInSchema, type SignInInput } from "@/lib/schema/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import z from "zod";
-
-const FormSchema = z.object({
-  email: z.email().max(250),
-  password: z.string().min(6).max(128),
-});
-
-type FormValues = z.infer<typeof FormSchema>;
 
 export default function SignInForm() {
   const router = useRouter();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<SignInInput>({
+    resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: SignInInput) {
     const { data, error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,

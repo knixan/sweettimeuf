@@ -19,37 +19,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import authClient from "@/lib/auth-client";
+import { SignUpSchema, type SignUpInput } from "@/lib/schema/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import z from "zod";
-
-const FormSchema = z
-  .object({
-    name: z.string().min(2).max(100),
-    email: z.email().max(250),
-    password: z.string().min(6).max(128),
-    confirmPassword: z.string(),
-  })
-  .superRefine((values, ctx) => {
-    if (values.password !== values.confirmPassword) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["confirmPassword"],
-        message: "Passwords do not match",
-      });
-    }
-  });
-
-type FormValues = z.infer<typeof FormSchema>;
 
 export default function SignUpForm() {
   const router = useRouter();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<SignUpInput>({
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -58,7 +39,7 @@ export default function SignUpForm() {
     },
   });
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: SignUpInput) {
     const { data, error } = await authClient.signUp.email({
       name: values.name,
       email: values.email,

@@ -6,6 +6,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, User, LogOut } from "lucide-react";
 import authClient, { useSession } from "@/lib/auth-client";
 import { ModeToggle } from "@/components/toggle-theme-button";
+import { CartDropdown } from "@/components/layout/cart-dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 type LinkItem = { href: string; label: string };
 
@@ -13,6 +21,7 @@ interface NavbarProps {
   title?: string;
   links?: LinkItem[];
   showThemeToggle?: boolean;
+  categories?: { id: string; name: string }[];
 }
 
 // Navbar komponent med auth-stöd
@@ -25,6 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({
     { href: "#kontakt", label: "Kontakt" },
   ],
   showThemeToggle = true,
+  categories = [],
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
@@ -64,23 +74,45 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden md:flex md:items-center md:gap-6">
             {/* Navigation länkar */}
             <div className="flex items-center gap-6">
-              {links.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  className={`text-sm font-medium transition-colors ${
-                    isActive(link.href)
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {links.map((link, index) =>
+                link.href === "/produkter" ? (
+                  <DropdownMenu key={index}>
+                    <DropdownMenuTrigger className="text-sm font-medium transition-colors inline-flex items-center">
+                      {link.label}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <Link href="/produkter">Alla produkter</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {categories.map((c) => (
+                        <DropdownMenuItem key={c.id} asChild>
+                          <Link href={`/produkter?category=${encodeURIComponent(
+                            c.id
+                          )}`}>{c.name}</Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className={`text-sm font-medium transition-colors ${
+                      isActive(link.href)
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </div>
 
-            {/* Höger sektion: Theme toggle + auth knappar */}
+            {/* Höger sektion: Cart + Theme toggle + auth knappar */}
             <div className="flex items-center gap-3">
+              <CartDropdown />
               {showThemeToggle && <ModeToggle />}
 
               {/* Visa olika knappar beroende på auth-status */}
