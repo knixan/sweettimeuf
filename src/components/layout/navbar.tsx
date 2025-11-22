@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Moon, Sun, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import authClient, { useSession } from "@/lib/auth-client";
+import { ModeToggle } from "@/components/toggle-theme-button";
 
 type LinkItem = { href: string; label: string };
 
@@ -14,29 +15,14 @@ interface NavbarProps {
   showThemeToggle?: boolean;
 }
 
-// Simulerad ModeToggle komponent
-const ModeToggle: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
-
-  return (
-    <button
-      onClick={() => setIsDark(!isDark)}
-      className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      aria-label="Toggle theme"
-    >
-      {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-    </button>
-  );
-};
-
 // Navbar komponent med auth-stöd
 const Navbar: React.FC<NavbarProps> = ({
   title = "MinSajt",
   links = [
     { href: "/", label: "Hem" },
-    { href: "/om", label: "Om" },
-    { href: "/tjanster", label: "Tjänster" },
-    { href: "/kontakt", label: "Kontakt" },
+    { href: "/produkter", label: "Produkter" },
+    { href: "#om-oss", label: "Om oss" },
+    { href: "#kontakt", label: "Kontakt" },
   ],
   showThemeToggle = true,
 }) => {
@@ -61,14 +47,14 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 dark:bg-gray-950/95">
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo/Titel */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-xl font-bold hover:text-gray-600 transition-colors"
+              className="text-xl font-bold text-foreground hover:text-muted-foreground transition-colors"
             >
               {title}
             </Link>
@@ -84,8 +70,8 @@ const Navbar: React.FC<NavbarProps> = ({
                   href={link.href}
                   className={`text-sm font-medium transition-colors ${
                     isActive(link.href)
-                      ? "text-gray-900 dark:text-white"
-                      : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {link.label}
@@ -103,14 +89,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 <>
                   <button
                     onClick={handleLogin}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors dark:text-gray-300"
+                    className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Logga in
                   </button>
 
                   <button
                     onClick={handleRegister}
-                    className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800 transition-colors dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
                   >
                     Registrera
                   </button>
@@ -120,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 <>
                   <Link
                     href="/mina-sidor"
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors dark:text-gray-300"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <User className="h-4 w-4" />
                     Mina sidor
@@ -128,7 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
                   >
                     <LogOut className="h-4 w-4" />
                     Logga ut
@@ -141,7 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile menu knapp */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
@@ -163,8 +149,8 @@ const Navbar: React.FC<NavbarProps> = ({
                   href={link.href}
                   className={`px-2 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive(link.href)
-                      ? "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white"
-                      : "text-gray-700 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -189,7 +175,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         handleLogin();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
+                      className="px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent rounded-md transition-colors"
                     >
                       Logga in
                     </button>
@@ -199,7 +185,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         handleRegister();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800 transition-colors dark:bg-white dark:text-black"
+                      className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
                     >
                       Registrera
                     </button>
@@ -209,14 +195,14 @@ const Navbar: React.FC<NavbarProps> = ({
                   <>
                     {user && (
                       <div className="px-4 py-2 text-sm border-b mb-2">
-                        <p className="font-medium">{user.name}</p>
-                        <p className="text-gray-500 text-xs">{user.email}</p>
+                        <p className="font-medium text-foreground">{user.name}</p>
+                        <p className="text-muted-foreground text-xs">{user.email}</p>
                       </div>
                     )}
 
                     <Link
                       href="/mina-sidor"
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent rounded-md transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <User className="h-4 w-4" />
@@ -228,7 +214,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         await handleLogout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Logga ut

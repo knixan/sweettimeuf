@@ -14,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="sv">
       <body>
         <Navbar />
-        <Toaster position="top-right" />
+        <Toaster position="bottom-right" />
         {children}
       </body>
     </html>
