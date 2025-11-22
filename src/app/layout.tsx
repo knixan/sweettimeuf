@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/navbar";
 import { Toaster } from "sonner";
 
 export const metadata = {
-  title: "BetterAuth Prisma Example",
+  title: "Sweettime",
   description:
     "An example Next.js project demonstrating BetterAuth with Prisma integration.",
 };

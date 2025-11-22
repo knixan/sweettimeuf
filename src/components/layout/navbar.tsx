@@ -17,7 +17,7 @@ interface NavbarProps {
 
 // Navbar komponent med auth-stöd
 const Navbar: React.FC<NavbarProps> = ({
-  title = "MinSajt",
+  title = "Sweettime",
   links = [
     { href: "/", label: "Hem" },
     { href: "/produkter", label: "Produkter" },

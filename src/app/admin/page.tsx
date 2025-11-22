@@ -1,8 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { Link } from "lucide-react";
+
 
 export default async function AdminPage() {
 const session = await auth.api.getSession({
@@ -36,6 +35,13 @@ Du har administratörsrättigheter och kan hantera webbplatsen här.
 <h3 className="font-semibold mb-2">Kunder</h3>
 <a href="/admin/kunder" className="text-sm text-muted-foreground hover:underline">
 <p className="text-sm text-muted-foreground">Hantera kunder här</p>
+</a>
+</div>
+
+<div className="bg-card p-6 rounded-lg border">
+<h3 className="font-semibold mb-2">Kategorier</h3>
+<a href="/admin/kategorier" className="text-sm text-muted-foreground hover:underline">
+<p className="text-sm text-muted-foreground">Lägg till eller ta bort kategorier</p>
 </a>
 </div>
 
