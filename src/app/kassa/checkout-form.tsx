@@ -16,6 +16,9 @@ const CheckoutSchema = z.object({
   email: z.string().email("Ogiltig e-postadress"),
   phone: z.string().optional(),
   company: z.string().optional(),
+  address: z.string().min(1, "Adress krävs"),
+  postalCode: z.string().min(1, "Postnummer krävs"),
+  city: z.string().min(1, "Ort krävs"),
   notes: z.string().optional(),
 });
 
@@ -46,7 +49,9 @@ export function CheckoutForm() {
         clearCart();
         router.push(`/orderbekraftelse?orderNumber=${result.orderNumber}`);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Ett fel uppstod");
+        console.error("Order error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Ett fel uppstod vid beställning";
+        toast.error(errorMessage);
       }
     });
   };
@@ -84,9 +89,11 @@ export function CheckoutForm() {
                   {item.quantity} st × {item.price.toFixed(2)} kr
                 </p>
                 {item.customImageUrl && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Egen bild: {item.customImageUrl}
-                  </p>
+                  <div className="mt-2 p-2 bg-primary/10 rounded">
+                    <p className="text-xs font-semibold text-primary">
+                      ✓ Egen design bifogad
+                    </p>
+                  </div>
                 )}
                 <p className="font-semibold mt-1">
                   {(item.quantity * item.price).toFixed(2)} kr
@@ -155,6 +162,46 @@ export function CheckoutForm() {
               className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
               placeholder="Företagsnamn AB"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Adress *</label>
+            <input
+              {...register("address")}
+              type="text"
+              className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+              placeholder="Gatuadress 123"
+            />
+            {errors.address && (
+              <p className="text-sm text-red-500 mt-1">{errors.address.message}</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Postnummer *</label>
+              <input
+                {...register("postalCode")}
+                type="text"
+                className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                placeholder="123 45"
+              />
+              {errors.postalCode && (
+                <p className="text-sm text-red-500 mt-1">{errors.postalCode.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Ort *</label>
+              <input
+                {...register("city")}
+                type="text"
+                className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                placeholder="Stockholm"
+              />
+              {errors.city && (
+                <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>
+              )}
+            </div>
           </div>
 
           <div>

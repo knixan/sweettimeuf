@@ -14,14 +14,17 @@ export async function createOrder(values: {
   email: string;
   phone?: string;
   company?: string;
+  address: string;
+  postalCode: string;
+  city: string;
   notes?: string;
   items: unknown;
   totalPrice: number;
 }) {
-  const { name, email, phone, company, notes, items, totalPrice } = values;
+  const { name, email, phone, company, address, postalCode, city, notes, items, totalPrice } = values;
 
-  if (!name || !email || !items) {
-    throw new Error("Namn, e-post och minst en produkt krävs");
+  if (!name || !email || !address || !postalCode || !city || !items) {
+    throw new Error("Namn, e-post, adress och minst en produkt krävs");
   }
 
   try {
@@ -34,6 +37,9 @@ export async function createOrder(values: {
         customerEmail: email,
         customerPhone: phone || null,
         customerCompany: company || null,
+        customerAddress: address,
+        customerPostalCode: postalCode,
+        customerCity: city,
         items,
         totalPrice,
         notes: notes || null,
@@ -53,6 +59,6 @@ export async function createOrder(values: {
     };
   } catch (error) {
     console.error("Error creating order:", error);
-    throw new Error("Kunde inte skapa beställning");
+    throw error instanceof Error ? error : new Error("Kunde inte skapa beställning");
   }
 }

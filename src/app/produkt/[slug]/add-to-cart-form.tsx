@@ -70,7 +70,7 @@ export function AddToCartForm({ product }: { product: Product }) {
       {product.allowCustomerUpload && (
         <div>
           <label className="block text-sm font-medium mb-2">
-            Ladda upp din bild (URL)
+            Länk till din bild eller design
           </label>
           <input
             type="url"
@@ -80,7 +80,7 @@ export function AddToCartForm({ product }: { product: Product }) {
             className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
           />
           <p className="text-sm text-muted-foreground mt-1">
-            Valfritt: Ange URL till den bild du vill använda på produkten
+            Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
           </p>
         </div>
       )}

@@ -113,9 +113,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
           />
         </div>
 
-        {/* Information */}
+        {/* Om produkten */}
         <div>
-          <label className="block text-sm font-medium mb-2">Information</label>
+          <label className="block text-sm font-medium mb-2">Om produkten</label>
           <textarea
             {...register("information")}
             rows={6}
@@ -163,9 +163,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
           </div>
         </div>
 
-        {/* Om produkten */}
+        {/* Information */}
         <div className="border-t pt-4">
-          <label className="block text-sm font-medium mb-2">Om produkten</label>
+          <label className="block text-sm font-medium mb-2">Information</label>
           <textarea
             {...register("aboutProduct")}
             rows={8}

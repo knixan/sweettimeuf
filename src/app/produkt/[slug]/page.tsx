@@ -67,7 +67,7 @@ export default async function ProductPage({
 
             {product.information && (
               <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Information</h2>
+                <h2 className="text-xl font-semibold mb-2">Om produkten</h2>
                 <p className="text-muted-foreground whitespace-pre-wrap">{product.information}</p>
               </div>
             )}
@@ -100,10 +100,10 @@ export default async function ProductPage({
           </div>
         </div>
 
-        {/* About Product */}
+        {/* Information */}
         {product.aboutProduct && (
           <div className="bg-card border rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">Om produkten</h2>
+            <h2 className="text-2xl font-semibold mb-4">Information</h2>
             <p className="whitespace-pre-wrap text-muted-foreground">{product.aboutProduct}</p>
           </div>
         )}

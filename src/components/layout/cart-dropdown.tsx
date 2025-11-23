@@ -10,16 +10,22 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export function CartDropdown() {
   const { items, totalItems, totalPrice, removeItem } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="relative p-2 hover:bg-accent rounded-md transition-colors">
           <ShoppingCart className="h-5 w-5" />
-          {totalItems > 0 && (
+          {mounted && totalItems > 0 && (
             <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
               {totalItems}
             </span>
@@ -28,9 +34,9 @@ export function CartDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-4">
-          <h3 className="font-semibold mb-4">Kassa ({totalItems} produkter)</h3>
+          <h3 className="font-semibold mb-4">Kassa ({mounted ? totalItems : 0} produkter)</h3>
           
-          {items.length === 0 ? (
+          {!mounted || items.length === 0 ? (
             <p className="text-muted-foreground text-sm text-center py-4">
               Kassan är tom
             </p>
@@ -54,6 +60,11 @@ export function CartDropdown() {
                       <p className="text-sm text-muted-foreground">
                         {item.quantity} st × {item.price.toFixed(2)} kr
                       </p>
+                      {item.customImageUrl && (
+                        <p className="text-xs text-primary font-semibold mt-1">
+                          ✓ Egen design
+                        </p>
+                      )}
                       <p className="text-sm font-semibold">
                         {(item.quantity * item.price).toFixed(2)} kr
                       </p>
