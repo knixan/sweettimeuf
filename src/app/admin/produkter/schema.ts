@@ -10,9 +10,9 @@ export const ProductSchema = z.object({
   articleNumber: z.string().optional(),
   summary: z.string().optional(),
   information: z.string().optional(),
-  prices: z.array(PriceTierSchema).default([]),
+  prices: z.array(PriceTierSchema),
   aboutProduct: z.string().optional(),
-  images: z.array(z.string()).default([""]),
+  images: z.array(z.object({ url: z.string() })),
   allowCustomerUpload: z.boolean().optional(),
   categoryId: z.string().optional(),
 });

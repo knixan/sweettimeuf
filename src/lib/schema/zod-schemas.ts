@@ -8,17 +8,17 @@ export const SignUpSchema = z
   .object({
     name: z
       .string()
-      .min(2, { message: "Namn måste vara minst 2 tecken" })
+      .min(2, "Namn måste vara minst 2 tecken")
       .max(50),
-    email: z.string().email({ message: "Ogiltig e-postadress" }).max(100),
+    email: z.string().email("Ogiltig e-postadress").max(100),
     password: z
       .string()
-      .min(8, { message: "Lösenordet måste vara minst 8 tecken" })
+      .min(8, "Lösenordet måste vara minst 8 tecken")
       .max(100),
     confirmPassword: z.string(),
   })
   .refine((vals) => vals.password === vals.confirmPassword, {
-    message: "Lösenorden matchar inte",
+    error: "Lösenorden matchar inte",
     path: ["confirmPassword"],
   });
 // Typ för SignUp input
@@ -26,10 +26,10 @@ export type SignUpInput = z.infer<typeof SignUpSchema>;
 
 // SignIn Schema
 export const SignInSchema = z.object({
-  email: z.string().email({ message: "Ogiltig e-postadress" }).max(100),
+  email: z.string().email("Ogiltig e-postadress").max(100),
   password: z
     .string()
-    .min(8, { message: "Lösenordet måste vara minst 8 tecken" })
+    .min(8, "Lösenordet måste vara minst 8 tecken")
     .max(100),
 });
 // Typ för SignIn input
@@ -37,7 +37,7 @@ export type SignInInput = z.infer<typeof SignInSchema>;
 
 // Password Reset Request Schema
 export const PasswordResetRequestSchema = z.object({
-  email: z.string().email({ message: "Ogiltig e-postadress" }).max(100),
+  email: z.string().email("Ogiltig e-postadress").max(100),
 });
 // Typ för Password Reset Request input
 export type PasswordResetRequestInput = z.infer<
@@ -52,7 +52,7 @@ export const PasswordResetSchema = z
     confirmNewPassword: z.string(),
   })
   .refine((v) => v.newPassword === v.confirmNewPassword, {
-    message: "Lösenorden matchar inte",
+    error: "Lösenorden matchar inte",
     path: ["confirmNewPassword"],
   });
 // Typ för Password Reset input

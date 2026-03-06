@@ -21,6 +21,30 @@ export async function updateOrderStatus(orderId: string, status: string) {
   }
 }
 
+export async function updateOrderFlags(
+  orderId: string,
+  flags: { handled?: boolean; shipped?: boolean; invoiceSent?: boolean }
+) {
+  await requireAdminOrEditor();
+
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        ...(flags.handled !== undefined && { handled: flags.handled }),
+        ...(flags.shipped !== undefined && { shipped: flags.shipped }),
+        ...(flags.invoiceSent !== undefined && { invoiceSent: flags.invoiceSent }),
+      },
+    });
+
+    revalidatePath("/admin/offerter");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating order flags:", error);
+    throw new Error("Kunde inte uppdatera order");
+  }
+}
+
 export async function removeCustomerImage(orderId: string, productId: string) {
   await requireAdminOrEditor();
 

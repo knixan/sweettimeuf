@@ -6,19 +6,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { createOrder } from "./actions";
 
 const CheckoutSchema = z.object({
-  name: z.string().min(2, "Namn krävs"),
+  firstName: z.string().min(1, "Förnamn krävs"),
+  lastName: z.string().min(1, "Efternamn krävs"),
   email: z.string().email("Ogiltig e-postadress"),
-  phone: z.string().optional(),
+  phone: z.string().min(1, "Telefonnummer krävs"),
   company: z.string().optional(),
-  address: z.string().min(1, "Adress krävs"),
+  orgNumber: z.string().optional(),
+  // Leveransadress
+  address: z.string().min(1, "Gatuadress krävs"),
   postalCode: z.string().min(1, "Postnummer krävs"),
   city: z.string().min(1, "Ort krävs"),
+  // Fakturaadress (om annan)
+  sameInvoiceAddress: z.boolean(),
+  invoiceAddress: z.string().optional(),
+  invoicePostalCode: z.string().optional(),
+  invoiceCity: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -28,6 +36,7 @@ export function CheckoutForm() {
   const { items, totalPrice, clearCart } = useCart();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [sameAddress, setSameAddress] = useState(true);
 
   const {
     register,
@@ -35,13 +44,26 @@ export function CheckoutForm() {
     formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(CheckoutSchema),
+    defaultValues: { sameInvoiceAddress: true },
   });
 
   const onSubmit = async (data: CheckoutFormData) => {
     startTransition(async () => {
       try {
         const result = await createOrder({
-          ...data,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          company: data.company,
+          orgNumber: data.orgNumber,
+          address: data.address,
+          postalCode: data.postalCode,
+          city: data.city,
+          invoiceAddress: sameAddress ? undefined : data.invoiceAddress,
+          invoicePostalCode: sameAddress ? undefined : data.invoicePostalCode,
+          invoiceCity: sameAddress ? undefined : data.invoiceCity,
+          notes: data.notes,
           items,
           totalPrice,
         });
@@ -60,7 +82,7 @@ export function CheckoutForm() {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground mb-4">Din kassa är tom</p>
-        <Button onClick={() => router.push("/produkt")}>Fortsätt handla</Button>
+        <Button onClick={() => router.push("/produkter")}>Fortsätt handla</Button>
       </div>
     );
   }
@@ -118,17 +140,32 @@ export function CheckoutForm() {
       <div>
         <h2 className="text-2xl font-semibold mb-4">Dina uppgifter</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Namn *</label>
-            <input
-              {...register("name")}
-              type="text"
-              className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-              placeholder="Förnamn Efternamn"
-            />
-            {errors.name && (
-              <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
-            )}
+          {/* Namn */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Förnamn *</label>
+              <input
+                {...register("firstName")}
+                type="text"
+                className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                placeholder="Förnamn"
+              />
+              {errors.firstName && (
+                <p className="text-sm text-red-500 mt-1">{errors.firstName.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Efternamn *</label>
+              <input
+                {...register("lastName")}
+                type="text"
+                className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                placeholder="Efternamn"
+              />
+              {errors.lastName && (
+                <p className="text-sm text-red-500 mt-1">{errors.lastName.message}</p>
+              )}
+            </div>
           </div>
 
           <div>
@@ -145,63 +182,133 @@ export function CheckoutForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Telefon</label>
+            <label className="block text-sm font-medium mb-1">Telefonnummer *</label>
             <input
               {...register("phone")}
               type="tel"
               className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
               placeholder="070-123 45 67"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Företag</label>
-            <input
-              {...register("company")}
-              type="text"
-              className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-              placeholder="Företagsnamn AB"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Adress *</label>
-            <input
-              {...register("address")}
-              type="text"
-              className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-              placeholder="Gatuadress 123"
-            />
-            {errors.address && (
-              <p className="text-sm text-red-500 mt-1">{errors.address.message}</p>
+            {errors.phone && (
+              <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Postnummer *</label>
+              <label className="block text-sm font-medium mb-1">Företag</label>
               <input
-                {...register("postalCode")}
+                {...register("company")}
                 type="text"
                 className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-                placeholder="123 45"
+                placeholder="Företagsnamn AB"
               />
-              {errors.postalCode && (
-                <p className="text-sm text-red-500 mt-1">{errors.postalCode.message}</p>
-              )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Ort *</label>
+              <label className="block text-sm font-medium mb-1">Organisationsnummer</label>
               <input
-                {...register("city")}
+                {...register("orgNumber")}
                 type="text"
                 className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-                placeholder="Stockholm"
+                placeholder="556XXX-XXXX"
               />
-              {errors.city && (
-                <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>
-              )}
             </div>
+          </div>
+
+          {/* Leveransadress */}
+          <div className="border-t pt-4">
+            <h3 className="font-semibold mb-3">Leveransadress</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium mb-1">Gatuadress *</label>
+                <input
+                  {...register("address")}
+                  type="text"
+                  className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                  placeholder="Gatuadress 123"
+                />
+                {errors.address && (
+                  <p className="text-sm text-red-500 mt-1">{errors.address.message}</p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Postnummer *</label>
+                  <input
+                    {...register("postalCode")}
+                    type="text"
+                    className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                    placeholder="123 45"
+                  />
+                  {errors.postalCode && (
+                    <p className="text-sm text-red-500 mt-1">{errors.postalCode.message}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Ort *</label>
+                  <input
+                    {...register("city")}
+                    type="text"
+                    className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                    placeholder="Stockholm"
+                  />
+                  {errors.city && (
+                    <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Fakturaadress */}
+          <div className="border-t pt-4">
+            <div className="flex items-center gap-2 mb-3">
+              <input
+                type="checkbox"
+                id="sameAddress"
+                checked={sameAddress}
+                onChange={(e) => setSameAddress(e.target.checked)}
+                className="rounded border-input"
+              />
+              <label htmlFor="sameAddress" className="text-sm font-medium">
+                Fakturaadress samma som leveransadress
+              </label>
+            </div>
+
+            {!sameAddress && (
+              <div className="space-y-3">
+                <h3 className="font-semibold">Fakturaadress</h3>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Gatuadress</label>
+                  <input
+                    {...register("invoiceAddress")}
+                    type="text"
+                    className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                    placeholder="Fakturaadress 123"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Postnummer</label>
+                    <input
+                      {...register("invoicePostalCode")}
+                      type="text"
+                      className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                      placeholder="123 45"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Ort</label>
+                    <input
+                      {...register("invoiceCity")}
+                      type="text"
+                      className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+                      placeholder="Stockholm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -210,9 +317,9 @@ export function CheckoutForm() {
             </label>
             <textarea
               {...register("notes")}
-              rows={4}
+              rows={3}
               className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-              placeholder="Eventuella önskemål eller information..."
+              placeholder="Eventuella önskemål..."
             />
           </div>
 

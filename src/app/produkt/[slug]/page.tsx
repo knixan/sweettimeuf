@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { AddToCartForm } from "./add-to-cart-form";
+import { ImageLightbox } from "@/components/site/ImageLightbox";
+import Link from "next/link";
 
 export default async function ProductPage({
   params,
@@ -28,25 +29,33 @@ export default async function ProductPage({
   return (
     <main className="min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
+        {/* Breadcrumb */}
+        <p className="text-sm text-muted-foreground mb-6">
+          <Link href="/" className="hover:underline">Hem</Link>
+          {" / "}
+          {product.category ? (
+            <>
+              <Link
+                href={product.category.slug ? `/kategori/${product.category.slug}` : "/produkter"}
+                className="hover:underline"
+              >
+                {product.category.name}
+              </Link>
+              {" / "}
+            </>
+          ) : (
+            <>
+              <Link href="/produkter" className="hover:underline">Produkter</Link>
+              {" / "}
+            </>
+          )}
+          <span>{product.title}</span>
+        </p>
+
         <div className="grid md:grid-cols-2 gap-8 mb-8">
-          {/* Images */}
-          <div className="space-y-4">
-            {product.images.length > 0 ? (
-              product.images.map((image, index) => (
-                <div key={index} className="relative aspect-square bg-muted rounded-lg overflow-hidden">
-                  <Image
-                    src={image}
-                    alt={`${product.title} - bild ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))
-            ) : (
-              <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-                <span className="text-muted-foreground">Ingen bild tillgänglig</span>
-              </div>
-            )}
+          {/* Images with lightbox */}
+          <div>
+            <ImageLightbox images={product.images} title={product.title} />
           </div>
 
           {/* Product Info */}

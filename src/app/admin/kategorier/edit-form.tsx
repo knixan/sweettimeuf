@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import type { Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -21,7 +20,7 @@ import { updateCategory } from "./actions";
 const CategorySchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(50),
-  showInNavbar: z.boolean().optional().default(false),
+  showInNavbar: z.boolean(),
 });
 type CategoryValues = z.infer<typeof CategorySchema>;
 
@@ -32,10 +31,8 @@ interface EditCategoryFormProps {
 
 export default function EditCategoryForm({ category, onClose }: EditCategoryFormProps) {
   const router = useRouter();
-  const rhfResolver = zodResolver(CategorySchema) as Resolver<CategoryValues>;
-
   const form = useForm<CategoryValues>({
-    resolver: rhfResolver,
+    resolver: zodResolver(CategorySchema),
     defaultValues: {
       id: category.id,
       name: category.name,

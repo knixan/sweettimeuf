@@ -21,7 +21,7 @@ interface NavbarProps {
   title?: string;
   links?: LinkItem[];
   showThemeToggle?: boolean;
-  categories?: { id: string; name: string }[];
+  categories?: { id: string; name: string; slug: string | null }[];
 }
 
 // Navbar komponent med auth-stöd
@@ -87,9 +87,9 @@ const Navbar: React.FC<NavbarProps> = ({
                       <DropdownMenuSeparator />
                       {categories.map((c) => (
                         <DropdownMenuItem key={c.id} asChild>
-                          <Link href={`/produkter?category=${encodeURIComponent(
-                            c.id
-                          )}`}>{c.name}</Link>
+                          <Link href={c.slug ? `/kategori/${c.slug}` : `/produkter?category=${c.id}`}>
+                            {c.name}
+                          </Link>
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
@@ -176,18 +176,33 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="flex flex-col gap-4">
               {/* Mobile länkar */}
               {links.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  className={`px-2 py-2 text-sm font-medium rounded-md transition-colors ${
-                    isActive(link.href)
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
+                <div key={index}>
+                  <Link
+                    href={link.href}
+                    className={`block px-2 py-2 text-sm font-medium rounded-md transition-colors ${
+                      isActive(link.href)
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                  {link.href === "/produkter" && categories.length > 0 && (
+                    <div className="ml-4 flex flex-col gap-1 mt-1">
+                      {categories.map((c) => (
+                        <Link
+                          key={c.id}
+                          href={c.slug ? `/kategori/${c.slug}` : `/produkter?category=${c.id}`}
+                          className="px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {c.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
 
               {/* Mobile actions */}

@@ -10,7 +10,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -81,6 +80,7 @@ model Verification {
 model Category {
   id           String    @id @default(uuid())
   name         String
+  slug         String?   @unique
   showInNavbar Boolean   @default(false)
   products     Product[]
   createdAt    DateTime  @default(now())
@@ -109,21 +109,30 @@ model Product {
 }
 
 model Order {
-  id                 String   @id @default(uuid())
-  orderNumber        String   @unique
-  customerName       String
-  customerEmail      String
-  customerPhone      String?
-  customerCompany    String?
-  customerAddress    String
-  customerPostalCode String
-  customerCity       String
-  items              Json     // Array of cart items
-  totalPrice         Float
-  status             String   @default("pending") // pending, processing, completed, cancelled
-  notes              String?  @db.Text
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  orderNumber           String   @unique
+  userId                String?  // Link to logged-in user
+  customerName          String
+  customerLastName      String?
+  customerEmail         String
+  customerPhone         String?
+  customerCompany       String?
+  orgNumber             String?  // Organisationsnummer (valfritt)
+  customerAddress       String   // Leveransadress
+  customerPostalCode    String
+  customerCity          String
+  invoiceAddress        String?  // Fakturaadress (om annan)
+  invoicePostalCode     String?
+  invoiceCity           String?
+  items                 Json     // Array of cart items
+  totalPrice            Float
+  status                String   @default("pending")
+  handled               Boolean  @default(false)
+  shipped               Boolean  @default(false)
+  invoiceSent           Boolean  @default(false)
+  notes                 String?  @db.Text
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
   @@map("order")
 }

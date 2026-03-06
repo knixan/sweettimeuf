@@ -74,7 +74,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         information: product.information || "",
         prices: (product.prices as { quantity: number; price: number }[]) || [],
         aboutProduct: (product.aboutProduct as Record<string, string>) || {},
-        images: product.images.length > 0 ? product.images : [""],
+        images: product.images.length > 0 ? product.images.map((url) => ({ url })) : [{ url: "" }],
         allowCustomerUpload: product.allowCustomerUpload,
         categoryId: product.categoryId || "",
       });
@@ -96,7 +96,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
       try {
         const filteredData = {
           ...data,
-          images: data.images?.filter((img) => img && img.trim() !== ""),
+          images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
         };
 
         await updateProduct(productId, filteredData);
@@ -228,7 +228,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
             {imageFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
                 <input
-                  {...register(`images.${index}`)}
+                  {...register(`images.${index}.url`)}
                   type="url"
                   placeholder="https://..."
                   className="flex-1 rounded-md bg-background border border-input px-2 py-1 text-sm"
@@ -247,7 +247,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => appendImage("")}
+              onClick={() => appendImage({ url: "" })}
             >
               + Bild
             </Button>

@@ -16,12 +16,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   // Fetch categories shown in navbar
-  type CategoryRow = { id: string; name: string };
+  type CategoryRow = { id: string; name: string; slug: string | null };
   let categories: CategoryRow[] = [];
   try {
     const result = await prisma.category.findMany({
       where: { showInNavbar: true },
-      select: { id: true, name: true },
+      select: { id: true, name: true, slug: true },
       orderBy: { name: "asc" },
     });
     categories = result;
