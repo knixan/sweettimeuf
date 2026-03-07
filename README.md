@@ -1,31 +1,41 @@
-# Prisma BetterAuth
+# SweetTime UF
 
 **Observera: Detta projekt är ett pågående bygge och är under aktiv utveckling. Funktionalitet, struktur och implementation kan ändras löpande.**
 
 ---
 
-En Next.js-applikation som demonstrerar integration mellan **BetterAuth** och **Prisma** för autentisering, användarroller och säker användarhantering.
+En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog, kategorier, kundvagn, kassaköp och orderhantering med fullt admin-gränssnitt.
 
 ## Teknologier
 
-- **Next.js 16** – React-ramverk med App Router  
-- **BetterAuth 1.3** – Autentiseringsbibliotek  
-- **Prisma** – ORM för databasåtkomst  
-- **PostgreSQL** – Relationsdatabas  
-- **TypeScript** – Typat JavaScript  
-- **Tailwind CSS** – Utility-first CSS-ramverk  
-- **shadcn/ui** – UI-komponentbibliotek  
-- **React Hook Form** – Formulärhantering  
-- **Zod** – Schema- och inputvalidering  
+- **Next.js 16** – React-ramverk med App Router
+- **React 19** – UI-bibliotek
+- **TypeScript** – Typat JavaScript
+- **Prisma** – ORM för databasåtkomst
+- **PostgreSQL** – Relationsdatabas
+- **BetterAuth 1.3** – Autentisering (e-post/lösenord, roller)
+- **Tailwind CSS 4** – Utility-first CSS-ramverk
+- **shadcn/ui** – UI-komponentbibliotek
+- **Embla Carousel** – Bildkarusell och lightbox
+- **React Hook Form + Zod** – Formulärhantering och validering
+- **Sonner** – Toast-notifieringar
+- **next-themes** – Mörkt/ljust tema
 
 ## Funktioner
 
-- Registrering via e-post & lösenord  
-- Inloggning med sessionshantering via cookies  
-- Rollbaserad åtkomstkontroll (`user` och `admin`)  
-- Admin-dashboard för hantering av användare  
-- Skyddade administratorsidor  
-- Inputvalidering och säker hantering av användardata  
+### Kund
+- Produktkatalog med kategorier och filtrering
+- Produktsidor med bildlightbox (Embla Carousel)
+- Kundvagn med antal och prisberäkning
+- Kassaformulär: kontaktuppgifter, fakturaadress, org.nr
+- Beställningsbekräftelse och orderhistorik via "Mina sidor"
+- Registrering och inloggning
+
+### Admin
+- Produkthantering: skapa/redigera/ta bort produkter med bilder, priser och kategorier
+- Kategorier: skapa/redigera, styr vilka som visas i navbar
+- Orderhantering: markera som hanterad, skickad, faktura skickad
+- Användarhantering
 
 ## Installation
 
@@ -33,7 +43,7 @@ En Next.js-applikation som demonstrerar integration mellan **BetterAuth** och **
 
     ```bash
     git clone <repository-url>
-    cd prisma-betterauth
+    cd sweettimeuf
     ```
 
 2. Installera beroenden:
@@ -42,16 +52,18 @@ En Next.js-applikation som demonstrerar integration mellan **BetterAuth** och **
     npm install
     ```
 
-3. Skapa `.env.local` och ange din databas-url:
+3. Skapa `.env.local` och ange miljövariabler:
 
     ```env
-    DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+    DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
+    BETTER_AUTH_SECRET="din-hemliga-nyckel"
+    BETTER_AUTH_URL="http://localhost:3000"
     ```
 
-4. Kör Prisma-migreringar och generera klient:
+4. Pusha schema till databasen och generera Prisma-klient:
 
     ```bash
-    npx prisma migrate dev
+    npx prisma db push
     npx prisma generate
     ```
 
@@ -66,89 +78,60 @@ En Next.js-applikation som demonstrerar integration mellan **BetterAuth** och **
 ```
 src/
 ├── app/
-│   ├── admin/          # Admin-dashboard (skyddad ruta)
-│   ├── api/auth/       # BetterAuth API-rutter
-│   ├── logga-in/       # Inloggningssida
-│   ├── registrera/     # Registreringssida
-│   ├── mina-sidor/     # Användarprofil
-│   ├── layout.tsx      # Root-layout med navbar
-│   └── page.tsx        # Startsida
+│   ├── admin/
+│   │   ├── kategorier/     # Hantera kategorier
+│   │   ├── offerter/       # Orderhantering
+│   │   └── produkter/      # Produkthantering
+│   ├── api/auth/           # BetterAuth API-rutter
+│   ├── kassa/              # Kassaköp (checkout-form + actions)
+│   ├── kategori/[slug]/    # Dynamiska kategorisidor
+│   ├── logga-in/           # Inloggningssida
+│   ├── mina-sidor/         # Orderhistorik för inloggad kund
+│   ├── produkt/
+│   │   ├── [slug]/         # Produktsida med lightbox
+│   │   └── page.tsx        # Produktlista
+│   ├── registrera/         # Registreringssida
+│   ├── layout.tsx          # Root-layout (hämtar kategorier till navbar)
+│   └── page.tsx            # Startsida med populära produkter
 ├── components/
 │   ├── layout/
-│   │   ├── navbar.tsx  # Huvudnavigering med auth-status
+│   │   ├── navbar.tsx      # Navbar med kategorier, dropdown, mobilmeny
 │   │   └── navbar-wrapper.tsx
-│   └── ui/             # shadcn/ui komponenter
+│   ├── site/
+│   │   ├── ImageLightbox.tsx    # Bildlightbox med Embla Carousel
+│   │   └── PopularProducts.tsx  # Populära produkter (server-komponent)
+│   └── ui/                 # shadcn/ui komponenter
 ├── lib/
-│   ├── auth.ts         # BetterAuth-konfiguration
-│   ├── auth-client.ts  # Klient-side auth-funktioner
-│   ├── prisma.ts       # Prisma-klient
-│   └── utils.ts        # Hjälpfunktioner
+│   ├── auth.ts             # BetterAuth-konfiguration
+│   ├── auth-client.ts      # Klient-side auth-funktioner
+│   ├── prisma.ts           # Prisma-klient
+│   └── utils.ts            # Hjälpfunktioner
 └── types/
-    └── auth.d.ts       # TypeScript-typer för auth
+    └── auth.d.ts           # TypeScript-typer för auth
 ```
 
-## Databas-schema
+## Databas-schema (viktiga modeller)
+
+### Product
+- `id`, `title`, `slug`, `articleNumber`
+- `summary`, `information`, `aboutProduct`
+- `prices` (JSON), `images` (String[])
+- `allowCustomerUpload`, `categoryId`
+
+### Category
+- `id`, `name`, `slug`, `showInNavbar`
+
+### Order
+- `id`, `orderNumber`, `userId` (nullable)
+- Kundinformation: namn, e-post, telefon, adress, org.nr
+- Separat fakturadress (valfritt)
+- `items` (JSON), `totalPrice`, `status`
+- Flaggor: `handled`, `shipped`, `invoiceSent`
 
 ### User
+- `id`, `name`, `email`, `password`, `role` (`user` / `admin`)
 
-- `id`: UUID primärnyckel
-- `name`: Användarens namn (valfritt)
-- `email`: E-postadress (unik)
-- `emailVerified`: Boolean för e-postverifiering
-- `password`: Hashat lösenord
-- `role`: Användarroll (`user` eller `admin`)
-- `createdAt`/`updatedAt`: Tidsstämplar
-
-### Account
-
-- Länkar användare till autentiseringsleverantörer
-- Stöder flera autentiseringsmetoder
-
-### Session
-
-- Hanterar användarsessioner
-- Automatisk cleanup av utgångna sessioner
-
-## Användning
-
-### Registrering
-
-1. Navigera till `/registrera`
-2. Fyll i namn, e-post och lösenord
-3. Klicka på "Registrera"
-4. Omdirigeras till inloggningssidan
-
-### Inloggning
-
-1. Navigera till `/logga-in`
-2. Fyll i e-post och lösenord
-3. Klicka på "Logga in"
-4. Omdirigeras till startsidan eller admin-sidan (beroende på roll)
-
-### Admin-åtkomst
-
-1. Logga in med ett konto som har `role: "admin"`
-2. Navigera till `/admin`
-3. Se lista över alla användare
-
-## API-rutter
-
-### Autentisering
-
-- `GET/POST /api/auth/[...all]` - BetterAuth API
-
-Alla autentiseringsoperationer hanteras genom BetterAuths API-rutter.
-
-## Säkerhet
-
-- Lösenord hashas automatiskt av BetterAuth
-- Sessioner hanteras säkert med HTTP-only cookies
-- Rollbaserad åtkomstkontroll på server-sidan
-- Input-validering med Zod-scheman
-
-## Utveckling
-
-### Tillgängliga kommandon
+## Tillgängliga kommandon
 
 ```bash
 npm run dev      # Starta utvecklings-server
@@ -157,59 +140,15 @@ npm run start    # Starta produktions-server
 npm run lint     # Kör ESLint
 ```
 
-### Prisma-kommandon
-
 ```bash
-npx prisma studio          # Öppna Prisma Studio
-npx prisma migrate dev     # Kör migreringar
-npx prisma generate        # Generera Prisma-klient
-npx prisma db push         # Pusha schema till databas
+npx prisma studio     # Öppna Prisma Studio
+npx prisma db push    # Pusha schema till databas (används i dev)
+npx prisma generate   # Generera Prisma-klient
 ```
-
-## Konfiguration
-
-### BetterAuth
-
-Konfigurerad i `src/lib/auth.ts` med:
-
-- PostgreSQL-adapter
-- E-post och lösenordsautentisering
-- Anpassade användarfält (role)
-
-### Prisma
-
-Konfigurerad i `prisma/schema.prisma` med:
-
-- PostgreSQL som databasprovider
-- User, Account och Session-modeller
-
-## Felsökning
-
-### Vanliga problem
-
-1. **Kan inte logga in**
-
-   - Kontrollera att databasen är igång
-   - Verifiera att användaren finns i databasen
-   - Kontrollera att lösenordet är korrekt
-
-2. **Admin-sidan otillgänglig**
-
-   - Kontrollera att användaren har `role: "admin"`
-   - Uppdatera användarrollen i Prisma Studio om nödvändigt
-
-3. **Session fungerar inte**
-   - Kontrollera att cookies är aktiverade
-   - Verifiera att `NEXTAUTH_SECRET` är satt (om används)
 
 ## Licens
 
-Detta projekt är privat och avsett för utbildningsändamål.
+Detta projekt är privat och avsett för Sweettime UF men får användas som utbildningsmål.
 
-# or
-
-pnpm dev
-
-# or
-
-bun dev
+## Kod och Design 
+Av Josefine Eriksson https://kodochdesign.se
