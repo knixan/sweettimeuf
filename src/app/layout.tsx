@@ -4,6 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/slug";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/cart-context";
+import { Fredoka } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-fredoka",
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata = {
   title: "Sweettime",
@@ -35,6 +44,11 @@ export default async function RootLayout({
     // Non-critical – continue without fixing
   }
 
+
+
+
+
+
   // Fetch categories shown in navbar
   type CategoryRow = { id: string; name: string; slug: string | null };
   let categories: CategoryRow[] = [];
@@ -50,14 +64,17 @@ export default async function RootLayout({
     categories = [];
   }
 
+
   return (
-    <html lang="sv">
-      <body>
-        <CartProvider>
-          <Navbar categories={categories} />
-          <Toaster position="bottom-right" />
-          {children}
-        </CartProvider>
+    <html lang="sv" className={fredoka.variable} suppressHydrationWarning>
+      <body className="font-sans">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <CartProvider>
+            <Navbar categories={categories} />
+            <Toaster position="bottom-right" />
+            {children}
+          </CartProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
