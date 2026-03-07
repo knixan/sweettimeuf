@@ -1,17 +1,39 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminOrEditor } from "@/lib/server-auth";
+import { generateSlug, generateUniqueSlug } from "@/lib/slug";
 import CreateCategoryForm from "./form";
 import CategoryRow from "./category-row";
 
-type CategoryRowType = { id: string; name: string; showInNavbar: boolean };
+type CategoryRowType = { id: string; name: string; slug: string | null; showInNavbar: boolean };
 
 export default async function AdminKategorierPage() {
   await requireAdminOrEditor();
 
+  // Auto-generate slugs for any categories that are missing one
+  try {
+    const missing = await prisma.category.findMany({ where: { slug: null } });
+    if (missing.length > 0) {
+      const existing = await prisma.category.findMany({
+        where: { slug: { not: null } },
+        select: { slug: true },
+      });
+      const usedSlugs = existing.map((c) => c.slug as string);
+
+      for (const cat of missing) {
+        const base = generateSlug(cat.name);
+        const slug = generateUniqueSlug(base, usedSlugs);
+        usedSlugs.push(slug);
+        await prisma.category.update({ where: { id: cat.id }, data: { slug } });
+      }
+    }
+  } catch (err) {
+    console.error("Could not fix missing slugs:", err);
+  }
+
   let categories: CategoryRowType[] = [];
   try {
     categories = await prisma.category.findMany({
-      select: { id: true, name: true, showInNavbar: true },
+      select: { id: true, name: true, slug: true, showInNavbar: true },
       orderBy: { name: "asc" },
     });
   } catch (error) {
@@ -40,7 +62,7 @@ export default async function AdminKategorierPage() {
             ) : (
               <ul className="space-y-2">
                 {categories.map((c) => (
-                  <CategoryRow key={c.id} category={c} />
+                  <CategoryRow key={c.id} category={{ id: c.id, name: c.name, slug: c.slug, showInNavbar: c.showInNavbar }} />
                 ))}
               </ul>
             )}

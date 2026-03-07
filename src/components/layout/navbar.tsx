@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({
   title = "Sweettime",
   links = [
     { href: "/", label: "Hem" },
-    { href: "/produkter", label: "Produkter" },
+    { href: "/produkt", label: "Produkter" },
     { href: "#om-oss", label: "Om oss" },
     { href: "#kontakt", label: "Kontakt" },
   ],
@@ -75,19 +75,19 @@ const Navbar: React.FC<NavbarProps> = ({
             {/* Navigation länkar */}
             <div className="flex items-center gap-6">
               {links.map((link, index) =>
-                link.href === "/produkter" ? (
+                link.href === "/produkt" ? (
                   <DropdownMenu key={index}>
                     <DropdownMenuTrigger className="text-sm font-medium transition-colors inline-flex items-center">
                       {link.label}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem asChild>
-                        <Link href="/produkter">Alla produkter</Link>
+                        <Link href="/produkt">Alla produkter</Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       {categories.map((c) => (
                         <DropdownMenuItem key={c.id} asChild>
-                          <Link href={c.slug ? `/kategori/${c.slug}` : `/produkter?category=${c.id}`}>
+                          <Link href={c.slug ? `/kategori/${c.slug}` : `/produkt?category=${c.id}`}>
                             {c.name}
                           </Link>
                         </DropdownMenuItem>
@@ -188,12 +188,12 @@ const Navbar: React.FC<NavbarProps> = ({
                   >
                     {link.label}
                   </Link>
-                  {link.href === "/produkter" && categories.length > 0 && (
+                  {link.href === "/produkt" && categories.length > 0 && (
                     <div className="ml-4 flex flex-col gap-1 mt-1">
                       {categories.map((c) => (
                         <Link
                           key={c.id}
-                          href={c.slug ? `/kategori/${c.slug}` : `/produkter?category=${c.id}`}
+                          href={c.slug ? `/kategori/${c.slug}` : `/produkt?category=${c.id}`}
                           className="px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >

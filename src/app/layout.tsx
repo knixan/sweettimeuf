@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/layout/navbar";
 import { prisma } from "@/lib/prisma";
+import { generateSlug, generateUniqueSlug } from "@/lib/slug";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/cart-context";
 
@@ -15,6 +16,25 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Auto-fix any categories missing a slug
+  try {
+    const missing = await prisma.category.findMany({ where: { slug: null } });
+    if (missing.length > 0) {
+      const withSlug = await prisma.category.findMany({
+        where: { slug: { not: null } },
+        select: { slug: true },
+      });
+      const used = withSlug.map((c) => c.slug as string);
+      for (const cat of missing) {
+        const slug = generateUniqueSlug(generateSlug(cat.name), used);
+        used.push(slug);
+        await prisma.category.update({ where: { id: cat.id }, data: { slug } });
+      }
+    }
+  } catch {
+    // Non-critical – continue without fixing
+  }
+
   // Fetch categories shown in navbar
   type CategoryRow = { id: string; name: string; slug: string | null };
   let categories: CategoryRow[] = [];
@@ -26,7 +46,6 @@ export default async function RootLayout({
     });
     categories = result;
   } catch (err) {
-    // If there's an error loading categories, fall back to empty list
     console.error("Could not load categories for Navbar:", err);
     categories = [];
   }
