@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/cart-context";
 import { Fredoka } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/layout/Footer";
 
 
 const fredoka = Fredoka({
@@ -73,6 +74,7 @@ export default async function RootLayout({
             <Navbar categories={categories} />
             <Toaster position="bottom-right" />
             {children}
+            <Footer />
           </CartProvider>
         </ThemeProvider>
       </body>

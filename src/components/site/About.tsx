@@ -29,7 +29,7 @@ export default function About() {
               <div className="mb-8 relative">
                 <div className="absolute inset-0 bg-white opacity-10 rounded-full blur-2xl"></div>
                 <Image
-                  src="/images/Profil/ludvig-gabriel.jpg"
+                  src="/Profil/ludvig-gabriel.jpg"
                   alt="Ludvig Gabriel"
                   width={280}
                   height={280}

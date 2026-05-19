@@ -9,6 +9,7 @@ type CartItem = {
   title: string;
   quantity: number;
   price: number;
+  selectedVariant?: string;
 };
 
 function getStatusLabel(order: { handled: boolean; shipped: boolean; status: string }) {
@@ -102,7 +103,7 @@ export default async function MinaSidorPage() {
                       {items.map((item, i) => (
                         <div key={i} className="flex justify-between text-sm">
                           <span className="text-muted-foreground">
-                            {item.title} × {item.quantity}
+                            {item.title}{item.selectedVariant ? ` – ${item.selectedVariant}` : ""} × {item.quantity}
                           </span>
                           <span>{(item.price * item.quantity).toFixed(2)} kr</span>
                         </div>

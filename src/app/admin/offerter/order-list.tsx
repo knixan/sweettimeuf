@@ -37,6 +37,7 @@ type CartItem = {
   price: number;
   image?: string;
   customImageUrl?: string;
+  selectedVariant?: string;
 };
 
 export function OrderList({ orders }: { orders: Order[] }) {
@@ -241,6 +242,9 @@ export function OrderList({ orders }: { orders: Order[] }) {
                           )}
                           <div className="flex-1">
                             <p className="font-medium">{item.title}</p>
+                            {item.selectedVariant && (
+                              <p className="text-sm text-muted-foreground font-medium">{item.selectedVariant}</p>
+                            )}
                             <p className="text-sm text-muted-foreground">
                               {item.quantity} st × {item.price.toFixed(2)} kr = {(item.quantity * item.price).toFixed(2)} kr
                             </p>

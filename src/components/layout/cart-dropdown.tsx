@@ -54,6 +54,9 @@ export function CartDropdown() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{item.title}</p>
+                      {item.selectedVariant && (
+                        <p className="text-xs text-muted-foreground">{item.selectedVariant}</p>
+                      )}
                       <p className="text-sm text-muted-foreground">
                         {item.quantity} st × {item.price.toFixed(2)} kr
                       </p>

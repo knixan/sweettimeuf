@@ -16,6 +16,8 @@ type Product = {
   prices: PriceTier[];
   image?: string;
   allowCustomerUpload: boolean;
+  variantLabel?: string | null;
+  variants?: string[];
 };
 
 export function AddToCartForm({ product }: { product: Product }) {
@@ -25,6 +27,9 @@ export function AddToCartForm({ product }: { product: Product }) {
     product.prices[0] || null
   );
   const [customImageUrl, setCustomImageUrl] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState<string>(
+    product.variants?.[0] ?? ""
+  );
 
   const handleAddToCart = () => {
     if (!selectedTier) return;
@@ -36,6 +41,7 @@ export function AddToCartForm({ product }: { product: Product }) {
       price: selectedTier.price,
       image: product.image,
       customImageUrl: customImageUrl || undefined,
+      selectedVariant: selectedVariant || undefined,
     });
 
     setCustomImageUrl("");
@@ -48,7 +54,23 @@ export function AddToCartForm({ product }: { product: Product }) {
 
   return (
     <div className="space-y-4">
-      {/* Quantity/Price Selector */}
+      {/* Variant Selector */}
+      {product.variants && product.variants.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            {product.variantLabel || "Välj variant"}
+          </label>
+          <select
+            value={selectedVariant}
+            onChange={(e) => setSelectedVariant(e.target.value)}
+            className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
+          >
+            {product.variants.map((v) => (
+              <option key={v} value={v}>{v}</option>
+            ))}
+          </select>
+        </div>
+      )}
       {product.prices.length > 0 && (
         <div>
           <label className="block text-sm font-medium mb-2">Välj antal</label>

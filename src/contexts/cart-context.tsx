@@ -10,6 +10,7 @@ export type CartItem = {
   price: number;
   image?: string;
   customImageUrl?: string;
+  selectedVariant?: string;
 };
 
 type CartContextType = {

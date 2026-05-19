@@ -15,7 +15,7 @@ export default function Team() {
           <div className="bg-card rounded-2xl p-8 text-card-foreground text-center shadow-xl">
             <div className="w-32 h-32 bg-popover rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden">
               <Image
-                src="/images/Profil/ludvig.jpg"
+                src="/Profil/ludvig.jpg"
                 alt="Ludvig Hedlund"
                 width={128}
                 height={128}
@@ -64,7 +64,7 @@ export default function Team() {
           <div className="bg-card rounded-2xl p-8 text-card-foreground text-center shadow-xl">
             <div className="w-32 h-32 bg-popover rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden">
               <Image
-                src="/images/Profil/gabriel.jpg"
+                src="/Profil/gabriel.jpg"
                 alt="Gabriel Kass Alias"
                 width={128}
                 height={128}

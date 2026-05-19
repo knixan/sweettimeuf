@@ -46,95 +46,103 @@
 :root {
   --radius: 1rem;
 
-  /* Light */
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* ── LJUST LÄGE ──────────────────────────────────────────────
+     Vitt: kyligt blåtonat vitt — som dagsljus mot snö.
+     Svart: blågrå-svart — som bläck eller djupt hav.
+  ──────────────────────────────────────────────────────────── */
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --background:        #F4F6F9;   /* kyligt blåtonat vitt       */
+  --foreground:        #141820;   /* djup blåsvart              */
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --card:              #FAFBFD;   /* nästan rent vitt, lite isigt */
+  --card-foreground:   #141820;
 
-  --primary: oklch(0.12 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --popover:           #FAFBFD;
+  --popover-foreground:#141820;
 
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0 0);
+  --primary:           #141820;   /* blåsvart                   */
+  --primary-foreground:#F4F6F9;   /* kyligt vitt                */
 
-  --muted: oklch(0.965 0 0);
-  --muted-foreground: oklch(0.5 0 0);
+  --secondary:         #E8ECF2;   /* ljusblå-grå                */
+  --secondary-foreground:#242B38;
 
-  --accent: oklch(0.94 0 0);
-  --accent-foreground: oklch(0.18 0 0);
+  --muted:             #E5E9F0;
+  --muted-foreground:  #6B7385;   /* mellankall blågrå          */
 
-  --destructive: oklch(0.55 0.22 27);
+  --accent:            #DDE2EC;
+  --accent-foreground: #242B38;
 
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.35 0 0);
+  --destructive:       #B03A3A;   /* mörk röd                   */
 
-  /* grayscale charts */
-  --chart-1: oklch(0.25 0 0);
-  --chart-2: oklch(0.4 0 0);
-  --chart-3: oklch(0.55 0 0);
-  --chart-4: oklch(0.7 0 0);
-  --chart-5: oklch(0.82 0 0);
+  --border:            #CDD3DE;   /* kylig blågrå kant          */
+  --input:             #D2D8E4;
+  --ring:              #4E5A72;   /* mellanblå-grå              */
 
-  --sidebar: oklch(0.97 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.12 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.93 0 0);
-  --sidebar-accent-foreground: oklch(0.18 0 0);
-  --sidebar-border: oklch(0.88 0 0);
-  --sidebar-ring: oklch(0.35 0 0);
+  /* Gråskale-diagram, kall ton */
+  --chart-1:           #141820;
+  --chart-2:           #2E3848;
+  --chart-3:           #566070;
+  --chart-4:           #8E98A8;
+  --chart-5:           #BEC5D0;
+
+  --sidebar:           #ECF0F6;
+  --sidebar-foreground:#141820;
+  --sidebar-primary:   #141820;
+  --sidebar-primary-foreground: #F4F6F9;
+  --sidebar-accent:    #DDE2EC;
+  --sidebar-accent-foreground:  #242B38;
+  --sidebar-border:    #CDD3DE;
+  --sidebar-ring:      #4E5A72;
 }
 
 .dark {
-  /* Dark */
-  --background: oklch(0.11 0 0);
-  --foreground: oklch(0.96 0 0);
+  /* ── MÖRKT LÄGE ──────────────────────────────────────────────
+     Svart: djup midnattblå-svart — som nattimmel.
+     Vitt: kallt isblått vitt — som månsken.
+  ──────────────────────────────────────────────────────────── */
 
-  --card: oklch(0.16 0 0);
-  --card-foreground: oklch(0.96 0 0);
+  --background:        #0E1118;   /* midnatt blåsvart           */
+  --foreground:        #E8ECF4;   /* kallt månvitt              */
 
-  --popover: oklch(0.16 0 0);
-  --popover-foreground: oklch(0.96 0 0);
+  --card:              #151B26;   /* ett steg ljusare, blågrå   */
+  --card-foreground:   #E8ECF4;
 
-  --primary: oklch(0.96 0 0);
-  --primary-foreground: oklch(0.12 0 0);
+  --popover:           #151B26;
+  --popover-foreground:#E8ECF4;
 
-  --secondary: oklch(0.22 0 0);
-  --secondary-foreground: oklch(0.96 0 0);
+  --primary:           #E8ECF4;   /* kallt månvitt              */
+  --primary-foreground:#0E1118;   /* midnatt                    */
 
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.7 0 0);
+  --secondary:         #1E2635;   /* djup blågrå                */
+  --secondary-foreground:#E8ECF4;
 
-  --accent: oklch(0.24 0 0);
-  --accent-foreground: oklch(0.96 0 0);
+  --muted:             #1A2030;
+  --muted-foreground:  #8A94A8;   /* kall mellanblugrå          */
 
-  --destructive: oklch(0.68 0.18 24);
+  --accent:            #222C3E;
+  --accent-foreground: #E8ECF4;
 
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.75 0 0);
+  --destructive:       #D05555;   /* mjuk röd                   */
 
-  /* grayscale charts */
-  --chart-1: oklch(0.92 0 0);
-  --chart-2: oklch(0.76 0 0);
-  --chart-3: oklch(0.6 0 0);
-  --chart-4: oklch(0.46 0 0);
-  --chart-5: oklch(0.32 0 0);
+  --border:            #FFFFFF1A; /* 10 % vitt — subtil kant    */
+  --input:             #FFFFFF26; /* 15 % vitt                  */
+  --ring:              #8A9BBB;   /* ljus kall blågrå           */
 
-  --sidebar: oklch(0.14 0 0);
-  --sidebar-foreground: oklch(0.96 0 0);
-  --sidebar-primary: oklch(0.96 0 0);
-  --sidebar-primary-foreground: oklch(0.12 0 0);
-  --sidebar-accent: oklch(0.22 0 0);
-  --sidebar-accent-foreground: oklch(0.96 0 0);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.75 0 0);
+  /* Gråskale-diagram, kall ton */
+  --chart-1:           #DDE3F0;
+  --chart-2:           #A8B4CC;
+  --chart-3:           #6E7D96;
+  --chart-4:           #404E64;
+  --chart-5:           #252E40;
+
+  --sidebar:           #0A0F18;
+  --sidebar-foreground:#E8ECF4;
+  --sidebar-primary:   #E8ECF4;
+  --sidebar-primary-foreground: #0E1118;
+  --sidebar-accent:    #1E2635;
+  --sidebar-accent-foreground:  #E8ECF4;
+  --sidebar-border:    #FFFFFF1A;
+  --sidebar-ring:      #8A9BBB;
 }
 
 @layer base {
@@ -151,9 +159,9 @@
   }
 
   .fredoka {
-  font-family: "Fredoka", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-}
+    font-family: "Fredoka", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+  }
 }

@@ -104,6 +104,8 @@ export default async function ProductPage({
                 prices,
                 image: product.images[0],
                 allowCustomerUpload: product.allowCustomerUpload,
+                variantLabel: product.variantLabel,
+                variants: product.variants,
               }}
             />
           </div>

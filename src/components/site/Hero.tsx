@@ -66,7 +66,7 @@ export default function Hero() {
             </h3>
           </div>
 
-          <div className="relative w-full aspect-[16/9]">
+          <div className="relative w-full aspect-video">
             {slides.map((s, i) => (
               <div
                 key={i}
@@ -82,7 +82,7 @@ export default function Hero() {
                   sizes="(max-width: 1280px) 100vw, 1280px"
                   priority={i === current}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
               </div>
             ))}
 

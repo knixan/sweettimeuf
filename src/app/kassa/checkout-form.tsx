@@ -107,6 +107,9 @@ export function CheckoutForm() {
               )}
               <div className="flex-1">
                 <p className="font-medium">{item.title}</p>
+                {item.selectedVariant && (
+                  <p className="text-sm text-muted-foreground">{item.selectedVariant}</p>
+                )}
                 <p className="text-sm text-muted-foreground">
                   {item.quantity} st × {item.price.toFixed(2)} kr
                 </p>

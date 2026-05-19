@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, User, LogOut } from "lucide-react";
 import authClient, { useSession } from "@/lib/auth-client";
@@ -26,12 +27,11 @@ interface NavbarProps {
 
 // Navbar komponent med auth-stöd
 const Navbar: React.FC<NavbarProps> = ({
-  title = "Sweettime",
   links = [
     { href: "/", label: "Hem" },
     { href: "/produkt", label: "Produkter" },
-    { href: "#om-oss", label: "Om oss" },
-    { href: "#kontakt", label: "Kontakt" },
+    { href: "/om-oss", label: "Om oss" },
+    { href: "/om-oss#kontakt", label: "Kontakt" },
   ],
   showThemeToggle = true,
   categories = [],
@@ -57,16 +57,28 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full  bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 pt-4 items-center justify-between">
           {/* Logo/Titel */}
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="text-xl font-bold text-foreground hover:text-muted-foreground transition-colors"
-            >
-              {title}
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logga/sweettime-svart-loggo.png"
+                alt="Sweettime"
+                width={80}
+                height={80}
+                className="dark:hidden"
+                
+              />
+              <Image
+                src="/logga/sweettime-vit-loggo.png"
+                alt="Sweettime"
+                width={80}
+                height={80}
+                className="hidden dark:block"
+                
+              />
             </Link>
           </div>
 
