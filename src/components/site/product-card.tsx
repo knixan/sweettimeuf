@@ -30,6 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
               src={firstImage}
               alt={product.title}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover group-hover:scale-105 transition-transform"
             />
           </div>

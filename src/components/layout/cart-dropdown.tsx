@@ -47,6 +47,7 @@ export function CartDropdown() {
                           src={item.image}
                           alt={item.title}
                           fill
+                          sizes="64px"
                           className="object-cover rounded"
                         />
                       </div>

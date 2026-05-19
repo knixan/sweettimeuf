@@ -235,7 +235,7 @@ export function OrderList({ orders }: { orders: Order[] }) {
                                 src={item.image}
                                 alt={item.title}
                                 fill
-                                className="object-cover rounded"
+                                sizes="80px"
                               />
                             </div>
                           )}

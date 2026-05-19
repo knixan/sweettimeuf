@@ -75,7 +75,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         summary: product.summary || "",
         information: product.information || "",
         prices: (product.prices as { quantity: number; price: number }[]) || [],
-        aboutProduct: (product.aboutProduct as Record<string, string>) || {},
+        aboutProduct: (product.aboutProduct as string) || "",
         images: product.images.length > 0 ? product.images.map((url) => ({ url })) : [{ url: "" }],
         allowCustomerUpload: product.allowCustomerUpload,
         categoryId: product.categoryId || "",

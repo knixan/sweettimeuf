@@ -101,7 +101,7 @@ export function CheckoutForm() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-cover rounded"
+                    sizes="80px"
                   />
                 </div>
               )}

@@ -34,7 +34,7 @@ export async function createProduct(values: {
     const existingProducts = await prisma.product.findMany({
       select: { slug: true },
     });
-    const existingSlugs = existingProducts.map((p) => p.slug);
+    const existingSlugs = existingProducts.map((p) => p.slug).filter((s): s is string => s !== null);
     const slug = generateUniqueSlug(baseSlug, existingSlugs);
 
     const created = await prisma.product.create({
@@ -102,7 +102,7 @@ export async function updateProduct(
         where: { id: { not: id } },
         select: { slug: true },
       });
-      const existingSlugs = otherProducts.map((p) => p.slug);
+      const existingSlugs = otherProducts.map((p) => p.slug).filter((s): s is string => s !== null);
       slug = generateUniqueSlug(baseSlug, existingSlugs);
     }
 
