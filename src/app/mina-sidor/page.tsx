@@ -11,11 +11,15 @@ type CartItem = {
   price: number;
 };
 
-function getStatusLabel(order: { handled: boolean; shipped: boolean }) {
+function getStatusLabel(order: { handled: boolean; shipped: boolean; status: string }) {
   if (order.shipped)
     return { text: "Skickad", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" };
-  if (order.handled)
-    return { text: "Hanteras", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" };
+  if (order.status === "completed")
+    return { text: "Klar", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" };
+  if (order.status === "processing" || order.handled)
+    return { text: "Behandlas", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" };
+  if (order.status === "cancelled")
+    return { text: "Avbruten", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" };
   return { text: "Ohanterad", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" };
 }
 

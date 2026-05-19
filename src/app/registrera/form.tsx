@@ -40,7 +40,7 @@ export default function SignUpForm() {
   });
 
   async function onSubmit(values: SignUpInput) {
-    const { data, error } = await authClient.signUp.email({
+    const { error } = await authClient.signUp.email({
       name: values.name,
       email: values.email,
       password: values.password,

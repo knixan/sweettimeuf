@@ -69,7 +69,8 @@ export async function removeCustomerImage(orderId: string, productId: string) {
 
     const updatedItems = items.map((item) => {
       if (item.productId === productId) {
-        const { customImageUrl, ...rest } = item;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { customImageUrl: _, ...rest } = item;
         return rest;
       }
       return item;

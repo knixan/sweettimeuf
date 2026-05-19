@@ -15,6 +15,8 @@ export const ProductSchema = z.object({
   images: z.array(z.object({ url: z.string() })),
   allowCustomerUpload: z.boolean().optional(),
   categoryId: z.string().optional(),
+  variantLabel: z.string().optional(),
+  variants: z.array(z.object({ value: z.string() })).optional(),
 });
 
 export type ProductFormData = z.infer<typeof ProductSchema>;

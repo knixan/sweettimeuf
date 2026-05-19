@@ -26,6 +26,8 @@ type ProductData = {
   images: string[];
   allowCustomerUpload: boolean;
   categoryId: string | null;
+  variantLabel: string | null;
+  variants: string[];
 };
 
 type EditProductFormProps = {
@@ -77,6 +79,8 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         images: product.images.length > 0 ? product.images.map((url) => ({ url })) : [{ url: "" }],
         allowCustomerUpload: product.allowCustomerUpload,
         categoryId: product.categoryId || "",
+        variantLabel: product.variantLabel || "",
+        variants: product.variants.length > 0 ? product.variants.map((v) => ({ value: v })) : [],
       });
     }
   }, [product, reset]);
@@ -91,12 +95,18 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
     name: "images",
   });
 
+  const { fields: variantFields, append: appendVariant, remove: removeVariant } = useFieldArray({
+    control,
+    name: "variants",
+  });
+
   const onSubmit = async (data: ProductFormData) => {
     startTransition(async () => {
       try {
         const filteredData = {
           ...data,
           images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
+          variants: data.variants?.map((v) => v.value).filter((v) => v && v.trim() !== ""),
         };
 
         await updateProduct(productId, filteredData);
@@ -220,6 +230,44 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
             placeholder="Minsta order, hållbarhet, förpackning, leveranstid..."
             className="w-full rounded-md bg-background border border-input px-3 py-2 text-sm"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Val av smak / färg (valfritt)</label>
+          <input
+            {...register("variantLabel")}
+            type="text"
+            className="w-full rounded-md bg-background border border-input px-3 py-2 mb-2 text-sm"
+            placeholder='Etikett, t.ex. "Välj smak" eller "Välj färg"'
+          />
+          <div className="space-y-1">
+            {variantFields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
+                <input
+                  {...register(`variants.${index}.value`)}
+                  type="text"
+                  placeholder="T.ex. Jordgubb, Citron..."
+                  className="flex-1 rounded-md bg-background border border-input px-2 py-1 text-sm"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeVariant(index)}
+                >
+                  X
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => appendVariant({ value: "" })}
+            >
+              + Alternativ
+            </Button>
+          </div>
         </div>
 
         <div>

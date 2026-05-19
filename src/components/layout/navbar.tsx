@@ -156,18 +156,22 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Mobile menu knapp */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
+          {/* Mobile: cart + theme + hamburger */}
+          <div className="flex items-center gap-1 md:hidden">
+            <CartDropdown />
+            {showThemeToggle && <ModeToggle />}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-md hover:bg-accent transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -207,12 +211,6 @@ const Navbar: React.FC<NavbarProps> = ({
 
               {/* Mobile actions */}
               <div className="flex flex-col gap-2 pt-4 border-t">
-                {showThemeToggle && (
-                  <div className="flex items-center justify-between px-2 mb-2">
-                    <span className="text-sm font-medium">Tema</span>
-                    <ModeToggle />
-                  </div>
-                )}
 
                 {!isAuthenticated ? (
                   // Ej inloggad - mobil

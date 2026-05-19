@@ -20,6 +20,8 @@ export async function createProduct(values: {
   images?: string[];
   allowCustomerUpload?: boolean;
   categoryId?: string;
+  variantLabel?: string;
+  variants?: string[];
 }) {
   await requireAdminOrEditor();
 
@@ -46,6 +48,8 @@ export async function createProduct(values: {
         aboutProduct: values.aboutProduct || null,
         images: values.images || [],
         allowCustomerUpload: values.allowCustomerUpload || false,
+        variantLabel: values.variantLabel || null,
+        variants: values.variants || [],
         categoryId: values.categoryId || null,
       },
     });
@@ -72,6 +76,8 @@ export async function updateProduct(
     images?: string[];
     allowCustomerUpload?: boolean;
     categoryId?: string;
+    variantLabel?: string;
+    variants?: string[];
   }
 ) {
   await requireAdminOrEditor();
@@ -112,6 +118,8 @@ export async function updateProduct(
         aboutProduct: values.aboutProduct || null,
         images: values.images || [],
         allowCustomerUpload: values.allowCustomerUpload || false,
+        variantLabel: values.variantLabel || null,
+        variants: values.variants || [],
         categoryId: values.categoryId || null,
       },
     });

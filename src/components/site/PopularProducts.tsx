@@ -22,13 +22,22 @@ async function getPopularProducts() {
     .map(([id]) => id);
 
   if (topIds.length === 0) {
-    // Inga ordrar ännu – visa senaste produkterna
     return prisma.product.findMany({ orderBy: { createdAt: "desc" }, take: 10 });
   }
 
   const products = await prisma.product.findMany({ where: { id: { in: topIds } } });
+  const sorted = products.sort((a, b) => (countMap[b.id] ?? 0) - (countMap[a.id] ?? 0));
 
-  return products.sort((a, b) => (countMap[b.id] ?? 0) - (countMap[a.id] ?? 0));
+  if (sorted.length < 10) {
+    const newProducts = await prisma.product.findMany({
+      where: { id: { notIn: topIds } },
+      orderBy: { createdAt: "desc" },
+      take: 10 - sorted.length,
+    });
+    return [...sorted, ...newProducts];
+  }
+
+  return sorted;
 }
 
 export async function PopularProducts() {
@@ -44,7 +53,7 @@ export async function PopularProducts() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={{ ...product, slug: product.slug ?? undefined }} />
           ))}
         </div>
       </div>

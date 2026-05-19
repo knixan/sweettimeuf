@@ -15,7 +15,7 @@ export function ImageLightbox({ images, title }: ImageLightboxProps) {
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Thumbnail carousel
-  const [thumbRef, thumbApi] = useEmblaCarousel({ axis: "x", dragFree: true });
+  const [thumbRef] = useEmblaCarousel({ axis: "x", dragFree: true });
   // Lightbox carousel
   const [lightboxRef, lightboxApi] = useEmblaCarousel({ loop: true });
 
