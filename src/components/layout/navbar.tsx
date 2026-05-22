@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, User, LogOut } from "lucide-react";
+import { MdAdminPanelSettings } from "react-icons/md";
 import authClient, { useSession } from "@/lib/auth-client";
 import { ModeToggle } from "@/components/toggle-theme-button";
 import { CartDropdown } from "@/components/layout/cart-dropdown";
@@ -43,6 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const isAuthenticated = !!session?.user;
   const user = session?.user ?? null;
+  const isAdmin = (user as { role?: string } | null)?.role === "admin";
   const isActive = (href: string) => pathname === href;
 
   const handleLogin = () => router.push("/logga-in");
@@ -146,6 +148,15 @@ const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 // Inloggad
                 <>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <MdAdminPanelSettings className="h-4 w-4" />
+                      Admin
+                    </Link>
+                  )}
                   <Link
                     href="/mina-sidor"
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -253,6 +264,17 @@ const Navbar: React.FC<NavbarProps> = ({
                         <p className="font-medium text-foreground">{user.name}</p>
                         <p className="text-muted-foreground text-xs">{user.email}</p>
                       </div>
+                    )}
+
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent rounded-md transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <MdAdminPanelSettings className="h-4 w-4" />
+                        Admin
+                      </Link>
                     )}
 
                     <Link
