@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
 import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+
+const imageUrlSchema = z.string().url("Ange en giltig URL (börja med https://)").optional().or(z.literal(""));
 
 type PriceTier = {
   quantity: number;
@@ -27,12 +30,20 @@ export function AddToCartForm({ product }: { product: Product }) {
     product.prices[0] || null
   );
   const [customImageUrl, setCustomImageUrl] = useState("");
+  const [imageUrlError, setImageUrlError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string>(
     product.variants?.[0] ?? ""
   );
 
-  const handleAddToCart = () => {
-    if (!selectedTier) return;
+  const handleAddToCart = (): boolean => {
+    if (!selectedTier) return false;
+
+    const urlResult = imageUrlSchema.safeParse(customImageUrl);
+    if (!urlResult.success) {
+      setImageUrlError(urlResult.error.issues[0].message);
+      return false;
+    }
+    setImageUrlError(null);
 
     addItem({
       productId: product.id,
@@ -45,11 +56,13 @@ export function AddToCartForm({ product }: { product: Product }) {
     });
 
     setCustomImageUrl("");
+    return true;
   };
 
   const handleBuyNow = () => {
-    handleAddToCart();
-    router.push("/kassa");
+    if (handleAddToCart()) {
+      router.push("/kassa");
+    }
   };
 
   return (
@@ -97,10 +110,16 @@ export function AddToCartForm({ product }: { product: Product }) {
           <input
             type="url"
             value={customImageUrl}
-            onChange={(e) => setCustomImageUrl(e.target.value)}
+            onChange={(e) => {
+              setCustomImageUrl(e.target.value);
+              setImageUrlError(null);
+            }}
             placeholder="https://example.com/min-bild.jpg"
             className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
           />
+          {imageUrlError && (
+            <p className="text-sm text-red-500 mt-1">{imageUrlError}</p>
+          )}
           <p className="text-sm text-muted-foreground mt-1">
             Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
           </p>

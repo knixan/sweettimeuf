@@ -26,16 +26,26 @@ A Next.js e-commerce application built for SweetTime UF. It handles a product ca
 ### Customer
 - Product catalog with categories and filtering
 - Product pages with image lightbox (Embla Carousel)
-- Shopping cart with quantity and price calculation
-- Checkout form: contact details, billing address, organization number
-- Order confirmation and order history via "My Pages"
+- Product variants (e.g. color, size) with configurable label
+- Optional custom image/design URL upload per product
+- Shopping cart with quantity and price tiers
+- Checkout form: contact details, delivery address, billing address, organization number
+- Order confirmation page
+- Order history via "My Pages" (requires login)
 - Registration and login
 
 ### Admin
-- Product management: create/edit/delete products with images, prices, and categories
-- Category management: create/edit, control which categories appear in the navbar
-- Order management: mark as processed, shipped, invoice sent
-- User management
+- Product management: create/edit/delete products with images, price tiers, variants, and categories
+- Category management: create/edit, slug auto-generation, control which categories appear in the navbar
+- Order management: view orders, mark as handled/shipped/invoice sent
+- Customer management
+- All admin routes protected – requires `admin` role
+
+## Security
+
+- `/admin/*` – protected by layout-level session check (redirects to `/logga-in` if not authenticated, redirects to `/` if not admin)
+- `/mina-sidor` – protected by page-level session check (redirects to `/logga-in` if not authenticated)
+- All forms use React Hook Form + Zod validation, including URL validation on customer image upload
 
 ## Installation
 
@@ -79,23 +89,28 @@ A Next.js e-commerce application built for SweetTime UF. It handles a product ca
 src/
 ├── app/
 │   ├── admin/
-│   │   ├── kategorier/     # Manage categories
-│   │   ├── offerter/       # Order management
-│   │   └── produkter/      # Product management
-│   ├── api/auth/           # BetterAuth API routes
-│   ├── kassa/              # Checkout (checkout-form + actions)
-│   ├── kategori/[slug]/    # Dynamic category pages
-│   ├── logga-in/           # Login page
-│   ├── mina-sidor/         # Order history for logged-in customer
+│   │   ├── kategorier/         # Manage categories
+│   │   ├── kunder/             # Customer management
+│   │   ├── offerter/           # Order management
+│   │   └── produkter/          # Product management (list + create/edit)
+│   ├── api/auth/               # BetterAuth API routes
+│   ├── kassa/                  # Checkout (checkout-form + actions)
+│   ├── kategori/[slug]/        # Dynamic category pages
+│   ├── logga-in/               # Login page
+│   ├── mina-sidor/             # Order history for logged-in customer
+│   ├── om-oss/                 # About page
+│   ├── orderbekraftelse/       # Order confirmation page
 │   ├── produkt/
-│   │   ├── [slug]/         # Product page with lightbox
-│   │   └── page.tsx        # Product list
-│   ├── registrera/         # Registration page
-│   ├── layout.tsx          # Root layout (fetches categories for navbar)
-│   └── page.tsx            # Home page with popular products
+│   │   ├── [slug]/             # Product page with lightbox and add-to-cart form
+│   │   └── page.tsx            # Product list
+│   ├── registrera/             # Registration page
+│   ├── layout.tsx              # Root layout (fetches categories for navbar)
+│   └── page.tsx                # Home page with popular products
 ├── components/
+│   ├── admin/
+│   │   └── admin-navbar.tsx
 │   ├── layout/
-│   │   ├── navbar.tsx      # Navbar with categories, dropdown, mobile menu
+│   │   ├── navbar.tsx          # Navbar with categories, dropdown, mobile menu
 │   │   └── navbar-wrapper.tsx
 │   ├── site/
 │   │   ├── About.tsx
@@ -117,6 +132,8 @@ src/
 ├── contexts/
 │   └── cart-context.tsx
 ├── lib/
+│   ├── schema/
+│   │   └── zod-schemas.ts      # Zod schemas (auth: sign-in, sign-up)
 │   ├── auth-client.ts
 │   ├── auth-server.ts
 │   ├── auth.ts
@@ -135,6 +152,7 @@ src/
 - `id`, `title`, `slug`, `articleNumber`
 - `summary`, `information`, `aboutProduct`
 - `prices` (JSON), `images` (String[])
+- `variantLabel`, `variants` (String[])
 - `allowCustomerUpload`, `categoryId`
 
 ### Category

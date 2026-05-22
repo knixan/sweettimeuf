@@ -21,7 +21,7 @@ async function main() {
       where: { slug: { not: null } },
       select: { slug: true },
     })
-  ).map((p) => p.slug!);
+  ).map((p: { slug: string | null }) => p.slug!);
 
   for (const product of products) {
     const baseSlug = generateSlug(product.title);

@@ -12,25 +12,24 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    title: "Se vårt Julsortiment",
-    text: "Perfekta gåvor och säsongsprodukter för företag och privatpersoner",
-    image: "/images/bildspel/julkorg-strutar-sack.jpg",
-  },
-
-  {
-    title: "Müslibar flowpack",
-    text: "Müslibar i smakerna choklad och kokos. Perfekt som mellanmål eller snacks",
-    image: "/images/bildspel/Muslibar-flowpack.png",
+    title: "Chokladbitar",
+    text: "Hantverk och smak i varje bit – perfekt för event och giveaways",
+    image: "/bildspel/chokladbit.webp",
   },
   {
-    title: "Chokladbitar express",
-    text: "Små chokladbitar med tryck runt omslaget. Perfekt för event och giveaways",
-    image: "/images/bildspel/Chokladbitar-express-01.png",
+    title: "Heja Sverige!",
+    text: "Patriotiskt godis i svenska färger – perfekt inför match och event",
+    image: "/bildspel/hejja-sverige.webp",
   },
   {
-    title: "Twistad Choklad",
-    text: "Chokladöverdragna smörkolor, klassiskt reklamgodis.",
-    image: "/images/bildspel/Twistad-choklad-01.jpg",
+    title: "Karameller",
+    text: "Klassiska karameller i ett brett utbud av smaker och förpackningar",
+    image: "/bildspel/karameller.webp",
+  },
+  {
+    title: "Tablettaskar",
+    text: "Smidiga tablettaskar med eget tryck – populärt reklamgodis",
+    image: "/bildspel/tablettaskar.webp",
   },
 ];
 
@@ -95,12 +94,7 @@ export default function Hero() {
                 <p className="text-lg md:text-xl mb-8 text-muted-foreground">
                   {slides[current].text}
                 </p>
-                <Link
-                  href="/produkter"
-                  className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                  Se Produkter
-                </Link>
+              
               </div>
             </div>
 
