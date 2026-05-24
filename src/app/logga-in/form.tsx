@@ -44,10 +44,9 @@ export default function SignInForm() {
     });
 
     if (error) {
-      toast.error(error.message || "Failed to sign in");
+      toast.error(error.message || "Kunde inte logga in");
     } else {
-      toast.success("Signed in successfully!");
-      // Router refresh will trigger useSession to update
+      toast.success("Inloggad!");
       router.refresh();
       router.push("/");
     }
@@ -56,14 +55,11 @@ export default function SignInForm() {
   return (
     <Card className="max-w-sm mx-auto">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Enter your details below to sign in to your account
-        </CardDescription>
-
+        <CardTitle>Logga in</CardTitle>
+        <CardDescription>Ange dina uppgifter för att logga in</CardDescription>
         <CardAction>
           <Button variant="link" asChild>
-            <Link href="/registrera">Sign Up</Link>
+            <Link href="/registrera">Skapa konto</Link>
           </Button>
         </CardAction>
       </CardHeader>
@@ -76,7 +72,7 @@ export default function SignInForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>E-post</FormLabel>
                   <FormControl>
                     <Input type="email" {...field} />
                   </FormControl>
@@ -90,7 +86,7 @@ export default function SignInForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Lösenord</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -104,7 +100,7 @@ export default function SignInForm() {
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "Loading..." : "Sign In"}
+              {form.formState.isSubmitting ? "Laddar..." : "Logga in"}
             </Button>
           </form>
         </Form>

@@ -47,9 +47,9 @@ export default function SignUpForm() {
     });
 
     if (error) {
-      toast.error(error.message || "Failed to sign up");
+      toast.error(error.message || "Kunde inte skapa konto");
     } else {
-      toast.success("Account created successfully! Please sign in.");
+      toast.success("Konto skapat! Kolla din e-post för att verifiera ditt konto.");
       router.push("/logga-in");
     }
   }
@@ -57,14 +57,11 @@ export default function SignUpForm() {
   return (
     <Card className="max-w-sm mx-auto">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>
-          Enter your details below to create an account
-        </CardDescription>
-
+        <CardTitle>Skapa konto</CardTitle>
+        <CardDescription>Ange dina uppgifter för att skapa ett konto</CardDescription>
         <CardAction>
           <Button variant="link" asChild>
-            <Link href="/logga-in">Sign In</Link>
+            <Link href="/logga-in">Logga in</Link>
           </Button>
         </CardAction>
       </CardHeader>
@@ -77,7 +74,7 @@ export default function SignUpForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Namn</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -91,7 +88,7 @@ export default function SignUpForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>E-post</FormLabel>
                   <FormControl>
                     <Input type="email" {...field} />
                   </FormControl>
@@ -105,7 +102,7 @@ export default function SignUpForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Lösenord</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -119,7 +116,7 @@ export default function SignUpForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>Bekräfta lösenord</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -133,7 +130,7 @@ export default function SignUpForm() {
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "Loading..." : "Sign Up"}
+              {form.formState.isSubmitting ? "Laddar..." : "Skapa konto"}
             </Button>
           </form>
         </Form>

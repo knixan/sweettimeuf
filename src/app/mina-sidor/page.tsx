@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import ChangePasswordForm from "./change-password-form";
 
 type CartItem = {
   productId: string;
@@ -57,6 +58,9 @@ export default async function MinaSidorPage() {
             </div>
           </div>
         </div>
+
+        {/* Byt lösenord */}
+        <ChangePasswordForm />
 
         {/* Ordrar */}
         <div>
