@@ -45,6 +45,17 @@ export async function updateOrderFlags(
   }
 }
 
+export async function deleteOrder(orderId: string) {
+  await requireAdminOrEditor();
+  try {
+    await prisma.order.delete({ where: { id: orderId } });
+    revalidatePath("/admin/offerter");
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}
+
 export async function removeCustomerImage(orderId: string, productId: string) {
   await requireAdminOrEditor();
 

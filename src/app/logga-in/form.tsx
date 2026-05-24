@@ -86,7 +86,15 @@ export default function SignInForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Lösenord</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Lösenord</FormLabel>
+                    <Link
+                      href="/glomt-losenord"
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Glömt lösenord?
+                    </Link>
+                  </div>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -104,6 +112,15 @@ export default function SignInForm() {
             </Button>
           </form>
         </Form>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/skicka-verifiering"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Fick inget verifieringsmail? Skicka igen
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

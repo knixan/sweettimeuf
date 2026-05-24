@@ -9,6 +9,7 @@ const links = [
   { href: "/admin/kategorier", label: "Kategorier" },
   { href: "/admin/offerter", label: "Offerter" },
   { href: "/admin/kunder", label: "Kunder" },
+  { href: "/admin/admins", label: "Admins" },
 ];
 
 export function AdminNavbar() {
