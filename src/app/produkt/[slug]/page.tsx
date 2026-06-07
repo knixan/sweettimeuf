@@ -67,12 +67,7 @@ export default async function ProductPage({
               </p>
             )}
 
-            {product.summary && (
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Sammanfattning</h2>
-                <p className="text-muted-foreground whitespace-pre-wrap">{product.summary}</p>
-              </div>
-            )}
+
 
             {product.information && (
               <div className="mb-6">

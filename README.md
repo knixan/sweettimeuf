@@ -1,6 +1,6 @@
 # SweetTime UF
 
-**Note: This project is a work in progress and is under active development. Functionality, structure, and implementation may change over time.**
+**Webstore for sweettimeUF a dropshipping company for Karamello**
 
 ---
 
