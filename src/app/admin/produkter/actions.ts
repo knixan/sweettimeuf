@@ -10,6 +10,11 @@ export type PriceTier = {
   price: number;
 };
 
+export type VariantOption = {
+  name: string;
+  surcharge: number;
+};
+
 export async function createProduct(values: {
   title: string;
   articleNumber?: string;
@@ -21,7 +26,7 @@ export async function createProduct(values: {
   allowCustomerUpload?: boolean;
   categoryId?: string;
   variantLabel?: string;
-  variants?: string[];
+  variants?: VariantOption[];
 }) {
   await requireAdminOrEditor();
 
@@ -37,6 +42,8 @@ export async function createProduct(values: {
     const existingSlugs = existingProducts.map((p) => p.slug).filter((s): s is string => s !== null);
     const slug = generateUniqueSlug(baseSlug, existingSlugs);
 
+    const variantOptions = values.variants || [];
+
     const created = await prisma.product.create({
       data: {
         title,
@@ -49,7 +56,8 @@ export async function createProduct(values: {
         images: values.images || [],
         allowCustomerUpload: values.allowCustomerUpload || false,
         variantLabel: values.variantLabel || null,
-        variants: values.variants || [],
+        variants: variantOptions.map((v) => v.name),
+        variantOptions: variantOptions,
         categoryId: values.categoryId || null,
       },
     });
@@ -77,7 +85,7 @@ export async function updateProduct(
     allowCustomerUpload?: boolean;
     categoryId?: string;
     variantLabel?: string;
-    variants?: string[];
+    variants?: VariantOption[];
   }
 ) {
   await requireAdminOrEditor();
@@ -94,7 +102,7 @@ export async function updateProduct(
     });
 
     let slug = existing?.slug || generateSlug(title);
-    
+
     // If title changed, regenerate slug
     if (existing && existing.title !== title) {
       const baseSlug = generateSlug(title);
@@ -105,6 +113,8 @@ export async function updateProduct(
       const existingSlugs = otherProducts.map((p) => p.slug).filter((s): s is string => s !== null);
       slug = generateUniqueSlug(baseSlug, existingSlugs);
     }
+
+    const variantOptions = values.variants || [];
 
     const updated = await prisma.product.update({
       where: { id },
@@ -119,7 +129,8 @@ export async function updateProduct(
         images: values.images || [],
         allowCustomerUpload: values.allowCustomerUpload || false,
         variantLabel: values.variantLabel || null,
-        variants: values.variants || [],
+        variants: variantOptions.map((v) => v.name),
+        variantOptions: variantOptions,
         categoryId: values.categoryId || null,
       },
     });

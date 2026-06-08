@@ -28,6 +28,7 @@ type ProductData = {
   categoryId: string | null;
   variantLabel: string | null;
   variants: string[];
+  variantOptions: unknown;
 };
 
 type EditProductFormProps = {
@@ -80,7 +81,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         allowCustomerUpload: product.allowCustomerUpload,
         categoryId: product.categoryId || "",
         variantLabel: product.variantLabel || "",
-        variants: product.variants.length > 0 ? product.variants.map((v) => ({ value: v })) : [],
+        variants: product.variantOptions
+          ? (product.variantOptions as { name: string; surcharge: number }[])
+          : product.variants.map((v) => ({ name: v, surcharge: 0 })),
       });
     }
   }, [product, reset]);
@@ -106,7 +109,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         const filteredData = {
           ...data,
           images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
-          variants: data.variants?.map((v) => v.value).filter((v) => v && v.trim() !== ""),
+          variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
         };
 
         await updateProduct(productId, filteredData);
@@ -241,14 +244,32 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
             placeholder='Etikett, t.ex. "Välj smak" eller "Välj färg"'
           />
           <div className="space-y-1">
+            <div className="grid grid-cols-[1fr_auto_auto] gap-2 text-xs text-muted-foreground px-1">
+              <span>Namn (smak/färg)</span>
+              <span className="text-center">Pristillägg (kr)</span>
+              <span />
+            </div>
             {variantFields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
+              <div key={field.id} className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
                 <input
-                  {...register(`variants.${index}.value`)}
+                  {...register(`variants.${index}.name`)}
                   type="text"
                   placeholder="T.ex. Jordgubb, Citron..."
-                  className="flex-1 rounded-md bg-background border border-input px-2 py-1 text-sm"
+                  className="min-w-0 rounded-md bg-background border border-input px-2 py-1 text-sm"
                 />
+                <div className="flex items-center gap-1">
+                  <span className="text-muted-foreground text-sm">+</span>
+                  <input
+                    {...register(`variants.${index}.surcharge`, { valueAsNumber: true })}
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    defaultValue={0}
+                    placeholder="0"
+                    className="w-16 rounded-md bg-background border border-input px-2 py-1 text-sm"
+                  />
+                  <span className="text-sm text-muted-foreground">kr</span>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
@@ -263,7 +284,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => appendVariant({ value: "" })}
+              onClick={() => appendVariant({ name: "", surcharge: 0 })}
             >
               + Alternativ
             </Button>

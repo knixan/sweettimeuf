@@ -5,6 +5,11 @@ export const PriceTierSchema = z.object({
   price: z.number().min(0, "Pris måste vara minst 0"),
 });
 
+export const VariantOptionSchema = z.object({
+  name: z.string().min(1, "Namn krävs"),
+  surcharge: z.number().min(0, "Pristillägg måste vara 0 eller mer"),
+});
+
 export const ProductSchema = z.object({
   title: z.string().min(1, "Titel krävs").max(200, "Titel får vara max 200 tecken"),
   articleNumber: z.string().optional(),
@@ -16,7 +21,7 @@ export const ProductSchema = z.object({
   allowCustomerUpload: z.boolean().optional(),
   categoryId: z.string().optional(),
   variantLabel: z.string().optional(),
-  variants: z.array(z.object({ value: z.string() })).optional(),
+  variants: z.array(VariantOptionSchema).optional(),
 });
 
 export type ProductFormData = z.infer<typeof ProductSchema>;

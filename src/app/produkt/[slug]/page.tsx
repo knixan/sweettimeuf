@@ -23,8 +23,12 @@ export default async function ProductPage({
   }
 
   type PriceTier = { quantity: number; price: number };
+  type VariantOption = { name: string; surcharge: number };
 
   const prices = (product.prices as PriceTier[]) || [];
+  const variantOptions = Array.isArray(product.variantOptions)
+    ? (product.variantOptions as VariantOption[])
+    : undefined;
 
   return (
     <main className="min-h-screen p-6">
@@ -100,6 +104,7 @@ export default async function ProductPage({
                 image: product.images[0],
                 allowCustomerUpload: product.allowCustomerUpload,
                 variantLabel: product.variantLabel,
+                variantOptions,
                 variants: product.variants,
               }}
             />

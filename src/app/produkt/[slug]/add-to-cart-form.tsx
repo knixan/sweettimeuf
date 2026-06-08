@@ -13,6 +13,11 @@ type PriceTier = {
   price: number;
 };
 
+type VariantOption = {
+  name: string;
+  surcharge: number;
+};
+
 type Product = {
   id: string;
   title: string;
@@ -20,6 +25,7 @@ type Product = {
   image?: string;
   allowCustomerUpload: boolean;
   variantLabel?: string | null;
+  variantOptions?: VariantOption[];
   variants?: string[];
 };
 
@@ -32,8 +38,11 @@ export function AddToCartForm({ product }: { product: Product }) {
   const [customImageUrl, setCustomImageUrl] = useState("");
   const [imageUrlError, setImageUrlError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string>(
-    product.variants?.[0] ?? ""
+    product.variantOptions?.[0]?.name ?? product.variants?.[0] ?? ""
   );
+
+  const surcharge = product.variantOptions?.find((v) => v.name === selectedVariant)?.surcharge ?? 0;
+  const effectivePrice = selectedTier ? selectedTier.price + surcharge : 0;
 
   const handleAddToCart = (): boolean => {
     if (!selectedTier) return false;
@@ -49,7 +58,7 @@ export function AddToCartForm({ product }: { product: Product }) {
       productId: product.id,
       title: product.title,
       quantity: selectedTier.quantity,
-      price: selectedTier.price,
+      price: effectivePrice,
       image: product.image,
       customImageUrl: customImageUrl || undefined,
       selectedVariant: selectedVariant || undefined,
@@ -65,10 +74,13 @@ export function AddToCartForm({ product }: { product: Product }) {
     }
   };
 
+  const hasVariants = (product.variantOptions && product.variantOptions.length > 0) ||
+    (product.variants && product.variants.length > 0);
+
   return (
     <div className="space-y-4">
       {/* Variant Selector */}
-      {product.variants && product.variants.length > 0 && (
+      {hasVariants && (
         <div>
           <label className="block text-sm font-medium mb-2">
             {product.variantLabel || "Välj variant"}
@@ -78,9 +90,16 @@ export function AddToCartForm({ product }: { product: Product }) {
             onChange={(e) => setSelectedVariant(e.target.value)}
             className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
           >
-            {product.variants.map((v) => (
-              <option key={v} value={v}>{v}</option>
-            ))}
+            {product.variantOptions
+              ? product.variantOptions.map((v) => (
+                  <option key={v.name} value={v.name}>
+                    {v.name}{v.surcharge > 0 ? ` (+${v.surcharge.toFixed(2)} kr)` : ""}
+                  </option>
+                ))
+              : product.variants?.map((v) => (
+                  <option key={v} value={v}>{v}</option>
+                ))
+            }
           </select>
         </div>
       )}
@@ -94,7 +113,7 @@ export function AddToCartForm({ product }: { product: Product }) {
           >
             {product.prices.map((tier, index) => (
               <option key={index} value={index}>
-                {tier.quantity} st - {tier.price.toFixed(2)} kr
+                {tier.quantity} st — {(tier.price + surcharge).toFixed(2)} kr
               </option>
             ))}
           </select>
@@ -147,7 +166,12 @@ export function AddToCartForm({ product }: { product: Product }) {
 
       {selectedTier && (
         <div className="text-center text-2xl font-bold text-primary">
-          Totalt: {(selectedTier.price * selectedTier.quantity).toFixed(2)} kr
+          Totalt: {(effectivePrice * selectedTier.quantity).toFixed(2)} kr
+          {surcharge > 0 && (
+            <p className="text-sm font-normal text-muted-foreground mt-1">
+              inkl. pristillägg {selectedVariant} (+{surcharge.toFixed(2)} kr)
+            </p>
+          )}
         </div>
       )}
     </div>

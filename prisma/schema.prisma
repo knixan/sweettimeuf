@@ -103,6 +103,7 @@ model Product {
   allowCustomerUpload Boolean  @default(false)
   variantLabel        String?
   variants            String[]
+  variantOptions      Json?    // [{name: string, surcharge: number}]
   categoryId          String?
   category            Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdAt           DateTime @default(now())

@@ -54,7 +54,7 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         const filteredData = {
           ...data,
           images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
-          variants: data.variants?.map((v) => v.value).filter((v) => v && v.trim() !== ""),
+          variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
         };
 
         await createProduct(filteredData);
@@ -184,27 +184,46 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
             placeholder='Etikett, t.ex. "Välj smak" eller "Välj färg"'
           />
           <div className="space-y-2">
+            <div className="grid grid-cols-[1fr_auto_auto] gap-2 text-xs text-muted-foreground px-1">
+              <span>Namn (smak/färg)</span>
+              <span className="text-center">Pristillägg (kr)</span>
+              <span />
+            </div>
             {variantFields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
+              <div key={field.id} className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
                 <input
-                  {...register(`variants.${index}.value`)}
+                  {...register(`variants.${index}.name`)}
                   type="text"
-                  placeholder="T.ex. Jordgubb, Citron, Choklad..."
-                  className="flex-1 rounded-md bg-input/10 border border-input px-3 py-2"
+                  placeholder="T.ex. Jordgubb, Citron..."
+                  className="min-w-0 rounded-md bg-input/10 border border-input px-3 py-2"
                 />
+                <div className="flex items-center gap-1">
+                  <span className="text-muted-foreground">+</span>
+                  <input
+                    {...register(`variants.${index}.surcharge`, { valueAsNumber: true })}
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    defaultValue={0}
+                    placeholder="0"
+                    className="w-16 rounded-md bg-input/10 border border-input px-2 py-2"
+                  />
+                  <span className="text-sm text-muted-foreground">kr</span>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
+                  size="sm"
                   onClick={() => removeVariant(index)}
                 >
-                  Ta bort
+                  X
                 </Button>
               </div>
             ))}
             <Button
               type="button"
               variant="outline"
-              onClick={() => appendVariant({ value: "" })}
+              onClick={() => appendVariant({ name: "", surcharge: 0 })}
             >
               + Lägg till alternativ
             </Button>
