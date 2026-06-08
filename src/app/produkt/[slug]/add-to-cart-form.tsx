@@ -18,6 +18,11 @@ type VariantOption = {
   surcharge: number;
 };
 
+type PrintTemplate = {
+  label: string;
+  url: string;
+};
+
 type Product = {
   id: string;
   title: string;
@@ -27,6 +32,7 @@ type Product = {
   variantLabel?: string | null;
   variantOptions?: VariantOption[];
   variants?: string[];
+  printTemplates?: PrintTemplate[];
 };
 
 export function AddToCartForm({ product }: { product: Product }) {
@@ -142,6 +148,33 @@ export function AddToCartForm({ product }: { product: Product }) {
           <p className="text-sm text-muted-foreground mt-1">
             Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
           </p>
+          <p className="text-sm text-muted-foreground mt-1 font-bold">
+            OBS! Klichékostnad: 1000 kr/design (CMYK) &bull; Repetitionsorder: 500 kr/design
+          </p>
+          <p className="text-sm text-muted-foreground mt-1 font-bold">
+            Tillkommer på fakturan för varje unik design som laddas upp, oavsett antal produkter i ordern.
+          </p>
+        
+        </div>
+      )}
+
+      {/* Print Templates */}
+      {product.printTemplates && product.printTemplates.length > 0 && (
+        <div>
+          <p className="text-sm font-medium mb-1">Ladda ner designmall</p>
+          <div className="flex flex-col gap-1">
+            {product.printTemplates.map((t, i) => (
+              <a
+                key={i}
+                href={t.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary underline hover:opacity-80"
+              >
+                {t.label}
+              </a>
+            ))}
+          </div>
         </div>
       )}
 

@@ -30,6 +30,7 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
       images: [{ url: "" }],
       allowCustomerUpload: false,
       variants: [],
+      printTemplates: [],
     },
   });
 
@@ -48,6 +49,11 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
     name: "variants",
   });
 
+  const { fields: templateFields, append: appendTemplate, remove: removeTemplate } = useFieldArray({
+    control,
+    name: "printTemplates",
+  });
+
   const onSubmit = async (data: ProductFormData) => {
     startTransition(async () => {
       try {
@@ -55,6 +61,7 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
           ...data,
           images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
           variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
+          printTemplates: data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") || [],
         };
 
         await createProduct(filteredData);
@@ -267,6 +274,42 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
           <label htmlFor="allowCustomerUpload" className="text-sm font-medium">
             Tillåt kund att ladda upp bild innan kassan
           </label>
+        </div>
+
+        <div className="border-t pt-4">
+          <label className="block text-sm font-medium mb-2">Tryckfiler / mallar (PDF-länkar)</label>
+          <div className="space-y-2">
+            {templateFields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
+                <input
+                  {...register(`printTemplates.${index}.label`)}
+                  type="text"
+                  placeholder="T.ex. Tryckfil tablettask"
+                  className="w-1/3 rounded-md bg-input/10 border border-input px-3 py-2"
+                />
+                <input
+                  {...register(`printTemplates.${index}.url`)}
+                  type="url"
+                  placeholder="https://example.com/mall.pdf"
+                  className="flex-1 rounded-md bg-input/10 border border-input px-3 py-2"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => removeTemplate(index)}
+                >
+                  Ta bort
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => appendTemplate({ label: "", url: "" })}
+            >
+              + Lägg till tryckfil
+            </Button>
+          </div>
         </div>
 
         <div className="flex gap-4 pt-4 border-t">

@@ -104,6 +104,7 @@ model Product {
   variantLabel        String?
   variants            String[]
   variantOptions      Json?    // [{name: string, surcharge: number}]
+  printTemplates      Json?    // [{label: string, url: string}]
   categoryId          String?
   category            Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdAt           DateTime @default(now())

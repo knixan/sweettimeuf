@@ -30,6 +30,11 @@ export default async function ProductPage({
     ? (product.variantOptions as VariantOption[])
     : undefined;
 
+  type PrintTemplate = { label: string; url: string };
+  const printTemplates = Array.isArray((product as Record<string, unknown>).printTemplates)
+    ? ((product as Record<string, unknown>).printTemplates as PrintTemplate[])
+    : [];
+
   return (
     <main className="min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
@@ -106,6 +111,7 @@ export default async function ProductPage({
                 variantLabel: product.variantLabel,
                 variantOptions,
                 variants: product.variants,
+                printTemplates,
               }}
             />
           </div>

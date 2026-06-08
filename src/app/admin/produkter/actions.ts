@@ -15,6 +15,11 @@ export type VariantOption = {
   surcharge: number;
 };
 
+export type PrintTemplate = {
+  label: string;
+  url: string;
+};
+
 export async function createProduct(values: {
   title: string;
   articleNumber?: string;
@@ -27,6 +32,7 @@ export async function createProduct(values: {
   categoryId?: string;
   variantLabel?: string;
   variants?: VariantOption[];
+  printTemplates?: PrintTemplate[];
 }) {
   await requireAdminOrEditor();
 
@@ -59,6 +65,7 @@ export async function createProduct(values: {
         variants: variantOptions.map((v) => v.name),
         variantOptions: variantOptions,
         categoryId: values.categoryId || null,
+        printTemplates: values.printTemplates || [],
       },
     });
 
@@ -86,6 +93,7 @@ export async function updateProduct(
     categoryId?: string;
     variantLabel?: string;
     variants?: VariantOption[];
+    printTemplates?: PrintTemplate[];
   }
 ) {
   await requireAdminOrEditor();
@@ -132,6 +140,7 @@ export async function updateProduct(
         variants: variantOptions.map((v) => v.name),
         variantOptions: variantOptions,
         categoryId: values.categoryId || null,
+        printTemplates: values.printTemplates || [],
       },
     });
 

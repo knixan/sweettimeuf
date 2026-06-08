@@ -10,6 +10,11 @@ export const VariantOptionSchema = z.object({
   surcharge: z.number().min(0, "Pristillägg måste vara 0 eller mer"),
 });
 
+export const PrintTemplateSchema = z.object({
+  label: z.string().min(1, "Etikett krävs"),
+  url: z.string().url("Ange en giltig URL").or(z.literal("")),
+});
+
 export const ProductSchema = z.object({
   title: z.string().min(1, "Titel krävs").max(200, "Titel får vara max 200 tecken"),
   articleNumber: z.string().optional(),
@@ -22,6 +27,7 @@ export const ProductSchema = z.object({
   categoryId: z.string().optional(),
   variantLabel: z.string().optional(),
   variants: z.array(VariantOptionSchema).optional(),
+  printTemplates: z.array(PrintTemplateSchema).optional(),
 });
 
 export type ProductFormData = z.infer<typeof ProductSchema>;

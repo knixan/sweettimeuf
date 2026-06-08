@@ -29,6 +29,7 @@ type ProductData = {
   variantLabel: string | null;
   variants: string[];
   variantOptions: unknown;
+  printTemplates: unknown;
 };
 
 type EditProductFormProps = {
@@ -84,6 +85,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         variants: product.variantOptions
           ? (product.variantOptions as { name: string; surcharge: number }[])
           : product.variants.map((v) => ({ name: v, surcharge: 0 })),
+        printTemplates: (product.printTemplates as { label: string; url: string }[]) || [],
       });
     }
   }, [product, reset]);
@@ -103,6 +105,11 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
     name: "variants",
   });
 
+  const { fields: templateFields, append: appendTemplate, remove: removeTemplate } = useFieldArray({
+    control,
+    name: "printTemplates",
+  });
+
   const onSubmit = async (data: ProductFormData) => {
     startTransition(async () => {
       try {
@@ -110,6 +117,7 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
           ...data,
           images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
           variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
+          printTemplates: data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") || [],
         };
 
         await updateProduct(productId, filteredData);
@@ -333,6 +341,44 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
           <label htmlFor={`allowUpload-${productId}`} className="text-sm">
             Tillåt kunduppladdning
           </label>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Tryckfiler / mallar (PDF-länkar)</label>
+          <div className="space-y-1">
+            {templateFields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
+                <input
+                  {...register(`printTemplates.${index}.label`)}
+                  type="text"
+                  placeholder="T.ex. Tryckfil tablettask"
+                  className="w-1/3 rounded-md bg-background border border-input px-2 py-1 text-sm"
+                />
+                <input
+                  {...register(`printTemplates.${index}.url`)}
+                  type="url"
+                  placeholder="https://example.com/mall.pdf"
+                  className="flex-1 rounded-md bg-background border border-input px-2 py-1 text-sm"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeTemplate(index)}
+                >
+                  X
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => appendTemplate({ label: "", url: "" })}
+            >
+              + Tryckfil
+            </Button>
+          </div>
         </div>
 
         <div className="flex gap-2 pt-2">

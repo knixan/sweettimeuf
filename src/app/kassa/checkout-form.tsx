@@ -132,6 +132,9 @@ export function CheckoutForm() {
               <span>Totalt:</span>
               <span>{totalPrice.toFixed(2)} kr</span>
             </div>
+             <p className="text-sm text-muted-foreground font-bold mt-2">
+              OBS! Har du laddat upp en egen design till någon av produkterna i din beställning så tillkommer en klichékostnad på fakturan.
+            </p>
             <p className="text-sm text-muted-foreground mt-2">
               * Faktura skickas manuellt efter beställning
             </p>
