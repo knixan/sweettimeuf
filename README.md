@@ -1,68 +1,77 @@
 # SweetTime UF
 
-**Webstore for sweettimeUF a dropshipping company for Karamello**
+**Webbshop för SweetTime UF – profilprodukter, godis och trycksaker**
+
+🌐 [www.sweettime-uf.se](https://www.sweettime-uf.se)
 
 ---
 
-A Next.js e-commerce application built for SweetTime UF. It handles a product catalog, categories, shopping cart, checkout, and order management with a full admin interface.
+En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog, kategorier, kundvagn, kassa och orderhantering med ett fullständigt admingränssnitt.
 
-## Technologies
+## Tekniker
 
-- **Next.js 16** – React framework with App Router
-- **React 19** – UI library
-- **TypeScript** – Typed JavaScript
-- **Prisma** – ORM for database access
-- **PostgreSQL** – Relational database
-- **BetterAuth 1.3** – Authentication (email/password, roles)
-- **Tailwind CSS 4** – Utility-first CSS framework
-- **shadcn/ui** – UI component library
-- **Embla Carousel** – Image carousel and lightbox
-- **React Hook Form + Zod** – Form handling and validation
-- **Sonner** – Toast notifications
-- **next-themes** – Dark/light theme
+| Kategori | Teknik |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Tailwind CSS 4, shadcn/ui |
+| Språk | TypeScript |
+| Databas | PostgreSQL + Prisma ORM |
+| Autentisering | BetterAuth 1.3 (e-post/lösenord, roller) |
+| Formulär | React Hook Form + Zod |
+| Carousel/Lightbox | Embla Carousel |
+| Notifieringar | Sonner |
+| Tema | next-themes (mörkt/ljust) |
 
-## Features
+## Funktioner
 
-### Customer
-- Product catalog with categories and filtering
-- Product pages with image lightbox (Embla Carousel)
-- Product variants (e.g. color, size) with configurable label
-- Optional custom image/design URL upload per product
-- Shopping cart with quantity and price tiers
-- Checkout form: contact details, delivery address, billing address, organization number
-- Order confirmation page
-- Order history via "My Pages" (requires login)
-- Registration and login
+### Kund
+- Produktkatalog med kategorier
+- Produktsidor med bildlightbox
+- Produktvarianter (t.ex. färg, storlek) med konfigurerbar etikett
+- Möjlighet för kunden att ladda upp egen bild/design per produkt
+- Kundvagn med antal och pristrappor
+- Kassaformulär: kontaktuppgifter, leveransadress, fakturaadress, organisationsnummer
+- Orderbekräftelsesida
+- Orderhistorik via "Mina sidor" (kräver inloggning)
+- Registrering och inloggning med e-postverifiering
 
 ### Admin
-- Product management: create/edit/delete products with images, price tiers, variants, and categories
-- Category management: create/edit, slug auto-generation, control which categories appear in the navbar
-- Order management: view orders, mark as handled/shipped/invoice sent
-- Customer management
-- All admin routes protected – requires `admin` role
+- Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier
+- Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
+- Orderhantering: visa ordrar, markera som hanterad/skickad/faktura skickad
+- Kundhantering
+- Alla adminrutter skyddade – kräver `admin`-roll
 
-## Security
+## Säkerhet
 
-- `/admin/*` – protected by layout-level session check (redirects to `/logga-in` if not authenticated, redirects to `/` if not admin)
-- `/mina-sidor` – protected by page-level session check (redirects to `/logga-in` if not authenticated)
-- All forms use React Hook Form + Zod validation, including URL validation on customer image upload
+- `/admin/*` – skyddad via layout-nivå sessionscheck (omdirigerar till `/logga-in` om ej autentiserad, till `/` om ej admin)
+- `/mina-sidor` – skyddad via sidnivå sessionscheck
+- Alla formulär valideras med React Hook Form + Zod, inklusive URL-validering vid bilduppladdning
+- Adminrutter och privata sidor exkluderade från sökmotorindexering via `robots.txt`
+
+## SEO
+
+- Dynamisk `sitemap.xml` genereras automatiskt via `src/app/sitemap.ts` – inkluderar alla produkter och kategorier från databasen
+- `robots.txt` blockerar `/admin/`, `/kassa/`, `/mina-sidor/`, `/api/` m.fl.
+- Sidspecifik metadata (titel, beskrivning, Open Graph-bild) per produkt- och kategorisida via `generateMetadata`
+- `metadataBase` konfigurerad i root layout
 
 ## Installation
 
-1. Clone the repository:
+1. Klona repot:
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/knixan/sweettimeuf.git
     cd sweettimeuf
     ```
 
-2. Install dependencies:
+2. Installera beroenden:
 
     ```bash
     npm install
     ```
 
-3. Create `.env.local` and set environment variables:
+3. Skapa `.env.local` och fyll i miljövariabler:
 
     ```env
     DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
@@ -70,122 +79,92 @@ A Next.js e-commerce application built for SweetTime UF. It handles a product ca
     BETTER_AUTH_URL="http://localhost:3000"
     ```
 
-4. Push the schema to the database and generate the Prisma client:
+4. Pusha schemat till databasen och generera Prisma-klienten:
 
     ```bash
     npx prisma db push
     npx prisma generate
     ```
 
-5. Start the development server:
+5. Starta utvecklingsservern:
 
     ```bash
     npm run dev
     ```
 
-## Project Structure
+## Tillgängliga kommandon
+
+```bash
+npm run dev      # Starta utvecklingsserver
+npm run build    # Bygg för produktion (kör prisma generate automatiskt)
+npm run start    # Starta produktionsserver
+npm run lint     # Kör ESLint
+```
+
+```bash
+npx prisma studio     # Öppna Prisma Studio (visuell databaseditor)
+npx prisma db push    # Pusha schema till databas (dev)
+npx prisma generate   # Generera Prisma-klient
+```
+
+## Projektstruktur
 
 ```
 src/
 ├── app/
 │   ├── admin/
-│   │   ├── kategorier/         # Manage categories
-│   │   ├── kunder/             # Customer management
-│   │   ├── offerter/           # Order management
-│   │   └── produkter/          # Product management (list + create/edit)
-│   ├── api/auth/               # BetterAuth API routes
-│   ├── kassa/                  # Checkout (checkout-form + actions)
-│   ├── kategori/[slug]/        # Dynamic category pages
-│   ├── logga-in/               # Login page
-│   ├── mina-sidor/             # Order history for logged-in customer
-│   ├── om-oss/                 # About page
-│   ├── orderbekraftelse/       # Order confirmation page
+│   │   ├── admins/             # Adminanvändarhantering
+│   │   ├── kategorier/         # Kategorihantering
+│   │   ├── kunder/             # Kundhantering
+│   │   ├── offerter/           # Orderhantering
+│   │   └── produkter/          # Produkthantering (lista + skapa/redigera)
+│   ├── api/auth/               # BetterAuth API-rutter
+│   ├── kassa/                  # Kassa (formulär + server actions)
+│   ├── kategori/[slug]/        # Dynamiska kategorisidor
+│   ├── logga-in/               # Inloggningssida
+│   ├── mina-sidor/             # Orderhistorik för inloggad kund
+│   ├── om-oss/                 # Om oss-sida
+│   ├── orderbekraftelse/       # Orderbekräftelse
 │   ├── produkt/
-│   │   ├── [slug]/             # Product page with lightbox and add-to-cart form
-│   │   └── page.tsx            # Product list
-│   ├── registrera/             # Registration page
-│   ├── layout.tsx              # Root layout (fetches categories for navbar)
-│   └── page.tsx                # Home page with popular products
+│   │   ├── [slug]/             # Produktsida med lightbox och lägg-i-kundvagn
+│   │   └── page.tsx            # Produktlista
+│   ├── registrera/             # Registreringssida
+│   ├── sitemap.ts              # Dynamisk sitemap (produkter + kategorier)
+│   ├── layout.tsx              # Root layout med global metadata
+│   └── page.tsx                # Startsida med populära produkter
 ├── components/
 │   ├── admin/
-│   │   └── admin-navbar.tsx
-│   ├── layout/
-│   │   ├── navbar.tsx          # Navbar with categories, dropdown, mobile menu
-│   │   └── navbar-wrapper.tsx
-│   ├── site/
-│   │   ├── About.tsx
-│   │   ├── Hero.tsx
-│   │   ├── ImageCarousel.tsx
-│   │   ├── ImageLightbox.tsx
-│   │   ├── PopularProducts.tsx
-│   │   ├── product-card.tsx
-│   │   └── Team.tsx
-│   └── ui/
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── dropdown-menu.tsx
-│       ├── form.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── sonner.tsx
-│       └── switch.tsx
+│   ├── layout/                 # Navbar, footer, kundvagnsdropdown
+│   ├── site/                   # Hero, About, Team, ProductCard m.m.
+│   └── ui/                     # shadcn/ui-komponenter
 ├── contexts/
-│   └── cart-context.tsx
+│   └── cart-context.tsx        # Global kundvagnskontext
 ├── lib/
-│   ├── schema/
-│   │   └── zod-schemas.ts      # Zod schemas (auth: sign-in, sign-up)
-│   ├── auth-client.ts
-│   ├── auth-server.ts
-│   ├── auth.ts
+│   ├── auth.ts / auth-client.ts / auth-server.ts
 │   ├── prisma.ts
-│   ├── server-auth.ts
 │   ├── slug.ts
-│   └── utils.ts
+│   └── schema/zod-schemas.ts
 └── types/
-    ├── auth.d.ts
-    └── types.ts
 ```
 
-## Databas-schema (viktiga modeller)
+## Databasschema (viktiga modeller)
 
 ### Product
-- `id`, `title`, `slug`, `articleNumber`
-- `summary`, `information`, `aboutProduct`
-- `prices` (JSON), `images` (String[])
-- `variantLabel`, `variants` (String[])
-- `allowCustomerUpload`, `categoryId`
+`id` · `title` · `slug` · `articleNumber` · `summary` · `information` · `aboutProduct` · `prices` (JSON) · `images` (String[]) · `variantLabel` · `variants` (String[]) · `variantOptions` (JSON) · `allowCustomerUpload` · `categoryId`
 
 ### Category
-- `id`, `name`, `slug`, `showInNavbar`
+`id` · `name` · `slug` · `showInNavbar`
 
 ### Order
-- `id`, `orderNumber`, `userId` (nullable)
-- Kundinformation: namn, e-post, telefon, adress, org.nr
-- Separat fakturadress (valfritt)
-- `items` (JSON), `totalPrice`, `status`
-- Flaggor: `handled`, `shipped`, `invoiceSent`
+`id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `status` · flaggor: `handled` · `shipped` · `invoiceSent`
 
 ### User
-- `id`, `name`, `email`, `password`, `role` (`user` / `admin`)
-
-## Tillgängliga kommandon
-
-```bash
-npm run dev      # Starta utvecklings-server
-npm run build    # Bygg för produktion
-npm run start    # Starta produktions-server
-npm run lint     # Kör ESLint
-```
-
-```bash
-npx prisma studio     # Öppna Prisma Studio
-npx prisma db push    # Pusha schema till databas (används i dev)
-npx prisma generate   # Generera Prisma-klient
-```
+`id` · `name` · `email` · `password` · `role` (`user` / `admin`)
 
 ## Licens
 
-Detta projekt är privat och avsett för Sweettime UF men får användas som utbildningsmål.
+Detta projekt är privat och avsett för SweetTime UF, men får användas i utbildningssyfte.
 
-## Kod och Design 
-Av Josefine Eriksson https://kodochdesign.se
+---
+
+*Kod och design av [Josefine Eriksson](https://kodochdesign.se)*
