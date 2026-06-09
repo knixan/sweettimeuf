@@ -3,12 +3,34 @@ import { notFound } from "next/navigation";
 import { AddToCartForm } from "./add-to-cart-form";
 import { ImageLightbox } from "@/components/site/ImageLightbox";
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export default async function ProductPage({
-  params,
-}: {
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    select: { title: true, summary: true, images: true, category: { select: { name: true } } },
+  });
+
+  if (!product) return {};
+
+  return {
+    title: product.title,
+    description: product.summary ?? undefined,
+    openGraph: {
+      title: product.title,
+      description: product.summary ?? undefined,
+      images: product.images[0] ? [{ url: product.images[0] }] : [],
+    },
+  };
+}
+
+export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
 
   const product = await prisma.product.findUnique({
@@ -75,8 +97,6 @@ export default async function ProductPage({
                 Art. nr: {product.articleNumber}
               </p>
             )}
-
-
 
             {product.information && (
               <div className="mb-6">
