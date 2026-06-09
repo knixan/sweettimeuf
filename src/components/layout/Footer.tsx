@@ -15,7 +15,7 @@ export default function Footer() {
               width={120}
               height={64}
              style={{ width: "auto" }}
-              className="dark:hidden"
+              className="h-18 w-auto dark:hidden"
             />
             <Image
               src="/logga/sweettime-vit-loggo.png"
@@ -23,7 +23,7 @@ export default function Footer() {
               width={120}
               height={64}
              style={{ width: "auto" }}
-              className="hidden dark:block"
+              className="hidden h-18 w-auto dark:block"
             />
             <h3 className="text-2xl mb-3 font-semibold">Sweet Time UF</h3>
             <p className="text-muted-foreground max-w-prose">
