@@ -28,29 +28,42 @@ export default async function KategoriPage({
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-8">
           <p className="text-sm text-muted-foreground mb-1">
-            <Link href="/" className="hover:underline">Hem</Link>
+            <Link href="/" className="hover:underline">
+              Hem
+            </Link>
             {" / "}
-            <Link href="/produkt" className="hover:underline">Produkter</Link>
+            <Link href="/produkt" className="hover:underline">
+              Produkter
+            </Link>
             {" / "}
             <span>{category.name}</span>
           </p>
           <h1 className="text-4xl font-bold">{category.name}</h1>
           <p className="text-muted-foreground mt-2">
-            {category.products.length} produkt{category.products.length !== 1 ? "er" : ""}
+            {category.products.length} produkt
+            {category.products.length !== 1 ? "er" : ""}
           </p>
         </div>
 
         {category.products.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-muted-foreground text-lg">Inga produkter i denna kategori ännu.</p>
-            <Link href="/produkt" className="mt-4 inline-block text-primary hover:underline">
+            <p className="text-muted-foreground text-lg">
+              Inga produkter i denna kategori ännu.
+            </p>
+            <Link
+              href="/produkt"
+              className="mt-4 inline-block text-primary hover:underline"
+            >
               Se alla produkter
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {category.products.map((product) => (
-              <ProductCard key={product.id} product={{ ...product, slug: product.slug ?? undefined }} />
+              <ProductCard
+                key={product.id}
+                product={{ ...product, slug: product.slug ?? undefined }}
+              />
             ))}
           </div>
         )}

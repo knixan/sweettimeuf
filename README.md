@@ -10,21 +10,22 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 ## Tekniker
 
-| Kategori | Teknik |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| UI | React 19, Tailwind CSS 4, shadcn/ui |
-| Språk | TypeScript |
-| Databas | PostgreSQL + Prisma ORM |
-| Autentisering | BetterAuth 1.3 (e-post/lösenord, roller) |
-| Formulär | React Hook Form + Zod |
-| Carousel/Lightbox | Embla Carousel |
-| Notifieringar | Sonner |
-| Tema | next-themes (mörkt/ljust) |
+| Kategori          | Teknik                                   |
+| ----------------- | ---------------------------------------- |
+| Framework         | Next.js 16 (App Router)                  |
+| UI                | React 19, Tailwind CSS 4, shadcn/ui      |
+| Språk             | TypeScript                               |
+| Databas           | PostgreSQL + Prisma ORM                  |
+| Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller) |
+| Formulär          | React Hook Form + Zod                    |
+| Carousel/Lightbox | Embla Carousel                           |
+| Notifieringar     | Sonner                                   |
+| Tema              | next-themes (mörkt/ljust)                |
 
 ## Funktioner
 
 ### Kund
+
 - Produktkatalog med kategorier
 - Produktsidor med bildlightbox
 - Produktvarianter (t.ex. färg, storlek) med konfigurerbar etikett
@@ -36,6 +37,7 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Registrering och inloggning med e-postverifiering
 
 ### Admin
+
 - Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier
 - Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
 - Orderhantering: visa ordrar, markera som hanterad/skickad/faktura skickad
@@ -60,37 +62,37 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 1. Klona repot:
 
-    ```bash
-    git clone https://github.com/knixan/sweettimeuf.git
-    cd sweettimeuf
-    ```
+   ```bash
+   git clone https://github.com/knixan/sweettimeuf.git
+   cd sweettimeuf
+   ```
 
 2. Installera beroenden:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. Skapa `.env.local` och fyll i miljövariabler:
 
-    ```env
-    DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
-    BETTER_AUTH_SECRET="your-secret-key"
-    BETTER_AUTH_URL="http://localhost:3000"
-    ```
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
+   BETTER_AUTH_SECRET="your-secret-key"
+   BETTER_AUTH_URL="http://localhost:3000"
+   ```
 
 4. Pusha schemat till databasen och generera Prisma-klienten:
 
-    ```bash
-    npx prisma db push
-    npx prisma generate
-    ```
+   ```bash
+   npx prisma db push
+   npx prisma generate
+   ```
 
 5. Starta utvecklingsservern:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 ## Tillgängliga kommandon
 
@@ -150,15 +152,19 @@ src/
 ## Databasschema (viktiga modeller)
 
 ### Product
+
 `id` · `title` · `slug` · `articleNumber` · `summary` · `information` · `aboutProduct` · `prices` (JSON) · `images` (String[]) · `variantLabel` · `variants` (String[]) · `variantOptions` (JSON) · `allowCustomerUpload` · `categoryId`
 
 ### Category
+
 `id` · `name` · `slug` · `showInNavbar`
 
 ### Order
+
 `id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `status` · flaggor: `handled` · `shipped` · `invoiceSent`
 
 ### User
+
 `id` · `name` · `email` · `password` · `role` (`user` / `admin`)
 
 ## Licens
@@ -167,4 +173,4 @@ Detta projekt är privat och avsett för SweetTime UF, men får användas i utbi
 
 ---
 
-*Kod och design av [Josefine Eriksson](https://kodochdesign.se)*
+_Kod och design av [Josefine Eriksson](https://kodochdesign.se)_

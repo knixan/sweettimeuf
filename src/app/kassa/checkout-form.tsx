@@ -72,7 +72,10 @@ export function CheckoutForm() {
         router.push(`/orderbekraftelse?orderNumber=${result.orderNumber}`);
       } catch (error) {
         console.error("Order error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Ett fel uppstod vid beställning";
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Ett fel uppstod vid beställning";
         toast.error(errorMessage);
       }
     });
@@ -82,7 +85,9 @@ export function CheckoutForm() {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground mb-4">Din kassa är tom</p>
-        <Button onClick={() => router.push("/produkter")}>Fortsätt handla</Button>
+        <Button onClick={() => router.push("/produkter")}>
+          Fortsätt handla
+        </Button>
       </div>
     );
   }
@@ -97,18 +102,15 @@ export function CheckoutForm() {
             <div key={item.productId} className="flex gap-4 border-b pb-4">
               {item.image && (
                 <div className="relative w-20 h-20 shrink-0 bg-muted rounded">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="80px"
-                  />
+                  <Image src={item.image} alt={item.title} fill sizes="80px" />
                 </div>
               )}
               <div className="flex-1">
                 <p className="font-medium">{item.title}</p>
                 {item.selectedVariant && (
-                  <p className="text-sm text-muted-foreground">{item.selectedVariant}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {item.selectedVariant}
+                  </p>
                 )}
                 <p className="text-sm text-muted-foreground">
                   {item.quantity} st × {item.price.toFixed(2)} kr
@@ -132,8 +134,9 @@ export function CheckoutForm() {
               <span>Totalt:</span>
               <span>{totalPrice.toFixed(2)} kr</span>
             </div>
-             <p className="text-sm text-muted-foreground font-bold mt-2">
-              OBS! Har du laddat upp en egen design till någon av produkterna i din beställning så tillkommer en klichékostnad på fakturan.
+            <p className="text-sm text-muted-foreground font-bold mt-2">
+              OBS! Har du laddat upp en egen design till någon av produkterna i
+              din beställning så tillkommer en klichékostnad på fakturan.
             </p>
             <p className="text-sm text-muted-foreground mt-2">
               * Faktura skickas manuellt efter beställning
@@ -149,7 +152,9 @@ export function CheckoutForm() {
           {/* Namn */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Förnamn *</label>
+              <label className="block text-sm font-medium mb-1">
+                Förnamn *
+              </label>
               <input
                 {...register("firstName")}
                 type="text"
@@ -157,11 +162,15 @@ export function CheckoutForm() {
                 placeholder="Förnamn"
               />
               {errors.firstName && (
-                <p className="text-sm text-red-500 mt-1">{errors.firstName.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.firstName.message}
+                </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Efternamn *</label>
+              <label className="block text-sm font-medium mb-1">
+                Efternamn *
+              </label>
               <input
                 {...register("lastName")}
                 type="text"
@@ -169,7 +178,9 @@ export function CheckoutForm() {
                 placeholder="Efternamn"
               />
               {errors.lastName && (
-                <p className="text-sm text-red-500 mt-1">{errors.lastName.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.lastName.message}
+                </p>
               )}
             </div>
           </div>
@@ -183,12 +194,16 @@ export function CheckoutForm() {
               placeholder="din@email.se"
             />
             {errors.email && (
-              <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Telefonnummer *</label>
+            <label className="block text-sm font-medium mb-1">
+              Telefonnummer *
+            </label>
             <input
               {...register("phone")}
               type="tel"
@@ -196,7 +211,9 @@ export function CheckoutForm() {
               placeholder="070-123 45 67"
             />
             {errors.phone && (
-              <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.phone.message}
+              </p>
             )}
           </div>
 
@@ -211,7 +228,9 @@ export function CheckoutForm() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Organisationsnummer</label>
+              <label className="block text-sm font-medium mb-1">
+                Organisationsnummer
+              </label>
               <input
                 {...register("orgNumber")}
                 type="text"
@@ -226,7 +245,9 @@ export function CheckoutForm() {
             <h3 className="font-semibold mb-3">Leveransadress</h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium mb-1">Gatuadress *</label>
+                <label className="block text-sm font-medium mb-1">
+                  Gatuadress *
+                </label>
                 <input
                   {...register("address")}
                   type="text"
@@ -234,12 +255,16 @@ export function CheckoutForm() {
                   placeholder="Gatuadress 123"
                 />
                 {errors.address && (
-                  <p className="text-sm text-red-500 mt-1">{errors.address.message}</p>
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.address.message}
+                  </p>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Postnummer *</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Postnummer *
+                  </label>
                   <input
                     {...register("postalCode")}
                     type="text"
@@ -247,11 +272,15 @@ export function CheckoutForm() {
                     placeholder="123 45"
                   />
                   {errors.postalCode && (
-                    <p className="text-sm text-red-500 mt-1">{errors.postalCode.message}</p>
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.postalCode.message}
+                    </p>
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Ort *</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Ort *
+                  </label>
                   <input
                     {...register("city")}
                     type="text"
@@ -259,7 +288,9 @@ export function CheckoutForm() {
                     placeholder="Stockholm"
                   />
                   {errors.city && (
-                    <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.city.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -285,7 +316,9 @@ export function CheckoutForm() {
               <div className="space-y-3">
                 <h3 className="font-semibold">Fakturaadress</h3>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Gatuadress</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Gatuadress
+                  </label>
                   <input
                     {...register("invoiceAddress")}
                     type="text"
@@ -295,7 +328,9 @@ export function CheckoutForm() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Postnummer</label>
+                    <label className="block text-sm font-medium mb-1">
+                      Postnummer
+                    </label>
                     <input
                       {...register("invoicePostalCode")}
                       type="text"
@@ -304,7 +339,9 @@ export function CheckoutForm() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Ort</label>
+                    <label className="block text-sm font-medium mb-1">
+                      Ort
+                    </label>
                     <input
                       {...register("invoiceCity")}
                       type="text"

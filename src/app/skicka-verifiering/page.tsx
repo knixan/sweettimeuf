@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import authClient from "@/lib/auth-client";
@@ -42,7 +48,8 @@ export default function SkickaVerifieringPage() {
           {sent ? (
             <div className="space-y-4 text-center">
               <p className="text-sm text-muted-foreground">
-                Ett nytt verifieringsmail har skickats. Kolla din inkorg (och skräppost).
+                Ett nytt verifieringsmail har skickats. Kolla din inkorg (och
+                skräppost).
               </p>
               <Button variant="outline" asChild className="w-full">
                 <Link href="/logga-in">Tillbaka till inloggning</Link>

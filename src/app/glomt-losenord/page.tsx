@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import authClient from "@/lib/auth-client";
@@ -35,14 +41,16 @@ export default function GlomtLosenordPage() {
         <CardHeader>
           <CardTitle>Glömt lösenord?</CardTitle>
           <CardDescription>
-            Ange din e-postadress så skickar vi en länk för att återställa lösenordet.
+            Ange din e-postadress så skickar vi en länk för att återställa
+            lösenordet.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {sent ? (
             <div className="space-y-4 text-center">
               <p className="text-sm text-muted-foreground">
-                Om ett konto med den e-postadressen finns skickas ett återställningsmail inom kort.
+                Om ett konto med den e-postadressen finns skickas ett
+                återställningsmail inom kort.
               </p>
               <Button variant="outline" asChild className="w-full">
                 <Link href="/logga-in">Tillbaka till inloggning</Link>

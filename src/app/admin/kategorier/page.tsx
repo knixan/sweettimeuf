@@ -4,7 +4,12 @@ import { generateSlug, generateUniqueSlug } from "@/lib/slug";
 import CreateCategoryForm from "./form";
 import CategoryRow from "./category-row";
 
-type CategoryRowType = { id: string; name: string; slug: string | null; showInNavbar: boolean };
+type CategoryRowType = {
+  id: string;
+  name: string;
+  slug: string | null;
+  showInNavbar: boolean;
+};
 
 export default async function AdminKategorierPage() {
   await requireAdminOrEditor();
@@ -46,7 +51,7 @@ export default async function AdminKategorierPage() {
       <main className="flex grow pt-8 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl font-bold mb-6">Admin: Kategorier</h1>
-          
+
           <div className="mb-8 p-6 bg-card rounded-lg border">
             <h2 className="text-lg font-semibold mb-4">Skapa ny kategori</h2>
             <CreateCategoryForm />
@@ -54,7 +59,7 @@ export default async function AdminKategorierPage() {
 
           <div className="bg-card rounded-lg border p-6">
             <h2 className="text-lg font-semibold mb-4">Alla kategorier</h2>
-            
+
             {categories.length === 0 ? (
               <p className="text-muted-foreground">
                 Inga kategorier ännu. Skapa din första kategori ovan!
@@ -62,7 +67,15 @@ export default async function AdminKategorierPage() {
             ) : (
               <ul className="space-y-2">
                 {categories.map((c) => (
-                  <CategoryRow key={c.id} category={{ id: c.id, name: c.name, slug: c.slug, showInNavbar: c.showInNavbar }} />
+                  <CategoryRow
+                    key={c.id}
+                    category={{
+                      id: c.id,
+                      name: c.name,
+                      slug: c.slug,
+                      showInNavbar: c.showInNavbar,
+                    }}
+                  />
                 ))}
               </ul>
             )}

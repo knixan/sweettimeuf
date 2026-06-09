@@ -2,7 +2,10 @@ import Image from "next/image";
 
 export default function About() {
   return (
-    <section id="om-oss" className="py-20 bg-background relative overflow-hidden">
+    <section
+      id="om-oss"
+      className="py-20 bg-background relative overflow-hidden"
+    >
       {/* Decorative background elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>

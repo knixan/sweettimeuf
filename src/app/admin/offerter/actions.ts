@@ -23,7 +23,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
 export async function updateOrderFlags(
   orderId: string,
-  flags: { handled?: boolean; shipped?: boolean; invoiceSent?: boolean }
+  flags: { handled?: boolean; shipped?: boolean; invoiceSent?: boolean },
 ) {
   await requireAdminOrEditor();
 
@@ -33,7 +33,9 @@ export async function updateOrderFlags(
       data: {
         ...(flags.handled !== undefined && { handled: flags.handled }),
         ...(flags.shipped !== undefined && { shipped: flags.shipped }),
-        ...(flags.invoiceSent !== undefined && { invoiceSent: flags.invoiceSent }),
+        ...(flags.invoiceSent !== undefined && {
+          invoiceSent: flags.invoiceSent,
+        }),
       },
     });
 

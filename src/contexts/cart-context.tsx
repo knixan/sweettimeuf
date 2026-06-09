@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { toast } from "sonner";
 
 export type CartItem = {
@@ -48,7 +54,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (newItem: CartItem) => {
     setItems((prev) => {
-      const existingIndex = prev.findIndex((item) => item.productId === newItem.productId);
+      const existingIndex = prev.findIndex(
+        (item) => item.productId === newItem.productId,
+      );
       if (existingIndex >= 0) {
         // Update existing item
         const updated = [...prev];
@@ -76,8 +84,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
-      )
+        item.productId === productId ? { ...item, quantity } : item,
+      ),
     );
   };
 
@@ -86,7 +94,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   return (
     <CartContext.Provider

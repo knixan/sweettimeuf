@@ -70,8 +70,8 @@ const Navbar: React.FC<NavbarProps> = ({
                 alt="Sweettime"
                 width={120}
                 height={64}
-                 style={{ width: "auto" }}
-                 className="h-18 w-auto dark:hidden"
+                style={{ width: "auto" }}
+                className="h-18 w-auto dark:hidden"
               />
               <Image
                 src="/logga/sweettime-vit-loggo.png"
@@ -101,7 +101,13 @@ const Navbar: React.FC<NavbarProps> = ({
                       <DropdownMenuSeparator />
                       {categories.map((c) => (
                         <DropdownMenuItem key={c.id} asChild>
-                          <Link href={c.slug ? `/kategori/${c.slug}` : `/produkt?category=${c.id}`}>
+                          <Link
+                            href={
+                              c.slug
+                                ? `/kategori/${c.slug}`
+                                : `/produkt?category=${c.id}`
+                            }
+                          >
                             {c.name}
                           </Link>
                         </DropdownMenuItem>
@@ -120,7 +126,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   >
                     {link.label}
                   </Link>
-                )
+                ),
               )}
             </div>
 
@@ -220,7 +226,11 @@ const Navbar: React.FC<NavbarProps> = ({
                       {categories.map((c) => (
                         <Link
                           key={c.id}
-                          href={c.slug ? `/kategori/${c.slug}` : `/produkt?category=${c.id}`}
+                          href={
+                            c.slug
+                              ? `/kategori/${c.slug}`
+                              : `/produkt?category=${c.id}`
+                          }
                           className="px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
@@ -234,7 +244,6 @@ const Navbar: React.FC<NavbarProps> = ({
 
               {/* Mobile actions */}
               <div className="flex flex-col gap-2 pt-4 border-t">
-
                 {!isAuthenticated ? (
                   // Ej inloggad - mobil
                   <>
@@ -263,8 +272,12 @@ const Navbar: React.FC<NavbarProps> = ({
                   <>
                     {user && (
                       <div className="px-4 py-2 text-sm border-b mb-2">
-                        <p className="font-medium text-foreground">{user.name}</p>
-                        <p className="text-muted-foreground text-xs">{user.email}</p>
+                        <p className="font-medium text-foreground">
+                          {user.name}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {user.email}
+                        </p>
                       </div>
                     )}
 

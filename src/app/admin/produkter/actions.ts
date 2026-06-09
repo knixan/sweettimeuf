@@ -45,7 +45,9 @@ export async function createProduct(values: {
     const existingProducts = await prisma.product.findMany({
       select: { slug: true },
     });
-    const existingSlugs = existingProducts.map((p) => p.slug).filter((s): s is string => s !== null);
+    const existingSlugs = existingProducts
+      .map((p) => p.slug)
+      .filter((s): s is string => s !== null);
     const slug = generateUniqueSlug(baseSlug, existingSlugs);
 
     const variantOptions = values.variants || [];
@@ -94,7 +96,7 @@ export async function updateProduct(
     variantLabel?: string;
     variants?: VariantOption[];
     printTemplates?: PrintTemplate[];
-  }
+  },
 ) {
   await requireAdminOrEditor();
 
@@ -118,7 +120,9 @@ export async function updateProduct(
         where: { id: { not: id } },
         select: { slug: true },
       });
-      const existingSlugs = otherProducts.map((p) => p.slug).filter((s): s is string => s !== null);
+      const existingSlugs = otherProducts
+        .map((p) => p.slug)
+        .filter((s): s is string => s !== null);
       slug = generateUniqueSlug(baseSlug, existingSlugs);
     }
 

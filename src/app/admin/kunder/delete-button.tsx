@@ -6,7 +6,13 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { deleteUser } from "./actions";
 
-export default function DeleteUserButton({ id, name }: { id: string; name: string }) {
+export default function DeleteUserButton({
+  id,
+  name,
+}: {
+  id: string;
+  name: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -16,7 +22,12 @@ export default function DeleteUserButton({ id, name }: { id: string; name: strin
       size="sm"
       disabled={isPending}
       onClick={() => {
-        if (!confirm(`Är du säker på att du vill ta bort kunden "${name}"? All kunddata raderas.`)) return;
+        if (
+          !confirm(
+            `Är du säker på att du vill ta bort kunden "${name}"? All kunddata raderas.`,
+          )
+        )
+          return;
         startTransition(async () => {
           const result = await deleteUser(id);
           if (result?.ok) {

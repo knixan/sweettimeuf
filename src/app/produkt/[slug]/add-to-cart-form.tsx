@@ -6,7 +6,11 @@ import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-const imageUrlSchema = z.string().url("Ange en giltig URL (börja med https://)").optional().or(z.literal(""));
+const imageUrlSchema = z
+  .string()
+  .url("Ange en giltig URL (börja med https://)")
+  .optional()
+  .or(z.literal(""));
 
 type PriceTier = {
   quantity: number;
@@ -39,15 +43,17 @@ export function AddToCartForm({ product }: { product: Product }) {
   const { addItem } = useCart();
   const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<PriceTier | null>(
-    product.prices[0] || null
+    product.prices[0] || null,
   );
   const [customImageUrl, setCustomImageUrl] = useState("");
   const [imageUrlError, setImageUrlError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string>(
-    product.variantOptions?.[0]?.name ?? product.variants?.[0] ?? ""
+    product.variantOptions?.[0]?.name ?? product.variants?.[0] ?? "",
   );
 
-  const surcharge = product.variantOptions?.find((v) => v.name === selectedVariant)?.surcharge ?? 0;
+  const surcharge =
+    product.variantOptions?.find((v) => v.name === selectedVariant)
+      ?.surcharge ?? 0;
   const effectivePrice = selectedTier ? selectedTier.price + surcharge : 0;
 
   const handleAddToCart = (): boolean => {
@@ -80,7 +86,8 @@ export function AddToCartForm({ product }: { product: Product }) {
     }
   };
 
-  const hasVariants = (product.variantOptions && product.variantOptions.length > 0) ||
+  const hasVariants =
+    (product.variantOptions && product.variantOptions.length > 0) ||
     (product.variants && product.variants.length > 0);
 
   return (
@@ -99,13 +106,15 @@ export function AddToCartForm({ product }: { product: Product }) {
             {product.variantOptions
               ? product.variantOptions.map((v) => (
                   <option key={v.name} value={v.name}>
-                    {v.name}{v.surcharge > 0 ? ` (+${v.surcharge.toFixed(2)} kr)` : ""}
+                    {v.name}
+                    {v.surcharge > 0 ? ` (+${v.surcharge.toFixed(2)} kr)` : ""}
                   </option>
                 ))
               : product.variants?.map((v) => (
-                  <option key={v} value={v}>{v}</option>
-                ))
-            }
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
           </select>
         </div>
       )}
@@ -114,7 +123,9 @@ export function AddToCartForm({ product }: { product: Product }) {
           <label className="block text-sm font-medium mb-2">Välj antal</label>
           <select
             value={selectedTier ? product.prices.indexOf(selectedTier) : 0}
-            onChange={(e) => setSelectedTier(product.prices[parseInt(e.target.value)])}
+            onChange={(e) =>
+              setSelectedTier(product.prices[parseInt(e.target.value)])
+            }
             className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
           >
             {product.prices.map((tier, index) => (
@@ -149,12 +160,13 @@ export function AddToCartForm({ product }: { product: Product }) {
             Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
           </p>
           <p className="text-sm text-muted-foreground mt-1 font-bold">
-            OBS! Klichékostnad: 1000 kr/design (CMYK) &bull; Repetitionsorder: 500 kr/design
+            OBS! Klichékostnad: 1000 kr/design (CMYK) &bull; Repetitionsorder:
+            500 kr/design
           </p>
           <p className="text-sm text-muted-foreground mt-1 font-bold">
-            Tillkommer på fakturan för varje unik design som laddas upp, oavsett antal produkter i ordern.
+            Tillkommer på fakturan för varje unik design som laddas upp, oavsett
+            antal produkter i ordern.
           </p>
-        
         </div>
       )}
 

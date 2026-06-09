@@ -49,7 +49,9 @@ export default function SignUpForm() {
     if (error) {
       toast.error(error.message || "Kunde inte skapa konto");
     } else {
-      toast.success("Konto skapat! Kolla din e-post för att verifiera ditt konto.");
+      toast.success(
+        "Konto skapat! Kolla din e-post för att verifiera ditt konto.",
+      );
       router.push("/logga-in");
     }
   }
@@ -58,7 +60,9 @@ export default function SignUpForm() {
     <Card className="max-w-sm mx-auto">
       <CardHeader>
         <CardTitle>Skapa konto</CardTitle>
-        <CardDescription>Ange dina uppgifter för att skapa ett konto</CardDescription>
+        <CardDescription>
+          Ange dina uppgifter för att skapa ett konto
+        </CardDescription>
         <CardAction>
           <Button variant="link" asChild>
             <Link href="/logga-in">Logga in</Link>

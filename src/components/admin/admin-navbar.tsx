@@ -19,10 +19,14 @@ export function AdminNavbar() {
     <nav className="border-b bg-card">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center gap-1 h-14">
-          <span className="font-semibold text-sm mr-4 text-muted-foreground">Admin</span>
+          <span className="font-semibold text-sm mr-4 text-muted-foreground">
+            Admin
+          </span>
           {links.map(({ href, label }) => {
             const isActive =
-              href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+              href === "/admin"
+                ? pathname === "/admin"
+                : pathname.startsWith(href);
             return (
               <Link
                 key={href}

@@ -6,10 +6,7 @@ import { z } from "zod";
 // SignUp Schema
 export const SignUpSchema = z
   .object({
-    name: z
-      .string()
-      .min(2, "Namn måste vara minst 2 tecken")
-      .max(50),
+    name: z.string().min(2, "Namn måste vara minst 2 tecken").max(50),
     email: z.string().email("Ogiltig e-postadress").max(100),
     password: z
       .string()
@@ -27,10 +24,7 @@ export type SignUpInput = z.infer<typeof SignUpSchema>;
 // SignIn Schema
 export const SignInSchema = z.object({
   email: z.string().email("Ogiltig e-postadress").max(100),
-  password: z
-    .string()
-    .min(8, "Lösenordet måste vara minst 8 tecken")
-    .max(100),
+  password: z.string().min(8, "Lösenordet måste vara minst 8 tecken").max(100),
 });
 // Typ för SignIn input
 export type SignInInput = z.infer<typeof SignInSchema>;

@@ -3,7 +3,11 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminNavbar } from "@/components/admin/admin-navbar";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user) redirect("/logga-in");

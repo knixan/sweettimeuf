@@ -14,7 +14,11 @@ import { useSyncExternalStore } from "react";
 
 export function CartDropdown() {
   const { items, totalItems, totalPrice, removeItem } = useCart();
-  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   return (
     <DropdownMenu>
@@ -30,8 +34,10 @@ export function CartDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-4">
-          <h3 className="font-semibold mb-4">Kassa ({mounted ? totalItems : 0} produkter)</h3>
-          
+          <h3 className="font-semibold mb-4">
+            Kassa ({mounted ? totalItems : 0} produkter)
+          </h3>
+
           {!mounted || items.length === 0 ? (
             <p className="text-muted-foreground text-sm text-center py-4">
               Kassan är tom
@@ -40,7 +46,10 @@ export function CartDropdown() {
             <>
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {items.map((item) => (
-                  <div key={item.productId} className="flex gap-3 border-b pb-3">
+                  <div
+                    key={item.productId}
+                    className="flex gap-3 border-b pb-3"
+                  >
                     {item.image && (
                       <div className="relative w-16 h-16 shrink-0 bg-muted rounded">
                         <Image
@@ -53,9 +62,13 @@ export function CartDropdown() {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">{item.title}</p>
+                      <p className="font-medium text-sm truncate">
+                        {item.title}
+                      </p>
                       {item.selectedVariant && (
-                        <p className="text-xs text-muted-foreground">{item.selectedVariant}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.selectedVariant}
+                        </p>
                       )}
                       <p className="text-sm text-muted-foreground">
                         {item.quantity} st × {item.price.toFixed(2)} kr

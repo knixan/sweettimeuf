@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/layout/Footer";
 import type { Metadata } from "next";
 
-
 const fredoka = Fredoka({
   subsets: ["latin"],
   variable: "--font-fredoka",
@@ -22,7 +21,8 @@ export const metadata: Metadata = {
     default: "SweetTime UF – Profilprodukter & Trycksaker",
     template: "%s | SweetTime UF",
   },
-  description: "Beställ profilprodukter, godis och trycksaker från SweetTime UF.",
+  description:
+    "Beställ profilprodukter, godis och trycksaker från SweetTime UF.",
   openGraph: {
     siteName: "SweetTime UF",
     locale: "sv_SE",
@@ -54,11 +54,6 @@ export default async function RootLayout({
     // Non-critical – continue without fixing
   }
 
-
-
-
-
-
   // Fetch categories shown in navbar
   type CategoryRow = { id: string; name: string; slug: string | null };
   let categories: CategoryRow[] = [];
@@ -73,7 +68,6 @@ export default async function RootLayout({
     console.error("Could not load categories for Navbar:", err);
     categories = [];
   }
-
 
   return (
     <html lang="sv" className={fredoka.variable} suppressHydrationWarning>

@@ -14,7 +14,7 @@ export default function Footer() {
               alt="Sweet Time UF"
               width={120}
               height={64}
-             style={{ width: "auto" }}
+              style={{ width: "auto" }}
               className="h-18 w-auto dark:hidden"
             />
             <Image
@@ -22,7 +22,7 @@ export default function Footer() {
               alt="Sweet Time UF"
               width={120}
               height={64}
-             style={{ width: "auto" }}
+              style={{ width: "auto" }}
               className="hidden h-18 w-auto dark:block"
             />
             <h3 className="text-2xl mb-3 font-semibold">Sweet Time UF</h3>
@@ -48,7 +48,9 @@ export default function Footer() {
                 </p>
               </div>
               <div>
-                <p className="font-medium text-foreground">Gabriel Kass Alias</p>
+                <p className="font-medium text-foreground">
+                  Gabriel Kass Alias
+                </p>
                 <p>Vice VD - Ekonomiansvarig</p>
                 <p className="flex items-center gap-2">
                   <FiPhone /> 070 459 93 67
@@ -56,7 +58,10 @@ export default function Footer() {
               </div>
               <div className="pt-2 flex items-center gap-2">
                 <FiMail />
-                <a className="hover:text-foreground transition-colors" href="mailto:lg.sweets10@gmail.com">
+                <a
+                  className="hover:text-foreground transition-colors"
+                  href="mailto:lg.sweets10@gmail.com"
+                >
                   lg.sweets10@gmail.com
                 </a>
               </div>
@@ -67,16 +72,36 @@ export default function Footer() {
             <h4 className="text-xl mb-4 font-semibold">Länkar</h4>
             <ul className="space-y-2 text-muted-foreground">
               <li>
-                <Link className="hover:text-foreground transition-colors" href="/">Hem</Link>
+                <Link
+                  className="hover:text-foreground transition-colors"
+                  href="/"
+                >
+                  Hem
+                </Link>
               </li>
               <li>
-                <Link className="hover:text-foreground transition-colors" href="/produkt">Produkter</Link>
+                <Link
+                  className="hover:text-foreground transition-colors"
+                  href="/produkt"
+                >
+                  Produkter
+                </Link>
               </li>
               <li>
-                <Link className="hover:text-foreground transition-colors" href="/om-oss">Om oss</Link>
+                <Link
+                  className="hover:text-foreground transition-colors"
+                  href="/om-oss"
+                >
+                  Om oss
+                </Link>
               </li>
               <li>
-                <Link className="hover:text-foreground transition-colors" href="/om-oss#kontakt">Kontakt</Link>
+                <Link
+                  className="hover:text-foreground transition-colors"
+                  href="/om-oss#kontakt"
+                >
+                  Kontakt
+                </Link>
               </li>
               <li>
                 <a
@@ -119,7 +144,10 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between border-t pt-6 text-sm text-muted-foreground">
-          <div>© {new Date().getFullYear()} Sweet Time UF. Alla rättigheter förbehållna.</div>
+          <div>
+            © {new Date().getFullYear()} Sweet Time UF. Alla rättigheter
+            förbehållna.
+          </div>
           <div className="mt-2 md:mt-0">
             Kod och Design:{" "}
             <a

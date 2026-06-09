@@ -51,7 +51,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         setProduct(data.product);
         setCategories(data.categories);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Kunde inte ladda produkt");
+        toast.error(
+          error instanceof Error ? error.message : "Kunde inte ladda produkt",
+        );
       } finally {
         setLoading(false);
       }
@@ -78,34 +80,54 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         information: product.information || "",
         prices: (product.prices as { quantity: number; price: number }[]) || [],
         aboutProduct: (product.aboutProduct as string) || "",
-        images: product.images.length > 0 ? product.images.map((url) => ({ url })) : [{ url: "" }],
+        images:
+          product.images.length > 0
+            ? product.images.map((url) => ({ url }))
+            : [{ url: "" }],
         allowCustomerUpload: product.allowCustomerUpload,
         categoryId: product.categoryId || "",
         variantLabel: product.variantLabel || "",
         variants: product.variantOptions
           ? (product.variantOptions as { name: string; surcharge: number }[])
           : product.variants.map((v) => ({ name: v, surcharge: 0 })),
-        printTemplates: (product.printTemplates as { label: string; url: string }[]) || [],
+        printTemplates:
+          (product.printTemplates as { label: string; url: string }[]) || [],
       });
     }
   }, [product, reset]);
 
-  const { fields: priceFields, append: appendPrice, remove: removePrice } = useFieldArray({
+  const {
+    fields: priceFields,
+    append: appendPrice,
+    remove: removePrice,
+  } = useFieldArray({
     control,
     name: "prices",
   });
 
-  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+  const {
+    fields: imageFields,
+    append: appendImage,
+    remove: removeImage,
+  } = useFieldArray({
     control,
     name: "images",
   });
 
-  const { fields: variantFields, append: appendVariant, remove: removeVariant } = useFieldArray({
+  const {
+    fields: variantFields,
+    append: appendVariant,
+    remove: removeVariant,
+  } = useFieldArray({
     control,
     name: "variants",
   });
 
-  const { fields: templateFields, append: appendTemplate, remove: removeTemplate } = useFieldArray({
+  const {
+    fields: templateFields,
+    append: appendTemplate,
+    remove: removeTemplate,
+  } = useFieldArray({
     control,
     name: "printTemplates",
   });
@@ -115,9 +137,14 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
       try {
         const filteredData = {
           ...data,
-          images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
-          variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
-          printTemplates: data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") || [],
+          images: data.images
+            ?.map((i) => i.url)
+            .filter((url) => url && url.trim() !== ""),
+          variants:
+            data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
+          printTemplates:
+            data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") ||
+            [],
         };
 
         await updateProduct(productId, filteredData);
@@ -125,7 +152,11 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         router.refresh();
         onClose();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Kunde inte uppdatera produkt");
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Kunde inte uppdatera produkt",
+        );
       }
     });
   };
@@ -149,7 +180,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
             type="text"
             className="w-full rounded-md bg-background border border-input px-3 py-2"
           />
-          {errors.title && <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>}
+          {errors.title && (
+            <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>
+          )}
         </div>
 
         <div>
@@ -177,7 +210,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Sammanfattning</label>
+          <label className="block text-sm font-medium mb-1">
+            Sammanfattning
+          </label>
           <textarea
             {...register("summary")}
             rows={3}
@@ -195,18 +230,24 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Pris och antal</label>
+          <label className="block text-sm font-medium mb-1">
+            Pris och antal
+          </label>
           <div className="space-y-2">
             {priceFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
                 <input
-                  {...register(`prices.${index}.quantity`, { valueAsNumber: true })}
+                  {...register(`prices.${index}.quantity`, {
+                    valueAsNumber: true,
+                  })}
                   type="number"
                   placeholder="Antal"
                   className="w-1/2 rounded-md bg-background border border-input px-2 py-1 text-sm"
                 />
                 <input
-                  {...register(`prices.${index}.price`, { valueAsNumber: true })}
+                  {...register(`prices.${index}.price`, {
+                    valueAsNumber: true,
+                  })}
                   type="number"
                   step="0.01"
                   placeholder="Pris"
@@ -244,7 +285,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Val av smak / färg (valfritt)</label>
+          <label className="block text-sm font-medium mb-1">
+            Val av smak / färg (valfritt)
+          </label>
           <input
             {...register("variantLabel")}
             type="text"
@@ -258,7 +301,10 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
               <span />
             </div>
             {variantFields.map((field, index) => (
-              <div key={field.id} className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
+              <div
+                key={field.id}
+                className="grid grid-cols-[1fr_auto_auto] gap-2 items-center"
+              >
                 <input
                   {...register(`variants.${index}.name`)}
                   type="text"
@@ -268,7 +314,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
                 <div className="flex items-center gap-1">
                   <span className="text-muted-foreground text-sm">+</span>
                   <input
-                    {...register(`variants.${index}.surcharge`, { valueAsNumber: true })}
+                    {...register(`variants.${index}.surcharge`, {
+                      valueAsNumber: true,
+                    })}
                     type="number"
                     step="0.01"
                     min="0"
@@ -344,7 +392,9 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Tryckfiler / mallar (PDF-länkar)</label>
+          <label className="block text-sm font-medium mb-1">
+            Tryckfiler / mallar (PDF-länkar)
+          </label>
           <div className="space-y-1">
             {templateFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
@@ -393,4 +443,3 @@ export function EditProductForm({ productId, onClose }: EditProductFormProps) {
     </div>
   );
 }
-

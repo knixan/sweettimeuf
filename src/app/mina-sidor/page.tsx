@@ -13,16 +13,38 @@ type CartItem = {
   selectedVariant?: string;
 };
 
-function getStatusLabel(order: { handled: boolean; shipped: boolean; status: string }) {
+function getStatusLabel(order: {
+  handled: boolean;
+  shipped: boolean;
+  status: string;
+}) {
   if (order.shipped)
-    return { text: "Skickad", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" };
+    return {
+      text: "Skickad",
+      color:
+        "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    };
   if (order.status === "completed")
-    return { text: "Klar", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" };
+    return {
+      text: "Klar",
+      color:
+        "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    };
   if (order.status === "processing" || order.handled)
-    return { text: "Behandlas", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" };
+    return {
+      text: "Behandlas",
+      color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    };
   if (order.status === "cancelled")
-    return { text: "Avbruten", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" };
-  return { text: "Ohanterad", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" };
+    return {
+      text: "Avbruten",
+      color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    };
+  return {
+    text: "Ohanterad",
+    color:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  };
 }
 
 export default async function MinaSidorPage() {
@@ -53,7 +75,9 @@ export default async function MinaSidorPage() {
               <p className="text-lg">{user.name || "Ej angivet"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">E-post</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                E-post
+              </p>
               <p className="text-lg">{user.email}</p>
             </div>
           </div>
@@ -68,7 +92,9 @@ export default async function MinaSidorPage() {
 
           {orders.length === 0 ? (
             <div className="bg-card rounded-lg border p-8 text-center">
-              <p className="text-muted-foreground mb-4">Du har inga beställningar ännu.</p>
+              <p className="text-muted-foreground mb-4">
+                Du har inga beställningar ännu.
+              </p>
               <Link
                 href="/produkter"
                 className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
@@ -86,20 +112,29 @@ export default async function MinaSidorPage() {
                   <div key={order.id} className="bg-card rounded-lg border p-6">
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <div>
-                        <p className="font-semibold text-lg">{order.orderNumber}</p>
+                        <p className="font-semibold text-lg">
+                          {order.orderNumber}
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(order.createdAt).toLocaleDateString("sv-SE", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
+                          {new Date(order.createdAt).toLocaleDateString(
+                            "sv-SE",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 flex-wrap justify-end">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}
+                        >
                           {statusInfo.text}
                         </span>
-                        <p className="font-bold text-lg">{order.totalPrice.toFixed(2)} kr</p>
+                        <p className="font-bold text-lg">
+                          {order.totalPrice.toFixed(2)} kr
+                        </p>
                       </div>
                     </div>
 
@@ -107,15 +142,23 @@ export default async function MinaSidorPage() {
                       {items.map((item, i) => (
                         <div key={i} className="flex justify-between text-sm">
                           <span className="text-muted-foreground">
-                            {item.title}{item.selectedVariant ? ` – ${item.selectedVariant}` : ""} × {item.quantity}
+                            {item.title}
+                            {item.selectedVariant
+                              ? ` – ${item.selectedVariant}`
+                              : ""}{" "}
+                            × {item.quantity}
                           </span>
-                          <span>{(item.price * item.quantity).toFixed(2)} kr</span>
+                          <span>
+                            {(item.price * item.quantity).toFixed(2)} kr
+                          </span>
                         </div>
                       ))}
                     </div>
 
                     {order.invoiceSent && (
-                      <p className="mt-3 text-sm text-green-600 font-medium">✓ Faktura skickad</p>
+                      <p className="mt-3 text-sm text-green-600 font-medium">
+                        ✓ Faktura skickad
+                      </p>
                     )}
                   </div>
                 );

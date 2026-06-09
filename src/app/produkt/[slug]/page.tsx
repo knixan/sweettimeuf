@@ -14,7 +14,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const product = await prisma.product.findUnique({
     where: { slug },
-    select: { title: true, summary: true, images: true, category: { select: { name: true } } },
+    select: {
+      title: true,
+      summary: true,
+      images: true,
+      category: { select: { name: true } },
+    },
   });
 
   if (!product) return {};
@@ -53,7 +58,9 @@ export default async function ProductPage({ params }: Props) {
     : undefined;
 
   type PrintTemplate = { label: string; url: string };
-  const printTemplates = Array.isArray((product as Record<string, unknown>).printTemplates)
+  const printTemplates = Array.isArray(
+    (product as Record<string, unknown>).printTemplates,
+  )
     ? ((product as Record<string, unknown>).printTemplates as PrintTemplate[])
     : [];
 
@@ -62,12 +69,18 @@ export default async function ProductPage({ params }: Props) {
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <p className="text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:underline">Hem</Link>
+          <Link href="/" className="hover:underline">
+            Hem
+          </Link>
           {" / "}
           {product.category ? (
             <>
               <Link
-                href={product.category.slug ? `/kategori/${product.category.slug}` : "/produkter"}
+                href={
+                  product.category.slug
+                    ? `/kategori/${product.category.slug}`
+                    : "/produkter"
+                }
                 className="hover:underline"
               >
                 {product.category.name}
@@ -76,7 +89,9 @@ export default async function ProductPage({ params }: Props) {
             </>
           ) : (
             <>
-              <Link href="/produkter" className="hover:underline">Produkter</Link>
+              <Link href="/produkter" className="hover:underline">
+                Produkter
+              </Link>
               {" / "}
             </>
           )}
@@ -101,7 +116,9 @@ export default async function ProductPage({ params }: Props) {
             {product.information && (
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Om produkten</h2>
-                <p className="text-muted-foreground whitespace-pre-wrap">{product.information}</p>
+                <p className="text-muted-foreground whitespace-pre-wrap">
+                  {product.information}
+                </p>
               </div>
             )}
 
@@ -113,7 +130,9 @@ export default async function ProductPage({ params }: Props) {
                   {prices.map((tier, index) => (
                     <div key={index} className="flex justify-between">
                       <span>{tier.quantity} st:</span>
-                      <span className="font-semibold">{tier.price.toFixed(2)} kr</span>
+                      <span className="font-semibold">
+                        {tier.price.toFixed(2)} kr
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -141,7 +160,9 @@ export default async function ProductPage({ params }: Props) {
         {product.aboutProduct && (
           <div className="bg-card border rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4">Information</h2>
-            <p className="whitespace-pre-wrap text-muted-foreground">{product.aboutProduct}</p>
+            <p className="whitespace-pre-wrap text-muted-foreground">
+              {product.aboutProduct}
+            </p>
           </div>
         )}
       </div>

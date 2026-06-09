@@ -21,7 +21,9 @@ export default function DeleteButton({ id }: { id: string }) {
           try {
             const result = await deleteCategory(id);
             toast[result?.ok ? "success" : "error"](
-              result?.ok ? "Kategorin togs bort" : "Kunde inte ta bort kategorin"
+              result?.ok
+                ? "Kategorin togs bort"
+                : "Kunde inte ta bort kategorin",
             );
             if (result?.ok) router.refresh();
           } catch (err) {

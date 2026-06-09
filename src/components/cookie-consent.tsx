@@ -27,7 +27,9 @@ export default function CookieConsent({
       <div className="flex items-center justify-between gap-4">
         <div>
           <h4 className="font-medium">Cookies</h4>
-          <p className="text-muted-foreground">Vi använder kakor för att förbättra upplevelsen.</p>
+          <p className="text-muted-foreground">
+            Vi använder kakor för att förbättra upplevelsen.
+          </p>
         </div>
 
         <div className="flex items-center gap-2">

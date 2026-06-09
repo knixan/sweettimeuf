@@ -47,7 +47,15 @@ export async function createOrder(values: {
     totalPrice,
   } = values;
 
-  if (!firstName || !lastName || !email || !address || !postalCode || !city || !items) {
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !address ||
+    !postalCode ||
+    !city ||
+    !items
+  ) {
     throw new Error("Alla obligatoriska fält måste fyllas i");
   }
 
@@ -95,7 +103,12 @@ export async function createOrder(values: {
     revalidatePath("/admin/offerter");
 
     // Skicka orderbekräftelse
-    const itemsArray = items as Array<{ title: string; quantity: number; price: number; selectedVariant?: string }>;
+    const itemsArray = items as Array<{
+      title: string;
+      quantity: number;
+      price: number;
+      selectedVariant?: string;
+    }>;
     const itemRows = itemsArray
       .map(
         (item) =>
@@ -103,7 +116,7 @@ export async function createOrder(values: {
             <td style="padding:6px 12px;border-bottom:1px solid #eee">${item.title}${item.selectedVariant ? ` – ${item.selectedVariant}` : ""}</td>
             <td style="padding:6px 12px;border-bottom:1px solid #eee;text-align:center">${item.quantity}</td>
             <td style="padding:6px 12px;border-bottom:1px solid #eee;text-align:right">${(item.price * item.quantity).toFixed(2)} kr</td>
-          </tr>`
+          </tr>`,
       )
       .join("");
 
@@ -145,6 +158,8 @@ export async function createOrder(values: {
     };
   } catch (error) {
     console.error("Error creating order:", error);
-    throw error instanceof Error ? error : new Error("Kunde inte skapa beställning");
+    throw error instanceof Error
+      ? error
+      : new Error("Kunde inte skapa beställning");
   }
 }

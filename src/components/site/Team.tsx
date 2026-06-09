@@ -23,8 +23,12 @@ export default function Team() {
                 priority
               />
             </div>
-            <h3 className="font-display text-2xl mb-2 text-foreground">Ludvig Hedlund</h3>
-            <p className="text-xl mb-4 opacity-90 text-muted-foreground">Verkställande Direktör</p>
+            <h3 className="font-display text-2xl mb-2 text-foreground">
+              Ludvig Hedlund
+            </h3>
+            <p className="text-xl mb-4 opacity-90 text-muted-foreground">
+              Verkställande Direktör
+            </p>
             <p className="mb-6 opacity-80 leading-relaxed">
               Ludvig är företagets VD och har det övergripande ansvaret för
               Sweet Time. Han leder verksamheten, ser till att företaget följer
@@ -72,8 +76,12 @@ export default function Team() {
                 priority
               />
             </div>
-            <h3 className="font-display text-2xl mb-2 text-foreground">Gabriel Kass Alias</h3>
-            <p className="text-xl mb-4 opacity-90 text-muted-foreground">Vice VD - Ekonomiansvarig</p>
+            <h3 className="font-display text-2xl mb-2 text-foreground">
+              Gabriel Kass Alias
+            </h3>
+            <p className="text-xl mb-4 opacity-90 text-muted-foreground">
+              Vice VD - Ekonomiansvarig
+            </p>
             <p className="mb-6 opacity-80 leading-relaxed">
               Gabriel är ekonomiansvarig och ansvarar för företagets ekonomi.
               Han sköter bokföring, budgetering, fakturering och kontrollerar

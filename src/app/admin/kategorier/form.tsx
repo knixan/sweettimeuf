@@ -17,7 +17,10 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createCategory } from "./actions";
 
-const CategorySchema = z.object({ name: z.string().min(1).max(50), showInNavbar: z.boolean() });
+const CategorySchema = z.object({
+  name: z.string().min(1).max(50),
+  showInNavbar: z.boolean(),
+});
 type CategoryValues = z.infer<typeof CategorySchema>;
 
 export default function CreateCategoryForm() {
@@ -61,12 +64,18 @@ export default function CreateCategoryForm() {
 
         <div>
           <label className="flex items-center gap-2">
-            <input type="checkbox" {...form.register("showInNavbar")} className="h-4 w-4" />
+            <input
+              type="checkbox"
+              {...form.register("showInNavbar")}
+              className="h-4 w-4"
+            />
             <span>Visa i navigering</span>
           </label>
         </div>
 
-        <Button disabled={form.formState.isSubmitting || !form.formState.isValid}>
+        <Button
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
+        >
           {form.formState.isSubmitting ? "Läser..." : "Skapa kategori"}
         </Button>
       </form>

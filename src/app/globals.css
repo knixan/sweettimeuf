@@ -51,48 +51,48 @@
      Svart: blågrå-svart — som bläck eller djupt hav.
   ──────────────────────────────────────────────────────────── */
 
-  --background:        #F4F6F9;   /* kyligt blåtonat vitt       */
-  --foreground:        #141820;   /* djup blåsvart              */
+  --background: #f4f6f9; /* kyligt blåtonat vitt       */
+  --foreground: #141820; /* djup blåsvart              */
 
-  --card:              #FAFBFD;   /* nästan rent vitt, lite isigt */
-  --card-foreground:   #141820;
+  --card: #fafbfd; /* nästan rent vitt, lite isigt */
+  --card-foreground: #141820;
 
-  --popover:           #FAFBFD;
-  --popover-foreground:#141820;
+  --popover: #fafbfd;
+  --popover-foreground: #141820;
 
-  --primary:           #141820;   /* blåsvart                   */
-  --primary-foreground:#F4F6F9;   /* kyligt vitt                */
+  --primary: #141820; /* blåsvart                   */
+  --primary-foreground: #f4f6f9; /* kyligt vitt                */
 
-  --secondary:         #E8ECF2;   /* ljusblå-grå                */
-  --secondary-foreground:#242B38;
+  --secondary: #e8ecf2; /* ljusblå-grå                */
+  --secondary-foreground: #242b38;
 
-  --muted:             #E5E9F0;
-  --muted-foreground:  #6B7385;   /* mellankall blågrå          */
+  --muted: #e5e9f0;
+  --muted-foreground: #6b7385; /* mellankall blågrå          */
 
-  --accent:            #DDE2EC;
-  --accent-foreground: #242B38;
+  --accent: #dde2ec;
+  --accent-foreground: #242b38;
 
-  --destructive:       #B03A3A;   /* mörk röd                   */
+  --destructive: #b03a3a; /* mörk röd                   */
 
-  --border:            #CDD3DE;   /* kylig blågrå kant          */
-  --input:             #D2D8E4;
-  --ring:              #4E5A72;   /* mellanblå-grå              */
+  --border: #cdd3de; /* kylig blågrå kant          */
+  --input: #d2d8e4;
+  --ring: #4e5a72; /* mellanblå-grå              */
 
   /* Gråskale-diagram, kall ton */
-  --chart-1:           #141820;
-  --chart-2:           #2E3848;
-  --chart-3:           #566070;
-  --chart-4:           #8E98A8;
-  --chart-5:           #BEC5D0;
+  --chart-1: #141820;
+  --chart-2: #2e3848;
+  --chart-3: #566070;
+  --chart-4: #8e98a8;
+  --chart-5: #bec5d0;
 
-  --sidebar:           #ECF0F6;
-  --sidebar-foreground:#141820;
-  --sidebar-primary:   #141820;
-  --sidebar-primary-foreground: #F4F6F9;
-  --sidebar-accent:    #DDE2EC;
-  --sidebar-accent-foreground:  #242B38;
-  --sidebar-border:    #CDD3DE;
-  --sidebar-ring:      #4E5A72;
+  --sidebar: #ecf0f6;
+  --sidebar-foreground: #141820;
+  --sidebar-primary: #141820;
+  --sidebar-primary-foreground: #f4f6f9;
+  --sidebar-accent: #dde2ec;
+  --sidebar-accent-foreground: #242b38;
+  --sidebar-border: #cdd3de;
+  --sidebar-ring: #4e5a72;
 }
 
 .dark {
@@ -101,48 +101,48 @@
      Vitt: kallt isblått vitt — som månsken.
   ──────────────────────────────────────────────────────────── */
 
-  --background:        #0E1118;   /* midnatt blåsvart           */
-  --foreground:        #E8ECF4;   /* kallt månvitt              */
+  --background: #0e1118; /* midnatt blåsvart           */
+  --foreground: #e8ecf4; /* kallt månvitt              */
 
-  --card:              #151B26;   /* ett steg ljusare, blågrå   */
-  --card-foreground:   #E8ECF4;
+  --card: #151b26; /* ett steg ljusare, blågrå   */
+  --card-foreground: #e8ecf4;
 
-  --popover:           #151B26;
-  --popover-foreground:#E8ECF4;
+  --popover: #151b26;
+  --popover-foreground: #e8ecf4;
 
-  --primary:           #E8ECF4;   /* kallt månvitt              */
-  --primary-foreground:#0E1118;   /* midnatt                    */
+  --primary: #e8ecf4; /* kallt månvitt              */
+  --primary-foreground: #0e1118; /* midnatt                    */
 
-  --secondary:         #1E2635;   /* djup blågrå                */
-  --secondary-foreground:#E8ECF4;
+  --secondary: #1e2635; /* djup blågrå                */
+  --secondary-foreground: #e8ecf4;
 
-  --muted:             #1A2030;
-  --muted-foreground:  #8A94A8;   /* kall mellanblugrå          */
+  --muted: #1a2030;
+  --muted-foreground: #8a94a8; /* kall mellanblugrå          */
 
-  --accent:            #222C3E;
-  --accent-foreground: #E8ECF4;
+  --accent: #222c3e;
+  --accent-foreground: #e8ecf4;
 
-  --destructive:       #D05555;   /* mjuk röd                   */
+  --destructive: #d05555; /* mjuk röd                   */
 
-  --border:            #FFFFFF1A; /* 10 % vitt — subtil kant    */
-  --input:             #FFFFFF26; /* 15 % vitt                  */
-  --ring:              #8A9BBB;   /* ljus kall blågrå           */
+  --border: #ffffff1a; /* 10 % vitt — subtil kant    */
+  --input: #ffffff26; /* 15 % vitt                  */
+  --ring: #8a9bbb; /* ljus kall blågrå           */
 
   /* Gråskale-diagram, kall ton */
-  --chart-1:           #DDE3F0;
-  --chart-2:           #A8B4CC;
-  --chart-3:           #6E7D96;
-  --chart-4:           #404E64;
-  --chart-5:           #252E40;
+  --chart-1: #dde3f0;
+  --chart-2: #a8b4cc;
+  --chart-3: #6e7d96;
+  --chart-4: #404e64;
+  --chart-5: #252e40;
 
-  --sidebar:           #0A0F18;
-  --sidebar-foreground:#E8ECF4;
-  --sidebar-primary:   #E8ECF4;
-  --sidebar-primary-foreground: #0E1118;
-  --sidebar-accent:    #1E2635;
-  --sidebar-accent-foreground:  #E8ECF4;
-  --sidebar-border:    #FFFFFF1A;
-  --sidebar-ring:      #8A9BBB;
+  --sidebar: #0a0f18;
+  --sidebar-foreground: #e8ecf4;
+  --sidebar-primary: #e8ecf4;
+  --sidebar-primary-foreground: #0e1118;
+  --sidebar-accent: #1e2635;
+  --sidebar-accent-foreground: #e8ecf4;
+  --sidebar-border: #ffffff1a;
+  --sidebar-ring: #8a9bbb;
 }
 
 @layer base {

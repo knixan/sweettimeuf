@@ -34,22 +34,38 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
     },
   });
 
-  const { fields: priceFields, append: appendPrice, remove: removePrice } = useFieldArray({
+  const {
+    fields: priceFields,
+    append: appendPrice,
+    remove: removePrice,
+  } = useFieldArray({
     control,
     name: "prices",
   });
 
-  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+  const {
+    fields: imageFields,
+    append: appendImage,
+    remove: removeImage,
+  } = useFieldArray({
     control,
     name: "images",
   });
 
-  const { fields: variantFields, append: appendVariant, remove: removeVariant } = useFieldArray({
+  const {
+    fields: variantFields,
+    append: appendVariant,
+    remove: removeVariant,
+  } = useFieldArray({
     control,
     name: "variants",
   });
 
-  const { fields: templateFields, append: appendTemplate, remove: removeTemplate } = useFieldArray({
+  const {
+    fields: templateFields,
+    append: appendTemplate,
+    remove: removeTemplate,
+  } = useFieldArray({
     control,
     name: "printTemplates",
   });
@@ -59,9 +75,14 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
       try {
         const filteredData = {
           ...data,
-          images: data.images?.map((i) => i.url).filter((url) => url && url.trim() !== ""),
-          variants: data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
-          printTemplates: data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") || [],
+          images: data.images
+            ?.map((i) => i.url)
+            .filter((url) => url && url.trim() !== ""),
+          variants:
+            data.variants?.filter((v) => v.name && v.name.trim() !== "") || [],
+          printTemplates:
+            data.printTemplates?.filter((t) => t.url && t.url.trim() !== "") ||
+            [],
         };
 
         await createProduct(filteredData);
@@ -69,7 +90,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         router.push("/admin/produkter");
         router.refresh();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Kunde inte skapa produkt");
+        toast.error(
+          error instanceof Error ? error.message : "Kunde inte skapa produkt",
+        );
       }
     });
   };
@@ -85,7 +108,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
             className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
             placeholder="Tablettaskar — 7010-1"
           />
-          {errors.title && <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>}
+          {errors.title && (
+            <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>
+          )}
         </div>
 
         <div>
@@ -114,7 +139,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Sammanfattning</label>
+          <label className="block text-sm font-medium mb-2">
+            Sammanfattning
+          </label>
           <textarea
             {...register("summary")}
             rows={4}
@@ -134,18 +161,24 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Pris och antal</label>
+          <label className="block text-sm font-medium mb-2">
+            Pris och antal
+          </label>
           <div className="space-y-2">
             {priceFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
                 <input
-                  {...register(`prices.${index}.quantity`, { valueAsNumber: true })}
+                  {...register(`prices.${index}.quantity`, {
+                    valueAsNumber: true,
+                  })}
                   type="number"
                   placeholder="Antal (t.ex. 100)"
                   className="w-1/2 rounded-md bg-input/10 border border-input px-3 py-2"
                 />
                 <input
-                  {...register(`prices.${index}.price`, { valueAsNumber: true })}
+                  {...register(`prices.${index}.price`, {
+                    valueAsNumber: true,
+                  })}
                   type="number"
                   step="0.01"
                   placeholder="Pris (kr)"
@@ -172,7 +205,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         </div>
 
         <div className="border-t pt-4">
-          <label className="block text-sm font-medium mb-2">Information / detaljer</label>
+          <label className="block text-sm font-medium mb-2">
+            Information / detaljer
+          </label>
           <textarea
             {...register("aboutProduct")}
             rows={8}
@@ -183,7 +218,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
 
         {/* Varianter (smak/färg) */}
         <div className="border-t pt-4">
-          <label className="block text-sm font-medium mb-2">Val av smak / färg (valfritt)</label>
+          <label className="block text-sm font-medium mb-2">
+            Val av smak / färg (valfritt)
+          </label>
           <input
             {...register("variantLabel")}
             type="text"
@@ -197,7 +234,10 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
               <span />
             </div>
             {variantFields.map((field, index) => (
-              <div key={field.id} className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
+              <div
+                key={field.id}
+                className="grid grid-cols-[1fr_auto_auto] gap-2 items-center"
+              >
                 <input
                   {...register(`variants.${index}.name`)}
                   type="text"
@@ -207,7 +247,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
                 <div className="flex items-center gap-1">
                   <span className="text-muted-foreground">+</span>
                   <input
-                    {...register(`variants.${index}.surcharge`, { valueAsNumber: true })}
+                    {...register(`variants.${index}.surcharge`, {
+                      valueAsNumber: true,
+                    })}
                     type="number"
                     step="0.01"
                     min="0"
@@ -258,7 +300,11 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
                 </Button>
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={() => appendImage({ url: "" })}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => appendImage({ url: "" })}
+            >
               + Lägg till bild
             </Button>
           </div>
@@ -277,7 +323,9 @@ export function CreateProductForm({ categories }: { categories: Category[] }) {
         </div>
 
         <div className="border-t pt-4">
-          <label className="block text-sm font-medium mb-2">Tryckfiler / mallar (PDF-länkar)</label>
+          <label className="block text-sm font-medium mb-2">
+            Tryckfiler / mallar (PDF-länkar)
+          </label>
           <div className="space-y-2">
             {templateFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">

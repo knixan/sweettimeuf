@@ -18,7 +18,8 @@ type PriceTier = {
 
 export function ProductCard({ product }: { product: Product }) {
   const prices = (product.prices as PriceTier[]) || [];
-  const lowestPrice = prices.length > 0 ? Math.min(...prices.map((p) => p.price)) : null;
+  const lowestPrice =
+    prices.length > 0 ? Math.min(...prices.map((p) => p.price)) : null;
   const firstImage = product.images[0];
 
   return (
@@ -44,13 +45,19 @@ export function ProductCard({ product }: { product: Product }) {
             {product.title}
           </h3>
           {product.articleNumber && (
-            <p className="text-sm text-muted-foreground mb-2">Art. nr: {product.articleNumber}</p>
+            <p className="text-sm text-muted-foreground mb-2">
+              Art. nr: {product.articleNumber}
+            </p>
           )}
           {product.summary && (
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.summary}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+              {product.summary}
+            </p>
           )}
           {lowestPrice !== null && (
-            <p className="text-lg font-bold text-primary">Från {lowestPrice.toFixed(2)} kr</p>
+            <p className="text-lg font-bold text-primary">
+              Från {lowestPrice.toFixed(2)} kr
+            </p>
           )}
         </div>
       </div>

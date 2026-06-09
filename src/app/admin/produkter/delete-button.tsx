@@ -20,7 +20,9 @@ export function DeleteProductButton({ id }: { id: string }) {
         toast.success("Produkten togs bort");
         router.refresh();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Kunde inte ta bort produkt");
+        toast.error(
+          error instanceof Error ? error.message : "Kunde inte ta bort produkt",
+        );
       }
     });
   };

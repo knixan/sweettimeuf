@@ -32,17 +32,23 @@ export function ProductRow({ product }: { product: Product }) {
       <div className="flex-1">
         <div className="font-semibold">{product.title}</div>
         {product.articleNumber && (
-          <div className="text-sm text-muted-foreground">Art. nr: {product.articleNumber}</div>
+          <div className="text-sm text-muted-foreground">
+            Art. nr: {product.articleNumber}
+          </div>
         )}
         {product.category && (
-          <div className="text-sm text-muted-foreground">Kategori: {product.category.name}</div>
+          <div className="text-sm text-muted-foreground">
+            Kategori: {product.category.name}
+          </div>
         )}
         {product.summary && (
           <div className="text-sm text-muted-foreground mt-1 line-clamp-2">
             {product.summary}
           </div>
         )}
-        <div className="text-sm text-muted-foreground">{product.images.length} bilder</div>
+        <div className="text-sm text-muted-foreground">
+          {product.images.length} bilder
+        </div>
       </div>
       <div className="flex gap-2">
         <button

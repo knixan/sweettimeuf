@@ -94,7 +94,6 @@ export default function Hero() {
                 <p className="text-lg md:text-xl mb-8 text-muted-foreground">
                   {slides[current].text}
                 </p>
-              
               </div>
             </div>
 
@@ -153,7 +152,7 @@ export default function Hero() {
           </div>
 
           {/* Beskrivning och knapp för mobil under bilden */}
-            <div className="md:hidden text-center text-foreground px-8 py-8">
+          <div className="md:hidden text-center text-foreground px-8 py-8">
             <p className="text-base mb-6 text-muted-foreground">
               {slides[current].text}
             </p>

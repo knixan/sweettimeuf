@@ -29,7 +29,10 @@ interface EditCategoryFormProps {
   onClose?: () => void;
 }
 
-export default function EditCategoryForm({ category, onClose }: EditCategoryFormProps) {
+export default function EditCategoryForm({
+  category,
+  onClose,
+}: EditCategoryFormProps) {
   const router = useRouter();
   const form = useForm<CategoryValues>({
     resolver: zodResolver(CategorySchema),
@@ -73,13 +76,19 @@ export default function EditCategoryForm({ category, onClose }: EditCategoryForm
 
         <div>
           <label className="flex items-center gap-2">
-            <input type="checkbox" {...form.register("showInNavbar")} className="h-4 w-4" />
+            <input
+              type="checkbox"
+              {...form.register("showInNavbar")}
+              className="h-4 w-4"
+            />
             <span>Visa i navigering</span>
           </label>
         </div>
 
         <div className="flex gap-2">
-          <Button disabled={form.formState.isSubmitting || !form.formState.isValid}>
+          <Button
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
             {form.formState.isSubmitting ? "Sparar..." : "Spara ändringar"}
           </Button>
           {onClose && (

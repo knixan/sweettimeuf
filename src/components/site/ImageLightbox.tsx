@@ -110,7 +110,9 @@ export function ImageLightbox({ images, title }: ImageLightboxProps) {
                 <div
                   key={i}
                   className={`relative flex-none w-20 h-20 rounded-md overflow-hidden cursor-pointer border-2 transition-all ${
-                    i === 0 ? "border-primary" : "border-transparent hover:border-primary/50"
+                    i === 0
+                      ? "border-primary"
+                      : "border-transparent hover:border-primary/50"
                   }`}
                   onClick={() => openLightbox(i)}
                 >
@@ -154,8 +156,14 @@ export function ImageLightbox({ images, title }: ImageLightboxProps) {
             <div className="overflow-hidden" ref={lightboxRef}>
               <div className="flex">
                 {images.map((img, i) => (
-                  <div key={i} className="flex-none w-full flex items-center justify-center">
-                    <div className="relative w-full" style={{ paddingBottom: "75%" }}>
+                  <div
+                    key={i}
+                    className="flex-none w-full flex items-center justify-center"
+                  >
+                    <div
+                      className="relative w-full"
+                      style={{ paddingBottom: "75%" }}
+                    >
                       <Image
                         src={img}
                         alt={`${title} - bild ${i + 1}`}
@@ -177,7 +185,9 @@ export function ImageLightbox({ images, title }: ImageLightboxProps) {
                   onClick={(e) => {
                     e.stopPropagation();
                     scrollPrev();
-                    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length);
+                    setLightboxIndex(
+                      (prev) => (prev - 1 + images.length) % images.length,
+                    );
                   }}
                 >
                   <ChevronLeft className="h-6 w-6" />
@@ -203,7 +213,9 @@ export function ImageLightbox({ images, title }: ImageLightboxProps) {
                 <button
                   key={i}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    i === lightboxIndex ? "bg-white scale-125" : "bg-white/50 hover:bg-white/75"
+                    i === lightboxIndex
+                      ? "bg-white scale-125"
+                      : "bg-white/50 hover:bg-white/75"
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();

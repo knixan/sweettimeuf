@@ -7,9 +7,20 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { promoteToAdmin, removeAdmin } from "./actions";
 
-type Admin = { id: string; name: string | null; email: string; createdAt: Date };
+type Admin = {
+  id: string;
+  name: string | null;
+  email: string;
+  createdAt: Date;
+};
 
-export function AdminList({ admins, currentUserId }: { admins: Admin[]; currentUserId: string }) {
+export function AdminList({
+  admins,
+  currentUserId,
+}: {
+  admins: Admin[];
+  currentUserId: string;
+}) {
   const [email, setEmail] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -70,17 +81,27 @@ export function AdminList({ admins, currentUserId }: { admins: Admin[]; currentU
         <table className="min-w-full divide-y divide-border">
           <thead className="bg-muted/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Namn</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">E-post</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Skapad</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
+                Namn
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
+                E-post
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
+                Skapad
+              </th>
               <th className="px-6 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {admins.map((admin) => (
               <tr key={admin.id}>
-                <td className="px-6 py-4 text-sm font-medium">{admin.name || "—"}</td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{admin.email}</td>
+                <td className="px-6 py-4 text-sm font-medium">
+                  {admin.name || "—"}
+                </td>
+                <td className="px-6 py-4 text-sm text-muted-foreground">
+                  {admin.email}
+                </td>
                 <td className="px-6 py-4 text-sm text-muted-foreground">
                   {new Date(admin.createdAt).toLocaleDateString("sv-SE")}
                 </td>
@@ -90,7 +111,9 @@ export function AdminList({ admins, currentUserId }: { admins: Admin[]; currentU
                       variant="outline"
                       size="sm"
                       disabled={isPending}
-                      onClick={() => handleRemove(admin.id, admin.name ?? admin.email)}
+                      onClick={() =>
+                        handleRemove(admin.id, admin.name ?? admin.email)
+                      }
                     >
                       Ta bort admin
                     </Button>

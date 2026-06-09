@@ -2,7 +2,13 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import authClient from "@/lib/auth-client";
@@ -54,7 +60,9 @@ function AterstallForm() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Ogiltig länk</CardTitle>
-          <CardDescription>Den här länken är ogiltig eller har gått ut.</CardDescription>
+          <CardDescription>
+            Den här länken är ogiltig eller har gått ut.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Button asChild className="w-full">
@@ -74,8 +82,12 @@ function AterstallForm() {
       <CardContent>
         {done ? (
           <div className="text-center space-y-3">
-            <p className="text-sm text-green-600 font-medium">Lösenordet har ändrats!</p>
-            <p className="text-sm text-muted-foreground">Du skickas till inloggningssidan...</p>
+            <p className="text-sm text-green-600 font-medium">
+              Lösenordet har ändrats!
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Du skickas till inloggningssidan...
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +124,11 @@ function AterstallForm() {
 export default function AterstallLosenordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Suspense fallback={<div className="text-muted-foreground text-sm">Laddar...</div>}>
+      <Suspense
+        fallback={
+          <div className="text-muted-foreground text-sm">Laddar...</div>
+        }
+      >
         <AterstallForm />
       </Suspense>
     </div>

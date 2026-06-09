@@ -37,7 +37,9 @@ export default async function ProductsPage({
         <h1 className="text-3xl font-bold mb-2">
           {selectedCategory ? selectedCategory.name : "Alla produkter"}
         </h1>
-        <p className="text-muted-foreground mb-6">{products.length} produkter</p>
+        <p className="text-muted-foreground mb-6">
+          {products.length} produkter
+        </p>
 
         {products.length === 0 ? (
           <div className="text-center py-12">
@@ -46,7 +48,10 @@ export default async function ProductsPage({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product) => (
-              <ProductCard key={product.id} product={{ ...product, slug: product.slug ?? undefined }} />
+              <ProductCard
+                key={product.id}
+                product={{ ...product, slug: product.slug ?? undefined }}
+              />
             ))}
           </div>
         )}

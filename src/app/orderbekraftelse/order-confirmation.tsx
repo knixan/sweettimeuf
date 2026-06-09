@@ -29,7 +29,7 @@ export function OrderConfirmation() {
       </div>
 
       <h1 className="text-4xl font-bold mb-4">Tack för din beställning!</h1>
-      
+
       <div className="bg-card border rounded-lg p-6 mb-6 max-w-md mx-auto">
         <p className="text-muted-foreground mb-2">Ditt ordernummer</p>
         <p className="text-3xl font-bold text-primary">{orderNumber}</p>
@@ -37,13 +37,16 @@ export function OrderConfirmation() {
 
       <div className="space-y-4 max-w-lg mx-auto text-left">
         <p className="text-muted-foreground">
-          Vi har tagit emot din beställning och kommer att behandla den så snart som möjligt.
+          Vi har tagit emot din beställning och kommer att behandla den så snart
+          som möjligt.
         </p>
         <p className="text-muted-foreground">
-          En bekräftelse har skickats till din e-postadress. Du kommer att få en faktura separat.
+          En bekräftelse har skickats till din e-postadress. Du kommer att få en
+          faktura separat.
         </p>
         <p className="text-muted-foreground">
-          Om du har frågor om din beställning, vänligen kontakta oss med ditt ordernummer.
+          Om du har frågor om din beställning, vänligen kontakta oss med ditt
+          ordernummer.
         </p>
       </div>
 

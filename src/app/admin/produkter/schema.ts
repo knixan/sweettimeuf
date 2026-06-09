@@ -16,7 +16,10 @@ export const PrintTemplateSchema = z.object({
 });
 
 export const ProductSchema = z.object({
-  title: z.string().min(1, "Titel krävs").max(200, "Titel får vara max 200 tecken"),
+  title: z
+    .string()
+    .min(1, "Titel krävs")
+    .max(200, "Titel får vara max 200 tecken"),
   articleNumber: z.string().optional(),
   summary: z.string().optional(),
   information: z.string().optional(),
