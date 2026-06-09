@@ -14,14 +14,16 @@ export default function Footer() {
               alt="Sweet Time UF"
               width={120}
               height={64}
-              className="h-16 w-auto mb-4 dark:hidden"
+             style={{ width: "auto" }}
+              className="dark:hidden"
             />
             <Image
               src="/logga/sweettime-vit-loggo.png"
               alt="Sweet Time UF"
               width={120}
               height={64}
-              className="h-16 w-auto mb-4 hidden dark:block"
+             style={{ width: "auto" }}
+              className="hidden dark:block"
             />
             <h3 className="text-2xl mb-3 font-semibold">Sweet Time UF</h3>
             <p className="text-muted-foreground max-w-prose">

@@ -70,14 +70,16 @@ const Navbar: React.FC<NavbarProps> = ({
                 alt="Sweettime"
                 width={120}
                 height={64}
-                className="h-16 w-auto dark:hidden"
+               style={{ width: "auto" }}
+                 className="dark:hidden"
               />
               <Image
                 src="/logga/sweettime-vit-loggo.png"
                 alt="Sweettime"
                 width={120}
                 height={64}
-                className="h-16 w-auto hidden dark:block"
+                style={{ width: "auto" }}
+                className="hidden dark:block"
               />
             </Link>
           </div>
