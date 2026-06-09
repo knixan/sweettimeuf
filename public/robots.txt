@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /kassa/
+Disallow: /orderbekraftelse/
+Disallow: /mina-sidor/
+Disallow: /aterstall-losenord/
+Disallow: /skicka-verifiering/
+Disallow: /api/
+
+Allow: /
+
+Sitemap: https://www.sweettime-uf.se/sitemap.xml

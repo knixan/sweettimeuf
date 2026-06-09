@@ -7,6 +7,7 @@ import { CartProvider } from "@/contexts/cart-context";
 import { Fredoka } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/layout/Footer";
+import type { Metadata } from "next";
 
 
 const fredoka = Fredoka({
@@ -15,10 +16,18 @@ const fredoka = Fredoka({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata = {
-  title: "Sweettime",
-  description:
-    "An example Next.js project demonstrating BetterAuth with Prisma integration.",
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.sweettime-uf.se"),
+  title: {
+    default: "SweetTime UF – Profilprodukter & Trycksaker",
+    template: "%s | SweetTime UF",
+  },
+  description: "Beställ profilprodukter, godis och trycksaker från SweetTime UF.",
+  openGraph: {
+    siteName: "SweetTime UF",
+    locale: "sv_SE",
+    type: "website",
+  },
 };
 
 export default async function RootLayout({
