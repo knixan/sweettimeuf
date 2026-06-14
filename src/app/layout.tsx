@@ -44,9 +44,10 @@ export default async function RootLayout({
       select: { id: true, name: true, slug: true },
       orderBy: { name: "asc" },
     });
-    categories = result as CategoryNav[];
+    // Filtrera bort kategorier som saknar slug för att undvika problem i Navbar
+    categories = result.filter(c => c.slug !== null) as CategoryNav[];
   } catch (err) {
-    console.warn("Could not load categories for Navbar during build/render. Using empty list.");
+    console.error("Database error in RootLayout:", err instanceof Error ? err.message : err);
   }
 
   return (
