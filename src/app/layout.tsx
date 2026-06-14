@@ -34,17 +34,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let categories: { id: string; name: string; slug: string | null }[] = [];
+  // Definiera typen tydligt för att matcha Prisma-modellen
+  type CategoryNav = { id: string; name: string; slug: string | null };
+  let categories: CategoryNav[] = [];
+
   try {
     const result = await prisma.category.findMany({
       where: { showInNavbar: true },
       select: { id: true, name: true, slug: true },
       orderBy: { name: "asc" },
     });
-    categories = result;
+    categories = result as CategoryNav[];
   } catch (err) {
-    console.error("Could not load categories for Navbar:", err);
-    categories = [];
+    console.warn("Could not load categories for Navbar during build/render. Using empty list.");
   }
 
   return (
