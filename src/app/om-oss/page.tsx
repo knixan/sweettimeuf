@@ -1,6 +1,18 @@
 import About from "@/components/site/About";
 import Team from "@/components/site/Team";
 import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Om oss",
+  description:
+    "Lär känna SweetTime UF – ett ungdomsföretag som säljer profilprodukter, godis och trycksaker med tryck.",
+  openGraph: {
+    title: "Om oss – SweetTime UF",
+    description:
+      "Lär känna SweetTime UF – ett ungdomsföretag som säljer profilprodukter, godis och trycksaker med tryck.",
+  },
+};
 
 export default function Page() {
   return (

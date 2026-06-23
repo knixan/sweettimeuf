@@ -4,23 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminOrEditor } from "@/lib/server-auth";
 import { revalidatePath } from "next/cache";
 
-export async function updateOrderStatus(orderId: string, status: string) {
-  await requireAdminOrEditor();
-
-  try {
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { status },
-    });
-
-    revalidatePath("/admin/offerter");
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating order status:", error);
-    throw new Error("Kunde inte uppdatera status");
-  }
-}
-
 export async function updateOrderFlags(
   orderId: string,
   flags: { handled?: boolean; shipped?: boolean; invoiceSent?: boolean },

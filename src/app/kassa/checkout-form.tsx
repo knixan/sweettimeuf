@@ -65,7 +65,6 @@ export function CheckoutForm() {
           invoiceCity: sameAddress ? undefined : data.invoiceCity,
           notes: data.notes,
           items,
-          totalPrice,
         });
 
         clearCart();

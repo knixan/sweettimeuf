@@ -1,5 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/site/product-card";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Alla produkter",
+  description:
+    "Bläddra bland SweetTime UFs sortiment av profilprodukter, godis och trycksaker – beställ med eget tryck.",
+  openGraph: {
+    title: "Alla produkter – SweetTime UF",
+    description:
+      "Bläddra bland SweetTime UFs sortiment av profilprodukter, godis och trycksaker – beställ med eget tryck.",
+  },
+};
 
 export default async function ProductsPage({
   searchParams,

@@ -3,10 +3,11 @@ Disallow: /admin/
 Disallow: /kassa/
 Disallow: /orderbekraftelse/
 Disallow: /mina-sidor/
+Disallow: /logga-in/
+Disallow: /registrera/
+Disallow: /glomt-losenord/
 Disallow: /aterstall-losenord/
 Disallow: /skicka-verifiering/
 Disallow: /api/
-
-Allow: /
 
 Sitemap: https://www.sweettime-uf.se/sitemap.xml

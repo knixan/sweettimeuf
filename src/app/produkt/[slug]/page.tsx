@@ -64,8 +64,32 @@ export default async function ProductPage({ params }: Props) {
     ? ((product as Record<string, unknown>).printTemplates as PrintTemplate[])
     : [];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    ...(product.summary && { description: product.summary }),
+    ...(product.images.length > 0 && { image: product.images }),
+    ...(product.articleNumber && { sku: product.articleNumber }),
+    brand: { "@type": "Brand", name: "SweetTime UF" },
+    ...(prices.length > 0 && {
+      offers: {
+        "@type": "AggregateOffer",
+        lowPrice: Math.min(...prices.map((p) => p.price)),
+        highPrice: Math.max(...prices.map((p) => p.price)),
+        priceCurrency: "SEK",
+        availability: "https://schema.org/InStock",
+        seller: { "@type": "Organization", name: "SweetTime UF" },
+      },
+    }),
+  };
+
   return (
     <main className="min-h-screen p-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <p className="text-sm text-muted-foreground mb-6">

@@ -2,6 +2,29 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ProductCard } from "@/components/site/product-card";
+import type { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const category = await prisma.category.findUnique({
+    where: { slug },
+    select: { name: true },
+  });
+  if (!category) return {};
+  const description = `Utforska ${category.name.toLowerCase()} från SweetTime UF – profilprodukter och trycksaker med eget tryck.`;
+  return {
+    title: category.name,
+    description,
+    openGraph: {
+      title: `${category.name} – SweetTime UF`,
+      description,
+    },
+  };
+}
 
 export default async function KategoriPage({
   params,

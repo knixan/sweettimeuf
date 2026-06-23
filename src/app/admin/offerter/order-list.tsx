@@ -3,12 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  updateOrderStatus,
-  updateOrderFlags,
-  removeCustomerImage,
-  deleteOrder,
-} from "./actions";
+import { updateOrderFlags, removeCustomerImage, deleteOrder } from "./actions";
 import { toast } from "sonner";
 
 type Order = {
@@ -77,18 +72,6 @@ export function OrderList({ orders }: { orders: Order[] }) {
 
   const filtered = applyFilter(localOrders, activeFilter);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
-    try {
-      await updateOrderStatus(orderId, newStatus);
-      setLocalOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)),
-      );
-      toast.success("Status uppdaterad");
-    } catch {
-      toast.error("Kunde inte uppdatera status");
-    }
-  };
-
   const handleFlagChange = async (
     orderId: string,
     flag: "handled" | "shipped" | "invoiceSent",
@@ -133,34 +116,30 @@ export function OrderList({ orders }: { orders: Order[] }) {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "processing":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "cancelled":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "Väntande";
-      case "processing":
-        return "Behandlas";
-      case "completed":
-        return "Klar";
-      case "cancelled":
-        return "Avbruten";
-      default:
-        return status;
-    }
+  const getStatusFromFlags = (order: Order) => {
+    if (order.invoiceSent)
+      return {
+        label: "Faktura skickad",
+        className:
+          "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+      };
+    if (order.shipped)
+      return {
+        label: "Skickad",
+        className:
+          "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+      };
+    if (order.handled)
+      return {
+        label: "Hanteras",
+        className:
+          "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+      };
+    return {
+      label: "Ohanterad",
+      className:
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    };
   };
 
   return (
@@ -206,9 +185,9 @@ export function OrderList({ orders }: { orders: Order[] }) {
                 </div>
                 <div className="flex items-center gap-2 flex-wrap justify-end">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusFromFlags(order).className}`}
                   >
-                    {getStatusText(order.status)}
+                    {getStatusFromFlags(order).label}
                   </span>
                   <Button
                     variant="outline"
@@ -403,30 +382,6 @@ export function OrderList({ orders }: { orders: Order[] }) {
                       </p>
                     </div>
                   )}
-
-                  <div>
-                    <p className="text-sm font-medium mb-2">Ändra status</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {["pending", "processing", "completed", "cancelled"].map(
-                        (s) => (
-                          <Button
-                            key={s}
-                            size="sm"
-                            variant={
-                              order.status === s
-                                ? s === "cancelled"
-                                  ? "destructive"
-                                  : "default"
-                                : "outline"
-                            }
-                            onClick={() => handleStatusChange(order.id, s)}
-                          >
-                            {getStatusText(s)}
-                          </Button>
-                        ),
-                      )}
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
