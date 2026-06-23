@@ -100,10 +100,10 @@ export default function Hero() {
             <button
               aria-label="Föregående"
               onClick={prev}
-              className="absolute left-6 top-1/2 -translate-y-1/2 bg-popover/70 hover:bg-popover text-card-foreground p-4 rounded-full transition-all z-20"
+              className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 bg-popover/70 hover:bg-popover text-card-foreground p-2 md:p-4 rounded-full transition-all z-20"
             >
               <svg
-                className="w-6 h-6"
+                className="w-4 h-4 md:w-6 md:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -120,10 +120,10 @@ export default function Hero() {
             <button
               aria-label="Nästa"
               onClick={next}
-              className="absolute right-6 top-1/2 -translate-y-1/2 bg-popover/70 hover:bg-popover text-card-foreground p-4 rounded-full transition-all z-20"
+              className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 bg-popover/70 hover:bg-popover text-card-foreground p-2 md:p-4 rounded-full transition-all z-20"
             >
               <svg
-                className="w-6 h-6"
+                className="w-4 h-4 md:w-6 md:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
