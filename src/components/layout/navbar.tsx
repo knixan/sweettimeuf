@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <nav className="sticky top-0 z-50 w-full  bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4">
-        <div className="flex h-20 pt-4 items-center justify-between">
+        <div className="flex md:grid md:grid-cols-3 h-20 pt-4 items-center justify-between">
           {/* Logo/Titel */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
@@ -84,105 +84,102 @@ const Navbar: React.FC<NavbarProps> = ({
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-6">
-            {/* Navigation länkar */}
-            <div className="flex items-center gap-6">
-              {links.map((link, index) =>
-                link.href === "/produkt" ? (
-                  <DropdownMenu key={index}>
-                    <DropdownMenuTrigger className="text-sm font-medium transition-colors inline-flex items-center">
-                      {link.label}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem asChild>
-                        <Link href="/produkt">Alla produkter</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      {categories.map((c) => (
-                        <DropdownMenuItem key={c.id} asChild>
-                          <Link
-                            href={
-                              c.slug
-                                ? `/kategori/${c.slug}`
-                                : `/produkt?category=${c.id}`
-                            }
-                          >
-                            {c.name}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Link
-                    key={index}
-                    href={link.href}
-                    className={`text-sm font-medium transition-colors ${
-                      isActive(link.href)
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
+          {/* Desktop Navigation länkar – centrerade */}
+          <div className="hidden md:flex md:items-center md:justify-center md:gap-6">
+            {links.map((link, index) =>
+              link.href === "/produkt" ? (
+                <DropdownMenu key={index}>
+                  <DropdownMenuTrigger className="text-sm font-medium transition-colors inline-flex items-center">
                     {link.label}
-                  </Link>
-                ),
-              )}
-            </div>
-
-            {/* Höger sektion: Cart + Theme toggle + auth knappar */}
-            <div className="flex items-center gap-3">
-              <CartDropdown />
-              {showThemeToggle && <ModeToggle />}
-
-              {/* Visa olika knappar beroende på auth-status */}
-              {!isAuthenticated ? (
-                // Ej inloggad
-                <>
-                  <button
-                    onClick={handleLogin}
-                    className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Logga in
-                  </button>
-
-                  <button
-                    onClick={handleRegister}
-                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                  >
-                    Registrera
-                  </button>
-                </>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link href="/produkt">Alla produkter</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {categories.map((c) => (
+                      <DropdownMenuItem key={c.id} asChild>
+                        <Link
+                          href={
+                            c.slug
+                              ? `/kategori/${c.slug}`
+                              : `/produkt?category=${c.id}`
+                          }
+                        >
+                          {c.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
-                // Inloggad
-                <>
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <MdAdminPanelSettings className="h-4 w-4" />
-                      Admin
-                    </Link>
-                  )}
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
+          </div>
+
+          {/* Desktop höger sektion: Cart + Theme toggle + auth knappar */}
+          <div className="hidden md:flex md:items-center md:justify-end md:gap-3">
+            <CartDropdown />
+            {showThemeToggle && <ModeToggle />}
+
+            {/* Visa olika knappar beroende på auth-status */}
+            {!isAuthenticated ? (
+              // Ej inloggad
+              <>
+                <button
+                  onClick={handleLogin}
+                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Logga in
+                </button>
+
+                <button
+                  onClick={handleRegister}
+                  className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Registrera
+                </button>
+              </>
+            ) : (
+              // Inloggad
+              <>
+                {isAdmin && (
                   <Link
-                    href="/mina-sidor"
+                    href="/admin"
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    <User className="h-4 w-4" />
-                    Mina sidor
+                    <MdAdminPanelSettings className="h-4 w-4" />
+                    Admin
                   </Link>
+                )}
+                <Link
+                  href="/mina-sidor"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <User className="h-4 w-4" />
+                  Mina sidor
+                </Link>
 
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logga ut
-                  </button>
-                </>
-              )}
-            </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logga ut
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile: cart + theme + hamburger */}
