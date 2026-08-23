@@ -88,7 +88,9 @@ export default async function ProductPage({ params }: Props) {
     <main className="min-h-screen p-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}

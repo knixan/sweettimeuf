@@ -1,11 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrEditor } from "@/lib/server-auth";
+import { requireAdmin } from "@/lib/server-auth";
 import { revalidatePath } from "next/cache";
 
 export async function deleteUser(id: string) {
-  await requireAdminOrEditor();
+  await requireAdmin();
   try {
     await prisma.user.delete({ where: { id } });
     revalidatePath("/admin/kunder");

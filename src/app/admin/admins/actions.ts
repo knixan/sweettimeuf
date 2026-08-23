@@ -1,11 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrEditor } from "@/lib/server-auth";
+import { requireAdmin } from "@/lib/server-auth";
 import { revalidatePath } from "next/cache";
 
 export async function promoteToAdmin(email: string) {
-  await requireAdminOrEditor();
+  await requireAdmin();
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user)
     return {
@@ -20,7 +20,10 @@ export async function promoteToAdmin(email: string) {
 }
 
 export async function removeAdmin(id: string) {
-  await requireAdminOrEditor();
+  const session = await requireAdmin();
+  if (id === session.user.id) {
+    return { ok: false, error: "Du kan inte ta bort din egen adminroll" };
+  }
   await prisma.user.update({ where: { id }, data: { role: "user" } });
   revalidatePath("/admin/admins");
   return { ok: true };

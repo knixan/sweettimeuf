@@ -23,7 +23,7 @@ export default function GlomtLosenordPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { error } = await authClient.forgetPassword({
+    const { error } = await authClient.requestPasswordReset({
       email,
       redirectTo: "/aterstall-losenord",
     });

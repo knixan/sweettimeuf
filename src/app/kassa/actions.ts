@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sendEmail } from "@/lib/email";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const CartItemSchema = z.object({
@@ -62,11 +63,47 @@ export async function createOrder(values: {
     throw new Error("Alla obligatoriska fält måste fyllas i");
   }
 
+  await checkRateLimit("order", { windowMs: 15 * 60 * 1000, max: 10 });
+
   const parsedItems = CartItemsSchema.safeParse(items);
   if (!parsedItems.success) {
     throw new Error("Ogiltiga varor i beställningen");
   }
-  const validatedItems = parsedItems.data;
+
+  // Priser sätts aldrig av klienten – slå upp produktens faktiska
+  // pris/tillägg i databasen så att en manipulerad beställning inte kan
+  // ge en annan totalsumma än den riktiga.
+  const products = await prisma.product.findMany({
+    where: { id: { in: parsedItems.data.map((item) => item.productId) } },
+  });
+  const productsById = new Map(products.map((p) => [p.id, p]));
+
+  const validatedItems = parsedItems.data.map((item) => {
+    const product = productsById.get(item.productId);
+    if (!product) {
+      throw new Error(`Produkten "${item.title}" finns inte längre`);
+    }
+
+    const priceTiers = (product.prices as { quantity: number; price: number }[]) ?? [];
+    const tier = priceTiers.find((t) => t.quantity === item.quantity);
+    if (!tier) {
+      throw new Error(`Ogiltigt antal för "${product.title}"`);
+    }
+
+    let surcharge = 0;
+    if (item.selectedVariant) {
+      const variantOptions =
+        (product.variantOptions as { name: string; surcharge: number }[]) ?? [];
+      const variant = variantOptions.find((v) => v.name === item.selectedVariant);
+      if (!variant) {
+        throw new Error(`Ogiltig variant för "${product.title}"`);
+      }
+      surcharge = variant.surcharge;
+    }
+
+    return { ...item, price: tier.price + surcharge };
+  });
+
   const totalPrice = validatedItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,

@@ -16,6 +16,25 @@ export async function requireAdminOrEditor() {
   if (!(role === "admin" || role === "editor")) {
     redirect("/");
   }
+
+  return session;
+}
+
+export async function requireAdmin() {
+  const hdrs = await headers();
+
+  const session = await auth.api.getSession({ headers: hdrs });
+
+  if (!session?.user) {
+    redirect("/logga-in");
+  }
+
+  const role = (session.user as { role?: string })?.role ?? "user";
+  if (role !== "admin") {
+    redirect("/");
+  }
+
+  return session;
 }
 
 export default requireAdminOrEditor;

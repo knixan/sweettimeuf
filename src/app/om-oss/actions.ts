@@ -1,6 +1,7 @@
 "use server";
 
 import { sendEmail } from "@/lib/email";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const ContactSchema = z.object({
@@ -30,6 +31,8 @@ export async function sendContactMessage(values: {
     throw new Error("Ogiltiga uppgifter");
   }
   const { name, email, phone, message } = parsed.data;
+
+  await checkRateLimit("contact", { windowMs: 15 * 60 * 1000, max: 5 });
 
   try {
     await sendEmail({

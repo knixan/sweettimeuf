@@ -16,8 +16,8 @@ export default function ChangePasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (newPassword.length < 6) {
-      toast.error("Nytt lösenord måste vara minst 6 tecken");
+    if (newPassword.length < 8) {
+      toast.error("Nytt lösenord måste vara minst 8 tecken");
       return;
     }
     if (newPassword !== confirmPassword) {
