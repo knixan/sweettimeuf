@@ -18,8 +18,8 @@ export default function Hero() {
         sizes="100vw"
       />
 
-      <div className="absolute inset-0 bg-linear-to-r from-[#111111] via-[#111111]/80 to-[#111111]/20" />
-      <div className="absolute inset-0 bg-linear-to-t from-[#111111]/90 via-transparent to-[#151515]/40" />
+      <div className="absolute inset-0 bg-linear-to-r from-[#111111] via-[#111111]/60 to-[#111111]/10" />
+      <div className="absolute inset-0 bg-linear-to-t from-[#111111]/70 via-transparent to-[#151515]/20" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">

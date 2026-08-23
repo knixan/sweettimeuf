@@ -14,9 +14,11 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 | ----------------- | ---------------------------------------- |
 | Framework         | Next.js 16 (App Router)                  |
 | UI                | React 19, Tailwind CSS 4, shadcn/ui      |
+| Typsnitt          | Playfair Display (rubriker), Inter (brödtext) |
 | Språk             | TypeScript                               |
 | Databas           | PostgreSQL + Prisma ORM                  |
 | Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller) |
+| E-post            | Nodemailer (SMTP) – orderbekräftelse, verifiering, lösenordsåterställning, kontaktformulär |
 | Formulär          | React Hook Form + Zod                    |
 | Carousel/Lightbox | Embla Carousel                           |
 | Notifieringar     | Sonner                                   |
@@ -35,6 +37,8 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Orderbekräftelsesida
 - Orderhistorik via "Mina sidor" (kräver inloggning)
 - Registrering och inloggning med e-postverifiering
+- Glömt lösenord / återställ lösenord via e-post
+- Kontaktformulär (om oss-sidan) som skickar e-post direkt via Nodemailer, istället för en mailto-länk
 
 ### Admin
 
@@ -42,16 +46,24 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
 - Orderhantering: visa ordrar, filtrera på status; orderstatus härleds automatiskt från flaggorna `handled` / `shipped` / `invoiceSent`
 - Kundhantering
-- Alla adminrutter skyddade – kräver `admin`-roll
+- Adminanvändarhantering: befordra/ta bort admins
+- Alla adminrutter skyddade via inloggning + roll – två rollnivåer:
+  - `admin` – full åtkomst, inklusive adminanvändare och kundhantering
+  - `editor` – kan hantera produkter, kategorier och ordrar, men inte adminanvändare eller kundkonton
 
 ## Säkerhet
 
-- `/admin/*` – skyddad via layout-nivå sessionscheck (omdirigerar till `/logga-in` om ej autentiserad, till `/` om ej admin)
-- `/mina-sidor` – skyddad via sidnivå sessionscheck
+- `/admin/*` – skyddad via layout-nivå sessionscheck (omdirigerar till `/logga-in` om ej autentiserad, till `/` om ej admin), samt varje enskild server action gör sin egen roll-kontroll (`requireAdmin` / `requireAdminOrEditor` i `src/lib/server-auth.ts`) så att åtgärder inte kan anropas direkt förbi UI:t
+- `role`-fältet på användaren kan aldrig sättas av klienten vid registrering (`input: false` i BetterAuth-konfigurationen) – nya konton får alltid rollen `user`, oavsett vad som skickas i requesten
+- Endast `admin`-roll (inte `editor`) kan hantera adminanvändare eller radera kundkonton – `editor` är begränsad till produkter, kategorier och ordrar
+- `/mina-sidor` – skyddad via sidnivå sessionscheck, och visar bara den inloggade användarens egna ordrar
 - Alla formulär valideras med React Hook Form + Zod, inklusive URL-validering vid bilduppladdning
-- Servervalidering av varukorgen i `createOrder` – Zod verifierar att pris och antal är positiva; totalpriset räknas om server-side och klientens värde ignoreras
-- Lösenord kräver minst 8 tecken (konsekvent i formulär och BetterAuth-konfiguration)
-- Rate limiting via `src/middleware.ts` – max 10 försök per 15 minuter och IP på inloggning, registrering och lösenordsåterställning (returnerar `429 Too Many Requests`)
+- Servervalidering av varukorgen i `createOrder` – priser och varianttillägg slås upp mot produkten i databasen (klientens pris litas aldrig på), totalpriset räknas om server-side, och okända kvantiteter/varianter avvisas
+- Lösenord kräver minst 8 tecken (konsekvent i formulär, Zod-scheman och BetterAuth-konfiguration)
+- Rate limiting:
+  - `src/middleware.ts` – max 10 försök per 15 minuter och IP på inloggning, registrering och lösenordsåterställning (returnerar `429 Too Many Requests`)
+  - `src/lib/rate-limit.ts` – samma princip för kontaktformuläret (5/15 min) och kassan (10/15 min) per IP, för att skydda mot spam mot e-postutskicken
+- JSON-LD på produktsidor escapas för att undvika att bryta ut ur `<script>`-taggen
 - Adminrutter och privata sidor exkluderade från sökmotorindexering via `robots.txt`
 
 ## SEO
@@ -133,7 +145,7 @@ src/
 │   ├── kategori/[slug]/        # Dynamiska kategorisidor
 │   ├── logga-in/               # Inloggningssida
 │   ├── mina-sidor/             # Orderhistorik för inloggad kund
-│   ├── om-oss/                 # Om oss-sida
+│   ├── om-oss/                 # Om oss-sida + kontaktformulär (server action)
 │   ├── orderbekraftelse/       # Orderbekräftelse
 │   ├── produkt/
 │   │   ├── [slug]/             # Produktsida med lightbox och lägg-i-kundvagn
@@ -151,7 +163,9 @@ src/
 │   └── cart-context.tsx        # Global kundvagnskontext
 ├── lib/
 │   ├── auth.ts / auth-client.ts / auth-server.ts
-│   ├── email.ts
+│   ├── server-auth.ts          # requireAdmin / requireAdminOrEditor – rollkontroll för admin-actions
+│   ├── rate-limit.ts           # Delad rate limiter för kontaktformulär och kassa
+│   ├── email.ts                # Nodemailer-transport + sendEmail
 │   ├── prisma.ts
 │   ├── slug.ts
 │   └── schema/zod-schemas.ts
@@ -175,7 +189,7 @@ src/
 
 ### User
 
-`id` · `name` · `email` · `password` · `role` (`user` / `admin`)
+`id` · `name` · `email` · `password` · `role` (`user` / `editor` / `admin`)
 
 ## Licens
 
