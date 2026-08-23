@@ -33,7 +33,7 @@ export default function Footer() {
             </p>
             <div className="mt-4 flex items-center text-muted-foreground">
               <FiMapPin className="mr-2" />
-              <span>Mjölby, Östergötland</span>
+              <span>Skänninge, Östergötland</span>
             </div>
           </div>
 
@@ -177,15 +177,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-6">
-          <a
-            href="mailto:lg.sweets10@gmail.com"
-            aria-label="Maila offertförfrågan"
-            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium transition-colors"
-          >
-            Maila offertförfrågan
-          </a>
-        </div>
+      
       </div>
     </footer>
   );
