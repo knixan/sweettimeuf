@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useCart } from "@/contexts/cart-context";
+import { useBuyerType } from "@/contexts/buyer-type-context";
+import { getDisplayPrice, formatPrice } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -41,6 +43,7 @@ type Product = {
 
 export function AddToCartForm({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const { buyerType } = useBuyerType();
   const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<PriceTier | null>(
     product.prices[0] || null,
@@ -107,7 +110,9 @@ export function AddToCartForm({ product }: { product: Product }) {
               ? product.variantOptions.map((v) => (
                   <option key={v.name} value={v.name}>
                     {v.name}
-                    {v.surcharge > 0 ? ` (+${v.surcharge.toFixed(2)} kr)` : ""}
+                    {v.surcharge > 0
+                      ? ` (+${formatPrice(getDisplayPrice(v.surcharge, buyerType))} kr)`
+                      : ""}
                   </option>
                 ))
               : product.variants?.map((v) => (
@@ -130,7 +135,8 @@ export function AddToCartForm({ product }: { product: Product }) {
           >
             {product.prices.map((tier, index) => (
               <option key={index} value={index}>
-                {tier.quantity} st — {(tier.price + surcharge).toFixed(2)} kr
+                {tier.quantity} st —{" "}
+                {formatPrice(getDisplayPrice(tier.price + surcharge, buyerType))} kr
               </option>
             ))}
           </select>
@@ -211,10 +217,18 @@ export function AddToCartForm({ product }: { product: Product }) {
 
       {selectedTier && (
         <div className="text-center text-2xl font-bold text-primary">
-          Totalt: {(effectivePrice * selectedTier.quantity).toFixed(2)} kr
+          Totalt:{" "}
+          {formatPrice(
+            getDisplayPrice(effectivePrice, buyerType) * selectedTier.quantity,
+          )}{" "}
+          kr
+          <p className="text-xs font-normal text-muted-foreground mt-1">
+            {buyerType === "private" ? "Inkl. 12% moms" : "Exkl. moms"}
+          </p>
           {surcharge > 0 && (
             <p className="text-sm font-normal text-muted-foreground mt-1">
-              inkl. pristillägg {selectedVariant} (+{surcharge.toFixed(2)} kr)
+              inkl. pristillägg {selectedVariant} (+
+              {formatPrice(getDisplayPrice(surcharge, buyerType))} kr)
             </p>
           )}
         </div>

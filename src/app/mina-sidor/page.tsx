@@ -135,6 +135,11 @@ export default async function MinaSidorPage() {
                         <p className="font-bold text-lg">
                           {order.totalPrice.toFixed(2)} kr
                         </p>
+                        <p className="text-xs text-muted-foreground">
+                          {order.customerType === "private"
+                            ? "Inkl. moms"
+                            : "Exkl. moms"}
+                        </p>
                       </div>
                     </div>
 

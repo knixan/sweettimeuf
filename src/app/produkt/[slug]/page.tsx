@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { AddToCartForm } from "./add-to-cart-form";
+import { PriceList } from "./price-list";
 import { ImageLightbox } from "@/components/site/ImageLightbox";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -149,21 +150,7 @@ export default async function ProductPage({ params }: Props) {
             )}
 
             {/* Prices */}
-            {prices.length > 0 && (
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Pris och antal</h2>
-                <div className="bg-card border rounded-lg p-4 space-y-2">
-                  {prices.map((tier, index) => (
-                    <div key={index} className="flex justify-between">
-                      <span>{tier.quantity} st:</span>
-                      <span className="font-semibold">
-                        {tier.price.toFixed(2)} kr
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <PriceList prices={prices} />
 
             {/* Add to Cart Form */}
             <AddToCartForm

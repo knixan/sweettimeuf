@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useBuyerType } from "@/contexts/buyer-type-context";
+import { getDisplayPrice, formatPrice } from "@/lib/pricing";
 
 type Product = {
   id: string;
@@ -17,9 +21,12 @@ type PriceTier = {
 };
 
 export function ProductCard({ product }: { product: Product }) {
+  const { buyerType } = useBuyerType();
   const prices = (product.prices as PriceTier[]) || [];
   const lowestPrice =
     prices.length > 0 ? Math.min(...prices.map((p) => p.price)) : null;
+  const displayPrice =
+    lowestPrice !== null ? getDisplayPrice(lowestPrice, buyerType) : null;
   const firstImage = product.images[0];
 
   return (
@@ -54,9 +61,9 @@ export function ProductCard({ product }: { product: Product }) {
               {product.summary}
             </p>
           )}
-          {lowestPrice !== null && (
+          {displayPrice !== null && (
             <p className="text-lg font-bold text-primary">
-              Från {lowestPrice.toFixed(2)} kr
+              Från {formatPrice(displayPrice)} kr
             </p>
           )}
         </div>

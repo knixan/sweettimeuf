@@ -22,6 +22,7 @@ type Order = {
   invoiceCity: string | null;
   items: unknown;
   totalPrice: number;
+  customerType: string;
   status: string;
   handled: boolean;
   shipped: boolean;
@@ -276,6 +277,11 @@ export function OrderList({ orders }: { orders: Order[] }) {
                   <p className="text-sm font-medium">Totalt</p>
                   <p className="text-lg font-bold">
                     {order.totalPrice.toFixed(2)} kr
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {order.customerType === "private"
+                      ? "Inkl. moms (privatperson)"
+                      : "Exkl. moms (företag/förening)"}
                   </p>
                 </div>
               </div>

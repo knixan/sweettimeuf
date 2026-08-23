@@ -1,6 +1,8 @@
 "use client";
 
 import { useCart } from "@/contexts/cart-context";
+import { useBuyerType } from "@/contexts/buyer-type-context";
+import { getDisplayPrice, formatPrice } from "@/lib/pricing";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -34,6 +36,7 @@ type CheckoutFormData = z.infer<typeof CheckoutSchema>;
 
 export function CheckoutForm() {
   const { items, totalPrice, clearCart } = useCart();
+  const { buyerType } = useBuyerType();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [sameAddress, setSameAddress] = useState(true);
@@ -65,6 +68,7 @@ export function CheckoutForm() {
           invoiceCity: sameAddress ? undefined : data.invoiceCity,
           notes: data.notes,
           items,
+          buyerType,
         });
 
         clearCart();
@@ -112,7 +116,8 @@ export function CheckoutForm() {
                   </p>
                 )}
                 <p className="text-sm text-muted-foreground">
-                  {item.quantity} st × {item.price.toFixed(2)} kr
+                  {item.quantity} st ×{" "}
+                  {formatPrice(getDisplayPrice(item.price, buyerType))} kr
                 </p>
                 {item.customImageUrl && (
                   <div className="mt-2 p-2 bg-primary/10 rounded">
@@ -122,7 +127,10 @@ export function CheckoutForm() {
                   </div>
                 )}
                 <p className="font-semibold mt-1">
-                  {(item.quantity * item.price).toFixed(2)} kr
+                  {formatPrice(
+                    item.quantity * getDisplayPrice(item.price, buyerType),
+                  )}{" "}
+                  kr
                 </p>
               </div>
             </div>
@@ -131,8 +139,12 @@ export function CheckoutForm() {
           <div className="pt-4 border-t">
             <div className="flex justify-between text-lg font-bold">
               <span>Totalt:</span>
-              <span>{totalPrice.toFixed(2)} kr</span>
+              <span>{formatPrice(getDisplayPrice(totalPrice, buyerType))} kr</span>
             </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {buyerType === "private" ? "Inkl. 12% moms" : "Exkl. moms"} (
+              {buyerType === "private" ? "privatperson" : "företag/förening"})
+            </p>
             <p className="text-sm text-muted-foreground font-bold mt-2">
               OBS! Har du laddat upp en egen design till någon av produkterna i
               din beställning så tillkommer en klichékostnad på fakturan.

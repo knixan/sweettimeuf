@@ -1,6 +1,8 @@
 "use client";
 
 import { useCart } from "@/contexts/cart-context";
+import { useBuyerType } from "@/contexts/buyer-type-context";
+import { getDisplayPrice, formatPrice } from "@/lib/pricing";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
@@ -14,6 +16,7 @@ import { useSyncExternalStore } from "react";
 
 export function CartDropdown() {
   const { items, totalItems, totalPrice, removeItem } = useCart();
+  const { buyerType } = useBuyerType();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -71,7 +74,8 @@ export function CartDropdown() {
                         </p>
                       )}
                       <p className="text-sm text-muted-foreground">
-                        {item.quantity} st × {item.price.toFixed(2)} kr
+                        {item.quantity} st ×{" "}
+                        {formatPrice(getDisplayPrice(item.price, buyerType))} kr
                       </p>
                       {item.customImageUrl && (
                         <p className="text-xs text-primary font-semibold mt-1">
@@ -79,7 +83,10 @@ export function CartDropdown() {
                         </p>
                       )}
                       <p className="text-sm font-semibold">
-                        {(item.quantity * item.price).toFixed(2)} kr
+                        {formatPrice(
+                          item.quantity * getDisplayPrice(item.price, buyerType),
+                        )}{" "}
+                        kr
                       </p>
                     </div>
                     <button
@@ -93,10 +100,15 @@ export function CartDropdown() {
               </div>
 
               <div className="mt-4 pt-4 border-t">
-                <div className="flex justify-between font-bold text-lg mb-4">
+                <div className="flex justify-between font-bold text-lg mb-1">
                   <span>Totalt:</span>
-                  <span>{totalPrice.toFixed(2)} kr</span>
+                  <span>
+                    {formatPrice(getDisplayPrice(totalPrice, buyerType))} kr
+                  </span>
                 </div>
+                <p className="text-xs text-muted-foreground mb-4">
+                  {buyerType === "private" ? "Inkl. 12% moms" : "Exkl. moms"}
+                </p>
                 <Link href="/kassa">
                   <Button className="w-full">Gå till kassan</Button>
                 </Link>

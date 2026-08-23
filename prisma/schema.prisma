@@ -131,6 +131,7 @@ model Order {
   invoiceCity           String?
   items                 Json     // Array of cart items
   totalPrice            Float
+  customerType          String   @default("private") // "private" (inkl. moms) eller "company" (exkl. moms)
   status                String   @default("pending")
   handled               Boolean  @default(false)
   shipped               Boolean  @default(false)

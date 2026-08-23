@@ -3,6 +3,8 @@ import Navbar from "@/components/layout/navbar";
 import { prisma } from "@/lib/prisma";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/cart-context";
+import { BuyerTypeProvider } from "@/contexts/buyer-type-context";
+import { BuyerTypeBar } from "@/components/layout/buyer-type-bar";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/layout/Footer";
@@ -67,12 +69,15 @@ export default async function RootLayout({
     >
       <body className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>
-            <Navbar categories={categories} />
-            <Toaster position="bottom-right" />
-            {children}
-            <Footer />
-          </CartProvider>
+          <BuyerTypeProvider>
+            <CartProvider>
+              <BuyerTypeBar />
+              <Navbar categories={categories} />
+              <Toaster position="bottom-right" />
+              {children}
+              <Footer />
+            </CartProvider>
+          </BuyerTypeProvider>
         </ThemeProvider>
       </body>
     </html>

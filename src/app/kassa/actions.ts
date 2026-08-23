@@ -6,7 +6,10 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sendEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getDisplayPrice, type BuyerType } from "@/lib/pricing";
 import { z } from "zod";
+
+const BuyerTypeSchema = z.enum(["private", "company"]);
 
 const CartItemSchema = z.object({
   productId: z.string().min(1),
@@ -41,6 +44,7 @@ export async function createOrder(values: {
   invoiceCity?: string;
   notes?: string;
   items: unknown;
+  buyerType: BuyerType;
 }) {
   const {
     firstName,
@@ -62,6 +66,11 @@ export async function createOrder(values: {
   if (!firstName || !lastName || !email || !address || !postalCode || !city) {
     throw new Error("Alla obligatoriska fält måste fyllas i");
   }
+
+  const parsedBuyerType = BuyerTypeSchema.safeParse(values.buyerType);
+  const buyerType: BuyerType = parsedBuyerType.success
+    ? parsedBuyerType.data
+    : "private";
 
   await checkRateLimit("order", { windowMs: 15 * 60 * 1000, max: 10 });
 
@@ -101,7 +110,10 @@ export async function createOrder(values: {
       surcharge = variant.surcharge;
     }
 
-    return { ...item, price: tier.price + surcharge };
+    return {
+      ...item,
+      price: getDisplayPrice(tier.price + surcharge, buyerType),
+    };
   });
 
   const totalPrice = validatedItems.reduce(
@@ -142,6 +154,7 @@ export async function createOrder(values: {
         invoiceCity: invoiceCity || null,
         items: validatedItems,
         totalPrice,
+        customerType: buyerType,
         notes: notes || null,
         status: "pending",
         handled: false,
@@ -189,6 +202,7 @@ export async function createOrder(values: {
                 </tr>
               </tfoot>
             </table>
+            <p style="color:#666;font-size:14px">${buyerType === "private" ? "Priserna ovan är inkl. 12% moms." : "Priserna ovan är exkl. moms."}</p>
             <p style="color:#666;font-size:14px">Leveransadress: ${address}, ${postalCode} ${city}</p>
             <p style="margin-top:24px">Med vänliga hälsningar,<br/>SweetTime UF</p>
           </div>
