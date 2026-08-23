@@ -4,16 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/admin", label: "Översikt" },
-  { href: "/admin/produkter", label: "Produkter" },
-  { href: "/admin/kategorier", label: "Kategorier" },
-  { href: "/admin/offerter", label: "Offerter" },
-  { href: "/admin/kunder", label: "Kunder" },
-  { href: "/admin/admins", label: "Admins" },
+  { href: "/admin", label: "Översikt", adminOnly: false },
+  { href: "/admin/produkter", label: "Produkter", adminOnly: false },
+  { href: "/admin/kategorier", label: "Kategorier", adminOnly: false },
+  { href: "/admin/offerter", label: "Offerter", adminOnly: false },
+  { href: "/admin/kunder", label: "Kunder", adminOnly: true },
+  { href: "/admin/admins", label: "Admins", adminOnly: true },
 ];
 
-export function AdminNavbar() {
+export function AdminNavbar({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  const visibleLinks = links.filter((link) => isAdmin || !link.adminOnly);
 
   return (
     <nav className="border-b bg-card">
@@ -22,7 +23,7 @@ export function AdminNavbar() {
           <span className="font-semibold text-sm mr-4 text-muted-foreground">
             Admin
           </span>
-          {links.map(({ href, label }) => {
+          {visibleLinks.map(({ href, label }) => {
             const isActive =
               href === "/admin"
                 ? pathname === "/admin"

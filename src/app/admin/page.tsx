@@ -12,10 +12,10 @@ export default async function AdminPage() {
     redirect("/logga-in");
   }
 
-  // Check if user is admin - cast to include role field
-  const userRole = (session.user as { role?: string }).role;
+  const userRole = (session.user as { role?: string }).role ?? "user";
+  const isAdmin = userRole === "admin";
 
-  if (userRole !== "admin") {
+  if (!(isAdmin || userRole === "editor")) {
     redirect("/");
   }
 
@@ -29,18 +29,19 @@ export default async function AdminPage() {
             Välkommen, {session.user.name || "Admin"}!
           </h2>
           <p className="text-muted-foreground">
-            Du har administratörsrättigheter och kan hantera webbplatsen här.
+            Du har {isAdmin ? "administratörsrättigheter" : "redaktörsrättigheter"} och
+            kan hantera webbplatsen här.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="bg-card p-6 rounded-lg border">
-            <h3 className="font-semibold mb-2">Kunder</h3>
+            <h3 className="font-semibold mb-2">Produkter</h3>
             <a
-              href="/admin/kunder"
+              href="/admin/produkter"
               className="text-sm text-muted-foreground hover:underline"
             >
               <p className="text-sm text-muted-foreground">
-                Hantera kunder här
+                Lägg till och redigera produkter
               </p>
             </a>
           </div>
@@ -58,18 +59,6 @@ export default async function AdminPage() {
           </div>
 
           <div className="bg-card p-6 rounded-lg border">
-            <h3 className="font-semibold mb-2">Produkter</h3>
-            <a
-              href="/admin/produkter"
-              className="text-sm text-muted-foreground hover:underline"
-            >
-              <p className="text-sm text-muted-foreground">
-                Lägg till och redigera produkter
-              </p>
-            </a>
-          </div>
-
-          <div className="bg-card p-6 rounded-lg border">
             <h3 className="font-semibold mb-2">Offerter</h3>
             <a
               href="/admin/offerter"
@@ -80,6 +69,34 @@ export default async function AdminPage() {
               </p>
             </a>
           </div>
+
+          {isAdmin && (
+            <div className="bg-card p-6 rounded-lg border">
+              <h3 className="font-semibold mb-2">Kunder</h3>
+              <a
+                href="/admin/kunder"
+                className="text-sm text-muted-foreground hover:underline"
+              >
+                <p className="text-sm text-muted-foreground">
+                  Hantera kunder här
+                </p>
+              </a>
+            </div>
+          )}
+
+          {isAdmin && (
+            <div className="bg-card p-6 rounded-lg border">
+              <h3 className="font-semibold mb-2">Admins</h3>
+              <a
+                href="/admin/admins"
+                className="text-sm text-muted-foreground hover:underline"
+              >
+                <p className="text-sm text-muted-foreground">
+                  Hantera adminanvändare
+                </p>
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </main>

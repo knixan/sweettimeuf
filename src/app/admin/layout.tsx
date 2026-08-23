@@ -12,12 +12,12 @@ export default async function AdminLayout({
 
   if (!session?.user) redirect("/logga-in");
 
-  const userRole = (session.user as { role?: string }).role;
-  if (userRole !== "admin") redirect("/");
+  const userRole = (session.user as { role?: string }).role ?? "user";
+  if (!(userRole === "admin" || userRole === "editor")) redirect("/");
 
   return (
     <div className="min-h-screen">
-      <AdminNavbar />
+      <AdminNavbar isAdmin={userRole === "admin"} />
       <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
     </div>
   );

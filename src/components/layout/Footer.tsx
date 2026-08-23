@@ -143,10 +143,26 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between border-t pt-6 text-sm text-muted-foreground">
-          <div>
-            © {new Date().getFullYear()} Sweet Time UF. Alla rättigheter
-            förbehållna.
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2 border-t pt-6 text-sm text-muted-foreground">
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+            <span>
+              © {new Date().getFullYear()} Sweet Time UF. Alla rättigheter
+              förbehållna.
+            </span>
+            <span className="flex items-center gap-4">
+              <Link
+                href="/villkor"
+                className="hover:text-foreground transition-colors"
+              >
+                Köpvillkor
+              </Link>
+              <Link
+                href="/integritetspolicy"
+                className="hover:text-foreground transition-colors"
+              >
+                Integritetspolicy
+              </Link>
+            </span>
           </div>
           <div className="mt-2 md:mt-0">
             Kod och Design:{" "}
