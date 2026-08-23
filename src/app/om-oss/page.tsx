@@ -1,6 +1,6 @@
 import About from "@/components/site/About";
 import Team from "@/components/site/Team";
-import { Button } from "@/components/ui/button";
+import { Contact } from "@/components/site/contact";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -30,15 +30,8 @@ export default function Page() {
               oss så hör vi av oss!
             </p>
           </div>
-          <div className="bg-card rounded-3xl p-8 md:p-12 shadow-2xl text-center">
-            <p className="text-muted-foreground mb-6 text-lg">
-              Skicka din offertförfrågan via e-post så återkommer vi!
-            </p>
-            <a href="mailto:lg.sweets10@gmail.com">
-              <Button size="lg" className="rounded-full px-8 py-3">
-                Maila din offertförfrågan
-              </Button>
-            </a>
+          <div className="bg-card rounded-3xl p-8 md:p-12 shadow-2xl">
+            <Contact />
           </div>
         </div>
       </section>

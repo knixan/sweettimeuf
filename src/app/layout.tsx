@@ -3,15 +3,21 @@ import Navbar from "@/components/layout/navbar";
 import { prisma } from "@/lib/prisma";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/cart-context";
-import { Fredoka } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/layout/Footer";
 import type { Metadata } from "next";
 
-const fredoka = Fredoka({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-fredoka",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -54,7 +60,11 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="sv" className={fredoka.variable} suppressHydrationWarning>
+    <html
+      lang="sv"
+      className={`${inter.variable} ${playfair.variable}`}
+      suppressHydrationWarning
+    >
       <body className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CartProvider>

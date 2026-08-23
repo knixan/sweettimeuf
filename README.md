@@ -40,7 +40,7 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 - Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier
 - Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
-- Orderhantering: visa ordrar, markera som hanterad/skickad/faktura skickad
+- Orderhantering: visa ordrar, filtrera på status; orderstatus härleds automatiskt från flaggorna `handled` / `shipped` / `invoiceSent`
 - Kundhantering
 - Alla adminrutter skyddade – kräver `admin`-roll
 
@@ -49,13 +49,17 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - `/admin/*` – skyddad via layout-nivå sessionscheck (omdirigerar till `/logga-in` om ej autentiserad, till `/` om ej admin)
 - `/mina-sidor` – skyddad via sidnivå sessionscheck
 - Alla formulär valideras med React Hook Form + Zod, inklusive URL-validering vid bilduppladdning
+- Servervalidering av varukorgen i `createOrder` – Zod verifierar att pris och antal är positiva; totalpriset räknas om server-side och klientens värde ignoreras
+- Lösenord kräver minst 8 tecken (konsekvent i formulär och BetterAuth-konfiguration)
+- Rate limiting via `src/middleware.ts` – max 10 försök per 15 minuter och IP på inloggning, registrering och lösenordsåterställning (returnerar `429 Too Many Requests`)
 - Adminrutter och privata sidor exkluderade från sökmotorindexering via `robots.txt`
 
 ## SEO
 
-- Dynamisk `sitemap.xml` genereras automatiskt via `src/app/sitemap.ts` – inkluderar alla produkter och kategorier från databasen
-- `robots.txt` blockerar `/admin/`, `/kassa/`, `/mina-sidor/`, `/api/` m.fl.
-- Sidspecifik metadata (titel, beskrivning, Open Graph-bild) per produkt- och kategorisida via `generateMetadata`
+- Dynamisk `sitemap.xml` genereras automatiskt via `src/app/sitemap.ts` – inkluderar alla produkter och kategorier från databasen med `lastModified` och prioritet
+- `robots.txt` blockerar `/admin/`, `/kassa/`, `/mina-sidor/`, `/logga-in/`, `/registrera/`, `/glomt-losenord/`, `/api/` m.fl.
+- Sidspecifik metadata (titel, beskrivning, Open Graph-bild) på samtliga publika sidor via `generateMetadata` (produkter, kategorier, produktlista, om oss)
+- JSON-LD Product-schema på produktsidor – möjliggör rika sökresultat i Google med prisintervall och lagerstatus
 - `metadataBase` konfigurerad i root layout
 
 ## Installation
@@ -79,6 +83,10 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
    DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
    BETTER_AUTH_SECRET="your-secret-key"
    BETTER_AUTH_URL="http://localhost:3000"
+   SMTP_HOST="smtp.gmail.com"
+   SMTP_PORT="587"
+   SMTP_USER="din@gmail.com"
+   SMTP_PASS="ditt-app-losenord"
    ```
 
 4. Pusha schemat till databasen och generera Prisma-klienten:
@@ -143,9 +151,11 @@ src/
 │   └── cart-context.tsx        # Global kundvagnskontext
 ├── lib/
 │   ├── auth.ts / auth-client.ts / auth-server.ts
+│   ├── email.ts
 │   ├── prisma.ts
 │   ├── slug.ts
 │   └── schema/zod-schemas.ts
+├── middleware.ts               # Rate limiting på auth-endpoints
 └── types/
 ```
 

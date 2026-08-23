@@ -14,15 +14,18 @@ export async function sendEmail({
   to,
   subject,
   html,
+  replyTo,
 }: {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
 }) {
   await transporter.sendMail({
     from: `"SweetTime UF" <${process.env.SMTP_USER}>`,
     to,
     subject,
     html,
+    replyTo,
   });
 }
