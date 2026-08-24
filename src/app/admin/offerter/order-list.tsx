@@ -66,12 +66,25 @@ function applyFilter(orders: Order[], filter: Filter) {
   }
 }
 
+function applySearch(orders: Order[], search: string) {
+  const term = search.trim().toLowerCase();
+  if (!term) return orders;
+  return orders.filter(
+    (o) =>
+      o.orderNumber.toLowerCase().includes(term) ||
+      o.customerName.toLowerCase().includes(term) ||
+      o.customerEmail.toLowerCase().includes(term) ||
+      (o.customerCompany?.toLowerCase().includes(term) ?? false),
+  );
+}
+
 export function OrderList({ orders }: { orders: Order[] }) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [localOrders, setLocalOrders] = useState(orders);
   const [activeFilter, setActiveFilter] = useState<Filter>("alla");
+  const [search, setSearch] = useState("");
 
-  const filtered = applyFilter(localOrders, activeFilter);
+  const filtered = applySearch(applyFilter(localOrders, activeFilter), search);
 
   const handleFlagChange = async (
     orderId: string,
@@ -145,6 +158,15 @@ export function OrderList({ orders }: { orders: Order[] }) {
 
   return (
     <div className="space-y-4">
+      {/* Sök */}
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Sök på ordernummer, namn, e-post eller företag..."
+        className="w-full rounded-md bg-input/10 border border-input px-3 py-2 text-sm"
+      />
+
       {/* Filter */}
       <div className="flex flex-wrap gap-2">
         {FILTERS.map(({ key, label }) => (

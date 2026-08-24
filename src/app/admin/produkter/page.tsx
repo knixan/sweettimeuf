@@ -1,19 +1,25 @@
 import { requireAdminOrEditor } from "@/lib/server-auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ProductRow } from "./product-row";
+import { ProductList } from "./product-list";
 
 export default async function ProductsPage() {
   await requireAdminOrEditor();
 
-  const products = await prisma.product.findMany({
-    include: {
-      category: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      include: {
+        category: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
+    prisma.category.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   return (
     <main className="min-h-screen p-6">
@@ -28,19 +34,7 @@ export default async function ProductsPage() {
           </Link>
         </div>
 
-        <div className="bg-card rounded-lg border">
-          {products.length === 0 ? (
-            <div className="p-6 text-center text-muted-foreground">
-              Inga produkter än. Skapa din första produkt!
-            </div>
-          ) : (
-            <div className="divide-y">
-              {products.map((product) => (
-                <ProductRow key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductList products={products} categories={categories} />
       </div>
     </main>
   );
