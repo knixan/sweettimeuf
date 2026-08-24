@@ -10,19 +10,21 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 ## Tekniker
 
-| Kategori          | Teknik                                                                                     |
-| ----------------- | ------------------------------------------------------------------------------------------ |
-| Framework         | Next.js 16 (App Router)                                                                    |
-| UI                | React 19, Tailwind CSS 4, shadcn/ui                                                        |
-| Typsnitt          | Playfair Display (rubriker), Inter (brödtext)                                              |
-| Språk             | TypeScript                                                                                 |
-| Databas           | PostgreSQL + Prisma ORM                                                                    |
-| Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller)                                                   |
-| E-post            | Nodemailer (SMTP) – orderbekräftelse, verifiering, lösenordsåterställning, kontaktformulär |
-| Formulär          | React Hook Form + Zod                                                                      |
-| Carousel/Lightbox | Embla Carousel                                                                             |
-| Notifieringar     | Sonner                                                                                     |
-| Tema              | next-themes (mörkt/ljust)                                                                  |
+| Kategori          | Teknik                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| Framework         | Next.js 16 (App Router)                                                                     |
+| UI                | React 19, Tailwind CSS 4, shadcn/ui                                                         |
+| Typsnitt          | Playfair Display (rubriker), Inter (brödtext)                                               |
+| Språk             | TypeScript                                                                                  |
+| Databas           | PostgreSQL + Prisma ORM                                                                     |
+| Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller) – version **pinnad**, se Säkerhet nedan            |
+| Innehåll (CMS)    | Sanity – inbäddad Studio (`/studio`), redigerbara sidor (hero, om oss, villkor, integritet) |
+| E-post            | Nodemailer (SMTP) – orderbekräftelse, verifiering, lösenordsåterställning, kontaktformulär  |
+| Formulär          | React Hook Form + Zod                                                                       |
+| Carousel/Lightbox | Embla Carousel                                                                              |
+| Diagram           | Recharts (försäljningsstatistik i admin)                                                    |
+| Notifieringar     | Sonner                                                                                      |
+| Tema              | next-themes (mörkt/ljust)                                                                   |
 
 ## Funktioner
 
@@ -39,14 +41,18 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Registrering och inloggning med e-postverifiering
 - Glömt lösenord / återställ lösenord via e-post
 - Kontaktformulär (om oss-sidan) som skickar e-post direkt via Nodemailer, istället för en mailto-länk
+- Prisväljare Privatperson/Företag högst upp på sajten – styr om priser visas inkl. 12% moms (livsmedelsmoms) eller exkl. moms, sparas i localStorage och gäller genom hela köpflödet
+- Produktkaruseller på startsidan (populäraste och nyaste produkterna) med pilnavigering på desktop och "peek"-swipe på mobil
 
 ### Admin
 
-- Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier
+- Dashboard (`/admin`) med statistik: försäljning senaste 30 dagarna (diagram), antal ordrar, obehandlade ordrar, populäraste produkter och senaste ordrar
+- Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier – med sökfält och kategorifilter
 - Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
-- Orderhantering: visa ordrar, filtrera på status; orderstatus härleds automatiskt från flaggorna `handled` / `shipped` / `invoiceSent`
-- Kundhantering
+- Orderhantering: visa ordrar, sök (ordernummer/namn/e-post/företag) och filtrera på status; orderstatus härleds automatiskt från flaggorna `handled` / `shipped` / `invoiceSent`; visar om kunden betalade som privatperson (inkl. moms) eller företag (exkl. moms)
+- Kundhantering med sökfält
 - Adminanvändarhantering: befordra/ta bort admins
+- Mobilanpassad adminmeny (utfällbar sidomeny) utöver den vanliga menyraden på desktop
 - Alla adminrutter skyddade via inloggning + roll – två rollnivåer:
   - `admin` – full åtkomst, inklusive adminanvändare och kundhantering
   - `editor` – kan hantera produkter, kategorier och ordrar, men inte adminanvändare eller kundkonton
@@ -65,6 +71,42 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
   - `src/lib/rate-limit.ts` – samma princip för kontaktformuläret (5/15 min) och kassan (10/15 min) per IP, för att skydda mot spam mot e-postutskicken
 - JSON-LD på produktsidor escapas för att undvika att bryta ut ur `<script>`-taggen
 - Adminrutter och privata sidor exkluderade från sökmotorindexering via `robots.txt`
+
+### ⚠️ better-auth är medvetet pinnad till 1.3.34
+
+`package.json` låser `better-auth` till exakt `1.3.34` (inte `^1.3.34`). **Kör aldrig `npm update` eller ett fristående `npm install better-auth` utan att läsa detta först.**
+
+Anledningen: version 1.7 införde ett nytt obligatoriskt `issuer`-fält på `Account`-tabellen i Prisma-schemat. Utan en korrekt migrering (med backfill av `issuer` per kontotyp) kraschar inloggning och lösenordsåterställning med ett svårtolkat 500-fel ("Unknown argument `issuer`"). Detta hände skarpt i det här projektet när ett orelaterat `npm install` av ett annat paket råkade dra upp `better-auth` till 1.7.1.
+
+Att stanna på 1.3.34 innebär att projektet saknar patchar för flera CVE:er i senare versioner (se `npm audit`) – ingen av dem gäller funktioner som faktiskt används här (OAuth, magic link, organisationsplugin), men en riktig uppgradering till senaste versionen med korrekt schemamigrering bör göras som ett eget, planerat arbete – inte som en bieffekt av att installera något annat.
+
+## Innehållshantering (Sanity CMS)
+
+Hero-texten, Om oss-sidan, Köpvillkor och Integritetspolicy hämtas från Sanity istället för att vara hårdkodade – produkter och kategorier hanteras fortfarande i det egna admingränssnittet, inte i Sanity.
+
+Studion är **inbäddad** i Next.js-appen på `/studio` – ingen separat process, den körs på samma `npm run dev`/port 3000 som resten av sajten.
+
+Öppna [http://localhost:3000/studio](http://localhost:3000/studio) (eller `/studio` på produktionsdomänen), logga in med det Sanity-konto som äger projektet, redigera under "Innehåll" i menyn och klicka **Publicera** – ändringen syns på sajten inom några sekunder utan omdeploy.
+
+Om en sida saknar innehåll i Sanity (t.ex. innan något fyllts i) visas samma text som tidigare var hårdkodad – sidorna går aldrig tomma.
+
+**Miljövariabler** (`.env`):
+
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID="plgh82e6"
+NEXT_PUBLIC_SANITY_DATASET="production"
+```
+
+> ⚠️ Inbäddad Studio är medvetet valt istället för Sanitys rekommenderade fristående upplägg, för att kunna nå Studio på `/studio` som i andra projekt. Notera: Studio-uppdateringar kräver `npm install` + omdeploy av hela appen (auto-uppdateras inte), och byggen/dev är långsammare än en fristående Vite-driven Studio hade varit.
+>
+> Studio-sidan (`src/app/studio/[[...tool]]/page.tsx`) måste vara markerad `"use client"` – annars evalueras `sanity.config.ts` som en Server Component och kraschar (`createContext is not a function`), eftersom Sanitys pluginfabriker (t.ex. `structureTool()`) anropar React-context-API:er som inte finns i RSC-miljön.
+
+Efter schemaändringar i `src/sanity/schemaTypes/`, kör om typegenereringen så att frontend-koden får uppdaterade typer:
+
+```bash
+npx sanity schemas extract
+npx sanity typegen generate
+```
 
 ## SEO
 
@@ -95,6 +137,8 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
    DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
    BETTER_AUTH_SECRET="your-secret-key"
    BETTER_AUTH_URL="http://localhost:3000"
+   NEXT_PUBLIC_SANITY_PROJECT_ID="plgh82e6"
+   NEXT_PUBLIC_SANITY_DATASET="production"
    SMTP_HOST="smtp.gmail.com"
    SMTP_PORT="587"
    SMTP_USER="din@gmail.com"
@@ -129,47 +173,65 @@ npx prisma db push    # Pusha schema till databas (dev)
 npx prisma generate   # Generera Prisma-klient
 ```
 
+```bash
+npx sanity schemas extract     # Extrahera Sanity-schemat (schema.json)
+npx sanity typegen generate    # Generera om TypeScript-typer efter schemaändring
+```
+
 ## Projektstruktur
 
 ```
+sanity.config.ts / sanity.cli.ts # Sanity-config (projectId/dataset, schema, structure, plugins)
+schema.json                      # Extraherat schema (genereras, underlag för typegen)
+sanity.types.ts                  # Genererade TypeScript-typer för GROQ-queries
+
 src/
 ├── app/
-│   ├── admin/
-│   │   ├── admins/             # Adminanvändarhantering
-│   │   ├── kategorier/         # Kategorihantering
-│   │   ├── kunder/             # Kundhantering
-│   │   ├── offerter/           # Orderhantering
-│   │   └── produkter/          # Produkthantering (lista + skapa/redigera)
-│   ├── api/auth/               # BetterAuth API-rutter
-│   ├── kassa/                  # Kassa (formulär + server actions)
-│   ├── kategori/[slug]/        # Dynamiska kategorisidor
-│   ├── logga-in/               # Inloggningssida
-│   ├── mina-sidor/             # Orderhistorik för inloggad kund
-│   ├── om-oss/                 # Om oss-sida + kontaktformulär (server action)
-│   ├── orderbekraftelse/       # Orderbekräftelse
-│   ├── produkt/
-│   │   ├── [slug]/             # Produktsida med lightbox och lägg-i-kundvagn
-│   │   └── page.tsx            # Produktlista
-│   ├── registrera/             # Registreringssida
-│   ├── sitemap.ts              # Dynamisk sitemap (produkter + kategorier)
-│   ├── layout.tsx              # Root layout med global metadata
-│   └── page.tsx                # Startsida med populära produkter
+│   ├── (site)/                  # Route group – allt som ska ha Navbar/Footer/BuyerTypeBar
+│   │   ├── admin/
+│   │   │   ├── admins/          # Adminanvändarhantering
+│   │   │   ├── kategorier/      # Kategorihantering
+│   │   │   ├── kunder/          # Kundhantering + sökfält
+│   │   │   ├── offerter/        # Orderhantering + sökfält
+│   │   │   ├── produkter/       # Produkthantering (lista + skapa/redigera) + sök/kategorifilter
+│   │   │   └── page.tsx         # Dashboard med statistik och försäljningsdiagram
+│   │   ├── integritetspolicy/   # Integritetspolicy (innehåll från Sanity)
+│   │   ├── kassa/                # Kassa (formulär + server actions)
+│   │   ├── kategori/[slug]/      # Dynamiska kategorisidor
+│   │   ├── logga-in/             # Inloggningssida
+│   │   ├── mina-sidor/           # Orderhistorik för inloggad kund
+│   │   ├── om-oss/               # Om oss-sida (Sanity) + kontaktformulär (server action)
+│   │   ├── orderbekraftelse/     # Orderbekräftelse
+│   │   ├── produkt/
+│   │   │   ├── [slug]/           # Produktsida med lightbox och lägg-i-kundvagn
+│   │   │   └── page.tsx          # Produktlista
+│   │   ├── registrera/           # Registreringssida
+│   │   ├── villkor/               # Köpvillkor (innehåll från Sanity)
+│   │   ├── layout.tsx            # Navbar/Footer/BuyerTypeBar/CartProvider/SanityLive
+│   │   └── page.tsx              # Startsida med produktkaruseller
+│   ├── studio/[[...tool]]/       # Inbäddad Sanity Studio ("use client" – se Innehållshantering)
+│   ├── api/auth/                 # BetterAuth API-rutter
+│   ├── sitemap.ts                # Dynamisk sitemap (produkter + kategorier)
+│   └── layout.tsx                # Root layout (endast html/body/typsnitt/metadata)
 ├── components/
-│   ├── admin/
-│   ├── layout/                 # Navbar, footer, kundvagnsdropdown
-│   ├── site/                   # Hero, About, Team, ProductCard m.m.
-│   └── ui/                     # shadcn/ui-komponenter
+│   ├── admin/                   # admin-navbar (mobilmeny), sales-chart
+│   ├── layout/                  # Navbar, footer, kundvagnsdropdown, buyer-type-bar
+│   ├── site/                    # Hero, About, Team, ProductCard, ProductCarousel m.m.
+│   └── ui/                      # shadcn/ui-komponenter
 ├── contexts/
-│   └── cart-context.tsx        # Global kundvagnskontext
+│   ├── cart-context.tsx         # Global kundvagnskontext
+│   └── buyer-type-context.tsx   # Privatperson/företag-val (moms-visning)
 ├── lib/
 │   ├── auth.ts / auth-client.ts / auth-server.ts
-│   ├── server-auth.ts          # requireAdmin / requireAdminOrEditor – rollkontroll för admin-actions
-│   ├── rate-limit.ts           # Delad rate limiter för kontaktformulär och kassa
-│   ├── email.ts                # Nodemailer-transport + sendEmail
+│   ├── server-auth.ts           # requireAdmin / requireAdminOrEditor – rollkontroll för admin-actions
+│   ├── rate-limit.ts            # Delad rate limiter för kontaktformulär och kassa
+│   ├── pricing.ts                # Momsberäkning (privatperson/företag)
+│   ├── email.ts                  # Nodemailer-transport + sendEmail
 │   ├── prisma.ts
 │   ├── slug.ts
 │   └── schema/zod-schemas.ts
-├── middleware.ts               # Rate limiting på auth-endpoints
+├── sanity/                      # Sanity-klient, GROQ-queries, bildhjälpare, schema + structure (Studio)
+├── middleware.ts                # Rate limiting på auth-endpoints
 └── types/
 ```
 
@@ -185,7 +247,7 @@ src/
 
 ### Order
 
-`id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `status` · flaggor: `handled` · `shipped` · `invoiceSent`
+`id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `customerType` (`private` inkl. moms / `company` exkl. moms) · `status` · flaggor: `handled` · `shipped` · `invoiceSent`
 
 ### User
 

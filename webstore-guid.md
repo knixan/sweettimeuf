@@ -129,7 +129,7 @@ Sajten körs idag på Josefines egna konton (Vercel, Neon, Gmail för SMTP). Inn
 - **Kod/GitHub:** överför ägarskapet av GitHub-repot till Sweet Time UF – kunden har redan ett eget GitHub-konto.
 - **Vercel:** driftsätt/flytta projektet till kundens eget Vercel-konto istället för Josefines – kunden har redan ett eget Vercel-konto.
 - **Databas (Neon):** kunden behöver skapa ett eget (gratis) Neon-konto och få databasen migrerad dit, så att Sweet Time UF äger sin egen data oberoende av Josefines konto.
-- **Sanity** (om ni går vidare med CMS-förslaget nedan): kunden behöver också skapa ett eget gratis Sanity-konto.
+- **Sanity:** kunden behöver också skapa ett eget gratis Sanity-konto och få projektet överfört dit (se CMS-avsnittet nedan).
 
 ### Stripe för privatpersoner
 
@@ -141,12 +141,22 @@ Idag går alla beställningar via kassan som en "offert" – ingen betalning ske
 - Skulle sannolikt bara aktiveras när köparen valt "Privatperson" i väljaren – företag fortsätter få faktura
 - Påverkar orderflödet: en betald order bör markeras annorlunda än dagens "ohanterad/hanterad/skickad/faktura skickad"-status
 
-### Sanity CMS för redigerbara texter
+### Sanity CMS för redigerbara texter — ✅ klart
 
-Sidor som Om oss, Hero-texten och footer-texten är hårdkodade i koden idag – varje textändring kräver en kodändring. Sanity (eller en annan headless CMS) skulle låta er redigera sådan text själva, utan att röra kod. Produkter och kategorier bör troligen **inte** flyttas dit – de hanteras redan bra via det egna admingränssnittet.
+Hero, Om oss, Köpvillkor och Integritetspolicy hämtar nu sin text från Sanity istället för att vara hårdkodade. Produkter och kategorier rörs inte – de hanteras fortfarande via det egna admingränssnittet, som tänkt.
 
-- Bra kandidat för: hero-text, Om oss-sidan, footer-text, ev. köpvillkor/integritetspolicy
-- Kräver ett Sanity-projekt (gratis upp till en viss gräns) och en Sanity Studio att redigera i
+**Så redigerar du innehållet:**
+
+1. Starta appen som vanligt (`npm run dev`)
+2. Öppna [http://localhost:3000/studio](http://localhost:3000/studio) (eller `/studio` på produktionsdomänen) och logga in med samma Sanity-konto som skapade projektet
+3. Under "Innehåll" i menyn hittar du **Hero**, **Om oss-sida**, **Köpvillkor** och **Integritetspolicy** – redigera och klicka **Publicera**
+4. Ändringen syns på sajten inom några sekunder (ingen omdeploy behövs)
+
+**Tekniskt:**
+
+- Sanity-projektet (`plgh82e6`, dataset `production`) är **inbäddat** i Next.js-appen på `/studio` – körs på samma port/process som resten av sajten, ingen separat server. Detta valdes medvetet framför Sanitys rekommenderade fristående upplägg (som fanns tidigare i en egen `studio/`-mapp), för att kunna nå Studio på samma URL-mönster som andra Sanity-projekt (`/studio` på port 3000). Priset: Studio-uppdateringar (buggfixar, säkerhetspatchar från Sanity) kräver `npm install` + omdeploy av hela appen istället för att ske automatiskt, och Studio-relaterade byggen/dev är långsammare.
+- Så länge en sida saknar innehåll i Sanity (innan ni fyllt i något) visas samma text som fanns hårdkodad tidigare – inget blir tomt eller trasigt under övergången.
+- Kom ihåg [Ägarskap-sektionen](#ägarskap--överlämning-av-drift) ovan – Sanity-kontot behöver också flyttas till kundens egen organisation.
 
 ### Fraktkostnader
 

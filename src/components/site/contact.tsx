@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { sendContactMessage } from "@/app/om-oss/actions";
+import { sendContactMessage } from "@/app/(site)/om-oss/actions";
 
 const ContactFormSchema = z.object({
   name: z.string().min(1, "Namn krävs"),
