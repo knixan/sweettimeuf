@@ -84,7 +84,8 @@ export function CartDropdown() {
                       )}
                       <p className="text-sm font-semibold">
                         {formatPrice(
-                          item.quantity * getDisplayPrice(item.price, buyerType),
+                          item.quantity *
+                            getDisplayPrice(item.price, buyerType),
                         )}{" "}
                         kr
                       </p>

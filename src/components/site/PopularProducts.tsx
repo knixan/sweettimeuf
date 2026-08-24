@@ -51,5 +51,7 @@ async function getPopularProducts() {
 export async function PopularProducts() {
   const products = await getPopularProducts();
 
-  return <ProductCarousel title="Våra populära produkter" products={products} />;
+  return (
+    <ProductCarousel title="Våra populära produkter" products={products} />
+  );
 }

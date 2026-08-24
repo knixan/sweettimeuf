@@ -21,7 +21,10 @@ export function SalesChart({
   data: { date: string; label: string; revenue: number }[];
 }) {
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[260px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-auto h-[260px] w-full"
+    >
       <BarChart data={data} margin={{ left: 0, right: 0 }}>
         <CartesianGrid vertical={false} />
         <XAxis

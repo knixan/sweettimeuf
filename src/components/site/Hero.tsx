@@ -35,8 +35,8 @@ export default function Hero() {
 
           <p className="text-lg text-white/70 max-w-xl mb-10">
             Premium godis och choklad för företag, föreningar och
-            privatpersoner. Vi skapar magiska stunder genom
-            kvalitetsprodukter och personlig service.
+            privatpersoner. Vi skapar magiska stunder genom kvalitetsprodukter
+            och personlig service.
           </p>
 
           <div className="flex flex-wrap items-center gap-6">
@@ -48,13 +48,12 @@ export default function Hero() {
               <FiArrowRight />
             </Link>
 
-           <Link
+            <Link
               href="/produkt"
               className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold rounded-full bg-white text-[#111111] hover:bg-white/90 transition-colors"
             >
               <CiMail />
               Kontakta oss
-              
             </Link>
           </div>
         </div>

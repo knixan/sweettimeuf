@@ -136,7 +136,10 @@ export function AddToCartForm({ product }: { product: Product }) {
             {product.prices.map((tier, index) => (
               <option key={index} value={index}>
                 {tier.quantity} st —{" "}
-                {formatPrice(getDisplayPrice(tier.price + surcharge, buyerType))} kr
+                {formatPrice(
+                  getDisplayPrice(tier.price + surcharge, buyerType),
+                )}{" "}
+                kr
               </option>
             ))}
           </select>
@@ -167,8 +170,8 @@ export function AddToCartForm({ product }: { product: Product }) {
           </p>
           <p className="text-sm text-muted-foreground mt-1 font-bold">
             OBS! En klichékostnad tillkommer per unik design som laddas upp,
-            oavsett antal produkter i ordern – se prisuppgift under
-            Information ovan. Tillkommer på fakturan.
+            oavsett antal produkter i ordern – se prisuppgift under Information
+            ovan. Tillkommer på fakturan.
           </p>
         </div>
       )}

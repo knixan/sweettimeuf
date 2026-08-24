@@ -98,12 +98,17 @@ async function getDashboardData() {
     const key = dayKey(date);
     return {
       date: key,
-      label: date.toLocaleDateString("sv-SE", { day: "numeric", month: "short" }),
+      label: date.toLocaleDateString("sv-SE", {
+        day: "numeric",
+        month: "short",
+      }),
       revenue: Math.round((revenueByDay.get(key) ?? 0) * 100) / 100,
     };
   });
 
-  const pendingOrders = allOrders.filter((o) => !o.handled && !o.shipped).length;
+  const pendingOrders = allOrders.filter(
+    (o) => !o.handled && !o.shipped,
+  ).length;
   const invoicedOrders = allOrders.filter((o) => o.invoiceSent).length;
 
   // Populäraste produkterna, sorterat på totalt sålt antal
@@ -156,7 +161,8 @@ function getOrderStatusLabel(order: {
   if (order.handled)
     return {
       text: "Hanteras",
-      className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+      className:
+        "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
     };
   return {
     text: "Ohanterad",
@@ -216,7 +222,8 @@ export default async function AdminPage() {
                   }`}
                 >
                   {data.revenueDelta >= 0 ? "+" : ""}
-                  {data.revenueDelta.toFixed(1)}% jämfört med föregående 30 dagar
+                  {data.revenueDelta.toFixed(1)}% jämfört med föregående 30
+                  dagar
                 </p>
               )}
             </CardContent>

@@ -14,7 +14,12 @@ export default function IntegritetspolicyPage() {
           Integritetspolicy
         </h1>
         <p className="text-sm text-muted-foreground mb-10">
-          Senast uppdaterad: {new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })}
+          Senast uppdaterad:{" "}
+          {new Date().toLocaleDateString("sv-SE", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
 
         <div className="space-y-10 text-foreground">
@@ -24,8 +29,8 @@ export default function IntegritetspolicyPage() {
             </h2>
             <p className="text-muted-foreground">
               Sweet Time UF, Mjölby, är personuppgiftsansvarig för de
-              personuppgifter som behandlas i samband med köp och
-              användarkonto på sajten. Kontakta oss på{" "}
+              personuppgifter som behandlas i samband med köp och användarkonto
+              på sajten. Kontakta oss på{" "}
               <a
                 href="mailto:lg.sweets10@gmail.com"
                 className="text-primary hover:underline"
@@ -77,12 +82,12 @@ export default function IntegritetspolicyPage() {
               3. Varför vi behandlar dina uppgifter
             </h2>
             <p className="text-muted-foreground">
-              Vi behandlar dina uppgifter för att kunna fullgöra köpet
-              (leverera varan och skicka faktura), hantera ditt konto och
-              din orderhistoria, svara på meddelanden du skickar via
+              Vi behandlar dina uppgifter för att kunna fullgöra köpet (leverera
+              varan och skicka faktura), hantera ditt konto och din
+              orderhistoria, svara på meddelanden du skickar via
               kontaktformuläret, och uppfylla bokföringsskyldigheter enligt
-              bokföringslagen. Den rättsliga grunden är i huvudsak
-              fullgörande av avtal samt rättslig förpliktelse.
+              bokföringslagen. Den rättsliga grunden är i huvudsak fullgörande
+              av avtal samt rättslig förpliktelse.
             </p>
           </section>
 
@@ -91,11 +96,10 @@ export default function IntegritetspolicyPage() {
               4. Hur länge vi sparar uppgifterna
             </h2>
             <p className="text-muted-foreground">
-              Uppgifter kopplade till en beställning sparas så länge det
-              krävs enligt bokföringslagen, normalt sju år efter
-              räkenskapsårets utgång. Kontouppgifter sparas så länge du har
-              ett aktivt konto hos oss – du kan när som helst be oss radera
-              ditt konto.
+              Uppgifter kopplade till en beställning sparas så länge det krävs
+              enligt bokföringslagen, normalt sju år efter räkenskapsårets
+              utgång. Kontouppgifter sparas så länge du har ett aktivt konto hos
+              oss – du kan när som helst be oss radera ditt konto.
             </p>
           </section>
 
@@ -105,11 +109,10 @@ export default function IntegritetspolicyPage() {
             </h2>
             <p className="text-muted-foreground">
               Vi säljer aldrig dina uppgifter vidare. Uppgifter kan delas med
-              underleverantörer som behövs för att driva sajten och
-              leverera din beställning, till exempel vår
-              e-postleverantör (för orderbekräftelser och
-              kontoutskick) och vår driftleverantör som hostar sajten och
-              databasen.
+              underleverantörer som behövs för att driva sajten och leverera din
+              beställning, till exempel vår e-postleverantör (för
+              orderbekräftelser och kontoutskick) och vår driftleverantör som
+              hostar sajten och databasen.
             </p>
           </section>
 
@@ -119,27 +122,26 @@ export default function IntegritetspolicyPage() {
               Sajten använder endast cookies som krävs för att sajten ska
               fungera – framför allt en inloggningscookie som håller dig
               inloggad. Vi använder inga cookies för reklam eller
-              tredjeparts­analys. Nödvändiga cookies kräver inte samtycke
-              enligt lagen om elektronisk kommunikation, men du informeras
-              om dem här.
+              tredjeparts­analys. Nödvändiga cookies kräver inte samtycke enligt
+              lagen om elektronisk kommunikation, men du informeras om dem här.
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-2xl mb-3">7. Dina rättigheter</h2>
             <p className="text-muted-foreground">
-              Du har rätt att begära tillgång till, rättelse av eller
-              radering av dina personuppgifter, samt att invända mot viss
-              behandling. Kontakta oss på{" "}
+              Du har rätt att begära tillgång till, rättelse av eller radering
+              av dina personuppgifter, samt att invända mot viss behandling.
+              Kontakta oss på{" "}
               <a
                 href="mailto:lg.sweets10@gmail.com"
                 className="text-primary hover:underline"
               >
                 lg.sweets10@gmail.com
               </a>{" "}
-              för att utöva dina rättigheter. Du har även rätt att lämna in
-              ett klagomål till Integritetsskyddsmyndigheten (IMY) om du
-              anser att vi behandlar dina uppgifter felaktigt.
+              för att utöva dina rättigheter. Du har även rätt att lämna in ett
+              klagomål till Integritetsskyddsmyndigheten (IMY) om du anser att
+              vi behandlar dina uppgifter felaktigt.
             </p>
           </section>
 
@@ -148,9 +150,9 @@ export default function IntegritetspolicyPage() {
               8. Ändringar av policyn
             </h2>
             <p className="text-muted-foreground">
-              Vi kan uppdatera den här policyn, till exempel om vi ändrar
-              vilka verktyg vi använder för att driva sajten. Den senaste
-              versionen finns alltid på den här sidan.
+              Vi kan uppdatera den här policyn, till exempel om vi ändrar vilka
+              verktyg vi använder för att driva sajten. Den senaste versionen
+              finns alltid på den här sidan.
             </p>
           </section>
         </div>

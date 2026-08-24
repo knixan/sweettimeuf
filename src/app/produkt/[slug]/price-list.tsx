@@ -24,7 +24,9 @@ export function PriceList({ prices }: { prices: PriceTier[] }) {
         ))}
       </div>
       <p className="text-xs text-muted-foreground mt-2">
-        {buyerType === "private" ? "Priser inkl. 12% moms" : "Priser exkl. moms"}
+        {buyerType === "private"
+          ? "Priser inkl. 12% moms"
+          : "Priser exkl. moms"}
       </p>
     </div>
   );

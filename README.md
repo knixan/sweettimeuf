@@ -10,19 +10,19 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 ## Tekniker
 
-| Kategori          | Teknik                                   |
-| ----------------- | ---------------------------------------- |
-| Framework         | Next.js 16 (App Router)                  |
-| UI                | React 19, Tailwind CSS 4, shadcn/ui      |
-| Typsnitt          | Playfair Display (rubriker), Inter (brödtext) |
-| Språk             | TypeScript                               |
-| Databas           | PostgreSQL + Prisma ORM                  |
-| Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller) |
+| Kategori          | Teknik                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| Framework         | Next.js 16 (App Router)                                                                    |
+| UI                | React 19, Tailwind CSS 4, shadcn/ui                                                        |
+| Typsnitt          | Playfair Display (rubriker), Inter (brödtext)                                              |
+| Språk             | TypeScript                                                                                 |
+| Databas           | PostgreSQL + Prisma ORM                                                                    |
+| Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller)                                                   |
 | E-post            | Nodemailer (SMTP) – orderbekräftelse, verifiering, lösenordsåterställning, kontaktformulär |
-| Formulär          | React Hook Form + Zod                    |
-| Carousel/Lightbox | Embla Carousel                           |
-| Notifieringar     | Sonner                                   |
-| Tema              | next-themes (mörkt/ljust)                |
+| Formulär          | React Hook Form + Zod                                                                      |
+| Carousel/Lightbox | Embla Carousel                                                                             |
+| Notifieringar     | Sonner                                                                                     |
+| Tema              | next-themes (mörkt/ljust)                                                                  |
 
 ## Funktioner
 

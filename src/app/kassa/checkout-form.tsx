@@ -139,7 +139,9 @@ export function CheckoutForm() {
           <div className="pt-4 border-t">
             <div className="flex justify-between text-lg font-bold">
               <span>Totalt:</span>
-              <span>{formatPrice(getDisplayPrice(totalPrice, buyerType))} kr</span>
+              <span>
+                {formatPrice(getDisplayPrice(totalPrice, buyerType))} kr
+              </span>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               {buyerType === "private" ? "Inkl. 12% moms" : "Exkl. moms"} (

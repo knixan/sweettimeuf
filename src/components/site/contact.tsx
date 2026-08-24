@@ -87,9 +87,7 @@ export function Contact() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
-          Meddelande *
-        </label>
+        <label className="block text-sm font-medium mb-1">Meddelande *</label>
         <textarea
           {...register("message")}
           rows={5}
@@ -97,9 +95,7 @@ export function Contact() {
           placeholder="Berätta vad du är intresserad av..."
         />
         {errors.message && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.message.message}
-          </p>
+          <p className="text-sm text-red-500 mt-1">{errors.message.message}</p>
         )}
       </div>
 

@@ -93,7 +93,8 @@ export async function createOrder(values: {
       throw new Error(`Produkten "${item.title}" finns inte längre`);
     }
 
-    const priceTiers = (product.prices as { quantity: number; price: number }[]) ?? [];
+    const priceTiers =
+      (product.prices as { quantity: number; price: number }[]) ?? [];
     const tier = priceTiers.find((t) => t.quantity === item.quantity);
     if (!tier) {
       throw new Error(`Ogiltigt antal för "${product.title}"`);
@@ -103,7 +104,9 @@ export async function createOrder(values: {
     if (item.selectedVariant) {
       const variantOptions =
         (product.variantOptions as { name: string; surcharge: number }[]) ?? [];
-      const variant = variantOptions.find((v) => v.name === item.selectedVariant);
+      const variant = variantOptions.find(
+        (v) => v.name === item.selectedVariant,
+      );
       if (!variant) {
         throw new Error(`Ogiltig variant för "${product.title}"`);
       }

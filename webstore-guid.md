@@ -22,10 +22,10 @@ Gå till [/logga-in](https://www.sweettime-uf.se/logga-in) och logga in med ditt
 
 Det finns två rollnivåer:
 
-| Roll     | Kan hantera                                      | Kan **inte** hantera            |
-| -------- | ------------------------------------------------- | -------------------------------- |
-| `editor` | Produkter, kategorier, offerter                   | Kunder, adminanvändare           |
-| `admin`  | Allt ovan + kunder och adminanvändare              | –                                 |
+| Roll     | Kan hantera                           | Kan **inte** hantera   |
+| -------- | ------------------------------------- | ---------------------- |
+| `editor` | Produkter, kategorier, offerter       | Kunder, adminanvändare |
+| `admin`  | Allt ovan + kunder och adminanvändare | –                      |
 
 Nya konton på sidan får alltid rollen `user` (vanlig kund) och kan aldrig bli admin eller editor genom att registrera sig själva – det gör bara en befintlig admin via [Admins](#admins)-sidan.
 
@@ -41,19 +41,19 @@ Här listas alla produkter. Klicka på en produkt för att redigera den, eller p
 
 ### Fält i produktformuläret
 
-| Fält | Beskrivning |
-| --- | --- |
-| **Titel** \* | Produktens namn – visas överallt på sajten |
-| **Kategori** | Valfri koppling till en kategori (styr var produkten dyker upp under `/kategori/...`) |
-| **Art. nummer** | Internt artikelnummer, valfritt |
-| **Sammanfattning** | Kort text som visas i produktlistor/kort |
-| **Om produkten** | Längre beskrivningstext på produktsidan |
-| **Pris och antal** | En eller flera prisrader: `antal` + `pris (kr)`. Kunden väljer bland dessa rader i en dropdown vid köp – lägg till en rad per kvantitetssteg (t.ex. 100 st / 500 st / 1000 st) |
-| **Information / detaljer** | Fritext för t.ex. minsta order, hållbarhet, leveranstid |
-| **Val av smak/färg** | Valfritt. Ange en etikett (t.ex. "Välj smak") och lägg till alternativ med namn + ett eventuellt pristillägg i kr |
-| **Bilder (URL)** | En eller flera bild-URL:er. Första bilden används som huvudbild |
-| **Tillåt kund att ladda upp bild** | Kryssruta – visar ett fält på produktsidan där kunden kan klistra in en länk till egen design innan köp |
-| **Tryckfiler / mallar** | Länkar till nedladdningsbara PDF-mallar som visas på produktsidan |
+| Fält                               | Beskrivning                                                                                                                                                                    |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Titel** \*                       | Produktens namn – visas överallt på sajten                                                                                                                                     |
+| **Kategori**                       | Valfri koppling till en kategori (styr var produkten dyker upp under `/kategori/...`)                                                                                          |
+| **Art. nummer**                    | Internt artikelnummer, valfritt                                                                                                                                                |
+| **Sammanfattning**                 | Kort text som visas i produktlistor/kort                                                                                                                                       |
+| **Om produkten**                   | Längre beskrivningstext på produktsidan                                                                                                                                        |
+| **Pris och antal**                 | En eller flera prisrader: `antal` + `pris (kr)`. Kunden väljer bland dessa rader i en dropdown vid köp – lägg till en rad per kvantitetssteg (t.ex. 100 st / 500 st / 1000 st) |
+| **Information / detaljer**         | Fritext för t.ex. minsta order, hållbarhet, leveranstid                                                                                                                        |
+| **Val av smak/färg**               | Valfritt. Ange en etikett (t.ex. "Välj smak") och lägg till alternativ med namn + ett eventuellt pristillägg i kr                                                              |
+| **Bilder (URL)**                   | En eller flera bild-URL:er. Första bilden används som huvudbild                                                                                                                |
+| **Tillåt kund att ladda upp bild** | Kryssruta – visar ett fält på produktsidan där kunden kan klistra in en länk till egen design innan köp                                                                        |
+| **Tryckfiler / mallar**            | Länkar till nedladdningsbara PDF-mallar som visas på produktsidan                                                                                                              |
 
 > **Viktigt om priser:** Kassan litar aldrig på vad kunden skickar in – den slår alltid upp det verkliga priset (och ett eventuellt varianttillägg) från produktens prisrader i databasen. Det betyder att en beställning bara går igenom om kunden väljer **exakt** en av de antal-rader du har lagt in, och en variant som faktiskt finns i listan. Lägger du inte in rätt kvantitet som en egen rad kan kunden inte beställa det antalet.
 

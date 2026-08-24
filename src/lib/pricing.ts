@@ -6,7 +6,10 @@ export type BuyerType = "private" | "company";
  * Alla priser lagras exkl. moms. Privatpersoner ser priset inkl. 12% moms
  * (livsmedelsmoms), företag/föreningar ser grundpriset.
  */
-export function getDisplayPrice(basePrice: number, buyerType: BuyerType): number {
+export function getDisplayPrice(
+  basePrice: number,
+  buyerType: BuyerType,
+): number {
   return buyerType === "private" ? basePrice * (1 + VAT_RATE) : basePrice;
 }
 
