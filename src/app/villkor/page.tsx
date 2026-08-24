@@ -17,19 +17,6 @@ export default function VillkorPage() {
           Senast uppdaterad: {new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })}
         </p>
 
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 mb-10 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground mb-1">
-            Detta är under uppdatering och behöver kompletteras med mer information om Sweet Time UF:s behandling av personuppgifter.
-          </p>
-          <p>
-            Texten nedan bygger på hur beställningsflödet faktiskt fungerar på
-            sajten idag. Komplettera gärna med organisationsnummer (om Sweet
-            Time UF har ett), uppgift om momsregistrering, och en eventuell
-            fysisk returadress om den skiljer sig från kontaktuppgifterna
-            nedan.
-          </p>
-        </div>
-
         <div className="space-y-10 text-foreground">
           <section>
             <h2 className="font-display text-2xl mb-3">1. Om Sweet Time UF</h2>
@@ -69,8 +56,11 @@ export default function VillkorPage() {
             </h2>
             <p className="text-muted-foreground">
               Priserna anges i svenska kronor (SEK) på respektive produktsida.
-              Faktura skickas manuellt efter att beställningen har
-              behandlats – betalningsvillkor framgår av fakturan.
+              Du kan välja om priserna ska visas för privatperson (inkl. 12%
+              moms) eller företag/förening (exkl. moms) via väljaren högst
+              upp på sajten – vilket val du gjort avgör vilket pris du
+              faktureras. Faktura skickas manuellt efter att beställningen
+              har behandlats – betalningsvillkor framgår av fakturan.
             </p>
             <p className="text-muted-foreground mt-3">
               Vid beställning av produkter med egen uppladdad design

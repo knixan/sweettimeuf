@@ -17,15 +17,6 @@ export default function IntegritetspolicyPage() {
           Senast uppdaterad: {new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })}
         </p>
 
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 mb-10 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground mb-1">
-            Detta gäller inte ännu detta är under uppdatering och behöver kompletteras med mer information om Sweet Time UF:s behandling av personuppgifter.  
-          </p>
-          <p>
-            Denna text är temporär och kommer att redigeras innan butiken går live för försäljning. Den slutgiltiga integritetspolicyn kommer att innehålla mer detaljerad information om hur Sweet Time UF samlar in, använder och skyddar dina personuppgifter i samband med köp och konto på sajten.
-          </p>
-        </div>
-
         <div className="space-y-10 text-foreground">
           <section>
             <h2 className="font-display text-2xl mb-3">

@@ -166,12 +166,9 @@ export function AddToCartForm({ product }: { product: Product }) {
             Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
           </p>
           <p className="text-sm text-muted-foreground mt-1 font-bold">
-            OBS! Klichékostnad: 1000 kr/design (CMYK) &bull; Repetitionsorder:
-            500 kr/design
-          </p>
-          <p className="text-sm text-muted-foreground mt-1 font-bold">
-            Tillkommer på fakturan för varje unik design som laddas upp, oavsett
-            antal produkter i ordern.
+            OBS! En klichékostnad tillkommer per unik design som laddas upp,
+            oavsett antal produkter i ordern – se prisuppgift under
+            Information ovan. Tillkommer på fakturan.
           </p>
         </div>
       )}
