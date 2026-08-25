@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrEditor } from "@/lib/server-auth";
+import { requireAdminOrEditor, requireAdmin } from "@/lib/server-auth";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export async function updateOrderFlags(
   orderId: string,
@@ -39,6 +40,82 @@ export async function deleteOrder(orderId: string) {
   } catch {
     return { ok: false };
   }
+}
+
+const OrderItemSchema = z.object({
+  productId: z.string().min(1),
+  title: z.string().min(1),
+  quantity: z.number().int().positive().max(10000),
+  price: z.number().min(0).max(1_000_000),
+  image: z.string().optional(),
+  customImageUrl: z.string().optional(),
+  selectedVariant: z.string().optional(),
+});
+
+const UpdateOrderSchema = z.object({
+  customerName: z.string().min(1),
+  customerLastName: z.string().optional(),
+  customerEmail: z.string().email(),
+  customerPhone: z.string().optional(),
+  customerCompany: z.string().optional(),
+  orgNumber: z.string().optional(),
+  customerAddress: z.string().min(1),
+  customerPostalCode: z.string().min(1),
+  customerCity: z.string().min(1),
+  invoiceAddress: z.string().optional(),
+  invoicePostalCode: z.string().optional(),
+  invoiceCity: z.string().optional(),
+  items: z.array(OrderItemSchema).min(1),
+  notes: z.string().optional(),
+});
+
+export async function getOrderForEdit(orderId: string) {
+  await requireAdmin();
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) {
+    throw new Error("Order hittades inte");
+  }
+  return order;
+}
+
+export async function updateOrder(orderId: string, values: unknown) {
+  await requireAdmin();
+
+  const parsed = UpdateOrderSchema.safeParse(values);
+  if (!parsed.success) {
+    throw new Error("Ogiltiga värden i ordern");
+  }
+  const data = parsed.data;
+
+  const totalPrice = data.items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: {
+      customerName: data.customerName,
+      customerLastName: data.customerLastName || null,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone || null,
+      customerCompany: data.customerCompany || null,
+      orgNumber: data.orgNumber || null,
+      customerAddress: data.customerAddress,
+      customerPostalCode: data.customerPostalCode,
+      customerCity: data.customerCity,
+      invoiceAddress: data.invoiceAddress || null,
+      invoicePostalCode: data.invoicePostalCode || null,
+      invoiceCity: data.invoiceCity || null,
+      items: data.items,
+      totalPrice,
+      notes: data.notes || null,
+    },
+  });
+
+  revalidatePath("/admin/offerter");
+  return { success: true };
 }
 
 export async function removeCustomerImage(orderId: string, productId: string) {

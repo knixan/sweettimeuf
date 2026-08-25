@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { useCart } from "@/contexts/cart-context";
 import { useBuyerType } from "@/contexts/buyer-type-context";
 import { getDisplayPrice, formatPrice } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
+import { UploadButton } from "@/components/uploadthing";
 import { useRouter } from "next/navigation";
-
-const imageUrlSchema = z
-  .string()
-  .url("Ange en giltig URL (börja med https://)")
-  .optional()
-  .or(z.literal(""));
+import { toast } from "sonner";
+import { X } from "lucide-react";
 
 type PriceTier = {
   quantity: number;
@@ -49,7 +45,8 @@ export function AddToCartForm({ product }: { product: Product }) {
     product.prices[0] || null,
   );
   const [customImageUrl, setCustomImageUrl] = useState("");
-  const [imageUrlError, setImageUrlError] = useState<string | null>(null);
+  const [customFileName, setCustomFileName] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string>(
     product.variantOptions?.[0]?.name ?? product.variants?.[0] ?? "",
   );
@@ -62,13 +59,6 @@ export function AddToCartForm({ product }: { product: Product }) {
   const handleAddToCart = (): boolean => {
     if (!selectedTier) return false;
 
-    const urlResult = imageUrlSchema.safeParse(customImageUrl);
-    if (!urlResult.success) {
-      setImageUrlError(urlResult.error.issues[0].message);
-      return false;
-    }
-    setImageUrlError(null);
-
     addItem({
       productId: product.id,
       title: product.title,
@@ -80,6 +70,7 @@ export function AddToCartForm({ product }: { product: Product }) {
     });
 
     setCustomImageUrl("");
+    setCustomFileName("");
     return true;
   };
 
@@ -150,23 +141,46 @@ export function AddToCartForm({ product }: { product: Product }) {
       {product.allowCustomerUpload && (
         <div>
           <label className="block text-sm font-medium mb-2">
-            Länk till din bild eller design
+            Ladda upp din bild eller design
           </label>
-          <input
-            type="url"
-            value={customImageUrl}
-            onChange={(e) => {
-              setCustomImageUrl(e.target.value);
-              setImageUrlError(null);
-            }}
-            placeholder="https://example.com/min-bild.jpg"
-            className="w-full rounded-md bg-input/10 border border-input px-3 py-2"
-          />
-          {imageUrlError && (
-            <p className="text-sm text-red-500 mt-1">{imageUrlError}</p>
+          {customImageUrl ? (
+            <div className="flex items-center justify-between gap-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2">
+              <span className="text-sm truncate">{customFileName}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomImageUrl("");
+                  setCustomFileName("");
+                }}
+                className="shrink-0 text-muted-foreground hover:text-foreground"
+                aria-label="Ta bort uppladdad fil"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <UploadButton
+              endpoint="customDesignUploader"
+              content={{ button: "Ladda upp fil, bild eller pdf" }}
+              disabled={isUploading}
+              onUploadBegin={() => setIsUploading(true)}
+              onClientUploadComplete={(res) => {
+                setIsUploading(false);
+                const file = res[0];
+                if (file) {
+                  setCustomImageUrl(file.ufsUrl);
+                  setCustomFileName(file.name);
+                  toast.success("Filen laddades upp");
+                }
+              }}
+              onUploadError={(error) => {
+                setIsUploading(false);
+                toast.error(`Uppladdning misslyckades: ${error.message}`);
+              }}
+            />
           )}
           <p className="text-sm text-muted-foreground mt-1">
-            Valfritt: Ange URL till din bild (JPG, PNG) eller PDF-fil
+            Valfritt: Ladda upp din bild (JPG, PNG) eller PDF-fil
           </p>
           <p className="text-sm text-muted-foreground mt-1 font-bold">
             OBS! En klichékostnad tillkommer per unik design som laddas upp,

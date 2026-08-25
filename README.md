@@ -19,6 +19,8 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 | Databas           | PostgreSQL + Prisma ORM                                                                     |
 | Autentisering     | BetterAuth 1.3 (e-post/lösenord, roller) – version **pinnad**, se Säkerhet nedan            |
 | Innehåll (CMS)    | Sanity – inbäddad Studio (`/studio`), redigerbara sidor (hero, om oss, villkor, integritet) |
+| Filuppladdning    | UploadThing – kundens designfiler, företagets logga i admin                                 |
+| Fakturor          | @react-pdf/renderer – PDF-generering server-side                                            |
 | E-post            | Nodemailer (SMTP) – orderbekräftelse, verifiering, lösenordsåterställning, kontaktformulär  |
 | Formulär          | React Hook Form + Zod                                                                       |
 | Carousel/Lightbox | Embla Carousel                                                                              |
@@ -33,7 +35,7 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Produktkatalog med kategorier
 - Produktsidor med bildlightbox
 - Produktvarianter (t.ex. färg, storlek) med konfigurerbar etikett
-- Möjlighet för kunden att ladda upp egen bild/design per produkt
+- Möjlighet för kunden att ladda upp egen bild/design per produkt (riktig filuppladdning via UploadThing, ej länk)
 - Kundvagn med antal och pristrappor
 - Kassaformulär: kontaktuppgifter, leveransadress, fakturaadress, organisationsnummer
 - Orderbekräftelsesida
@@ -50,6 +52,9 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 - Produkthantering: skapa/redigera/ta bort produkter med bilder, pristrappor, varianter och kategorier – med sökfält och kategorifilter
 - Kategorihantering: skapa/redigera, auto-generering av slug, styr vilka kategorier visas i navbaren
 - Orderhantering: visa ordrar, sök (ordernummer/namn/e-post/företag) och filtrera på status; orderstatus härleds automatiskt från flaggorna `handled` / `shipped` / `invoiceSent`; visar om kunden betalade som privatperson (inkl. moms) eller företag (exkl. moms)
+- Orderredigering (`/admin/offerter/[id]/redigera`, endast `admin`): redigera kunduppgifter, adresser och radera/lägg till/ändra orderrader (t.ex. rabatt eller frakt som extra rad) – totalsumman räknas om automatiskt från raderna
+- Fakturagenerering (`/admin/offerter/[id]/faktura`, endast `admin`): genererar en PDF-faktura med företagsuppgifter, Swish/bankgiro och orderrader; fakturanumret sätts löpande (`F-ÅÅÅÅ-NNNN`) första gången och återanvänds vid ny nedladdning av samma order
+- Inställningar (`/admin/installningar`, endast `admin`): företagsnamn, org.nr, adress, Swish-nummer, bankgironummer och logga (UploadThing) – används på genererade fakturor
 - Kundhantering med sökfält
 - Adminanvändarhantering: befordra/ta bort admins
 - Mobilanpassad adminmeny (utfällbar sidomeny) utöver den vanliga menyraden på desktop
@@ -131,7 +136,7 @@ npx sanity typegen generate
    npm install
    ```
 
-3. Skapa `.env.local` och fyll i miljövariabler:
+3. Skapa `.env` och fyll i miljövariabler:
 
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/sweettimeuf"
@@ -139,6 +144,7 @@ npx sanity typegen generate
    BETTER_AUTH_URL="http://localhost:3000"
    NEXT_PUBLIC_SANITY_PROJECT_ID="plgh82e6"
    NEXT_PUBLIC_SANITY_DATASET="production"
+   UPLOADTHING_TOKEN="din-uploadthing-token"
    SMTP_HOST="smtp.gmail.com"
    SMTP_PORT="587"
    SMTP_USER="din@gmail.com"
@@ -192,8 +198,12 @@ src/
 │   │   │   ├── admins/          # Adminanvändarhantering
 │   │   │   ├── kategorier/      # Kategorihantering
 │   │   │   ├── kunder/          # Kundhantering + sökfält
-│   │   │   ├── offerter/        # Orderhantering + sökfält
+│   │   │   ├── offerter/
+│   │   │   │   ├── [id]/redigera/ # Redigera orderrader/kunduppgifter (endast admin)
+│   │   │   │   ├── [id]/faktura/  # PDF-fakturaroute (endast admin)
+│   │   │   │   └── page.tsx       # Orderhantering + sökfält
 │   │   │   ├── produkter/       # Produkthantering (lista + skapa/redigera) + sök/kategorifilter
+│   │   │   ├── installningar/   # Företagsuppgifter för fakturor (Swish/bankgiro/logga, endast admin)
 │   │   │   └── page.tsx         # Dashboard med statistik och försäljningsdiagram
 │   │   ├── integritetspolicy/   # Integritetspolicy (innehåll från Sanity)
 │   │   ├── kassa/                # Kassa (formulär + server actions)
@@ -210,13 +220,16 @@ src/
 │   │   ├── layout.tsx            # Navbar/Footer/BuyerTypeBar/CartProvider/SanityLive
 │   │   └── page.tsx              # Startsida med produktkaruseller
 │   ├── studio/[[...tool]]/       # Inbäddad Sanity Studio ("use client" – se Innehållshantering)
-│   ├── api/auth/                 # BetterAuth API-rutter
+│   ├── api/
+│   │   ├── auth/                 # BetterAuth API-rutter
+│   │   └── uploadthing/          # UploadThing route handler (core.ts-router i src/lib/uploadthing.ts)
 │   ├── sitemap.ts                # Dynamisk sitemap (produkter + kategorier)
 │   └── layout.tsx                # Root layout (endast html/body/typsnitt/metadata)
 ├── components/
 │   ├── admin/                   # admin-navbar (mobilmeny), sales-chart
 │   ├── layout/                  # Navbar, footer, kundvagnsdropdown, buyer-type-bar
 │   ├── site/                    # Hero, About, Team, ProductCard, ProductCarousel m.m.
+│   ├── uploadthing.tsx           # UploadButton/UploadDropzone (typade mot OurFileRouter)
 │   └── ui/                      # shadcn/ui-komponenter
 ├── contexts/
 │   ├── cart-context.tsx         # Global kundvagnskontext
@@ -227,6 +240,8 @@ src/
 │   ├── rate-limit.ts            # Delad rate limiter för kontaktformulär och kassa
 │   ├── pricing.ts                # Momsberäkning (privatperson/företag)
 │   ├── email.ts                  # Nodemailer-transport + sendEmail
+│   ├── uploadthing.ts            # UploadThing filrouter (customDesign + companyLogo, admin-gated)
+│   ├── invoice-pdf.tsx           # @react-pdf/renderer-mall för fakturor
 │   ├── prisma.ts
 │   ├── slug.ts
 │   └── schema/zod-schemas.ts
@@ -247,7 +262,11 @@ src/
 
 ### Order
 
-`id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `customerType` (`private` inkl. moms / `company` exkl. moms) · `status` · flaggor: `handled` · `shipped` · `invoiceSent`
+`id` · `orderNumber` · `userId` · kundinformation (namn, e-post, telefon, adress, org.nr) · separat fakturaadress · `items` (JSON) · `totalPrice` · `customerType` (`private` inkl. moms / `company` exkl. moms) · `status` · flaggor: `handled` · `shipped` · `invoiceSent` · `invoiceNumber` (löpnummer, sätts vid första fakturagenerering) · `invoiceGeneratedAt`
+
+### CompanySettings
+
+Singleton-tabell (fast `id`) med företagsuppgifter för fakturor: `companyName` · `orgNumber` · `address` · `postalCode` · `city` · `swishNumber` · `bankgiroNumber` · `logoUrl`. Redigeras i `/admin/installningar`.
 
 ### User
 

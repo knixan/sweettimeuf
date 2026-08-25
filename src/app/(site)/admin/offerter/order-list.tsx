@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { updateOrderFlags, removeCustomerImage, deleteOrder } from "./actions";
 import { toast } from "sonner";
@@ -220,6 +221,20 @@ export function OrderList({ orders }: { orders: Order[] }) {
                     }
                   >
                     {isExpanded ? "Dölj" : "Visa"} detaljer
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/admin/offerter/${order.id}/redigera`}>
+                      Redigera
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={`/admin/offerter/${order.id}/faktura`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Generera faktura
+                    </a>
                   </Button>
                   <Button
                     variant="destructive"

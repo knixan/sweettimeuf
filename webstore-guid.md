@@ -11,6 +11,7 @@ Den här guiden förklarar hur man använder admin-panelen på [sweettime-uf.se/
 - [Offerter](#offerter)
 - [Kunder](#kunder)
 - [Admins](#admins)
+- [Inställningar](#inställningar)
 - [Vanliga frågor](#vanliga-frågor)
 - [Todos / framtida funktioner](#todos--framtida-funktioner)
 
@@ -52,7 +53,7 @@ Här listas alla produkter. Klicka på en produkt för att redigera den, eller p
 | **Information / detaljer**         | Fritext för t.ex. minsta order, hållbarhet, leveranstid                                                                                                                        |
 | **Val av smak/färg**               | Valfritt. Ange en etikett (t.ex. "Välj smak") och lägg till alternativ med namn + ett eventuellt pristillägg i kr                                                              |
 | **Bilder (URL)**                   | En eller flera bild-URL:er. Första bilden används som huvudbild                                                                                                                |
-| **Tillåt kund att ladda upp bild** | Kryssruta – visar ett fält på produktsidan där kunden kan klistra in en länk till egen design innan köp                                                                        |
+| **Tillåt kund att ladda upp bild** | Kryssruta – visar en riktig filuppladdningsknapp på produktsidan (bild eller PDF, via UploadThing) där kunden laddar upp sin egen design innan köp                             |
 | **Tryckfiler / mallar**            | Länkar till nedladdningsbara PDF-mallar som visas på produktsidan                                                                                                              |
 
 > **Viktigt om priser:** Kassan litar aldrig på vad kunden skickar in – den slår alltid upp det verkliga priset (och ett eventuellt varianttillägg) från produktens prisrader i databasen. Det betyder att en beställning bara går igenom om kunden väljer **exakt** en av de antal-rader du har lagt in, och en variant som faktiskt finns i listan. Lägger du inte in rätt kvantitet som en egen rad kan kunden inte beställa det antalet.
@@ -83,6 +84,8 @@ Flikarna högst upp filtrerar listan: **Alla**, **Ohanterad**, **Hanterad**, **S
 
 - **Visa detaljer** – expanderar ordern och visar leverans-/fakturaadress, alla produkter med antal och pris, eventuell kunduppladdad design, och kundens övriga anteckningar
 - Tre kryssrutor styr status: **Hanterad**, **Skickad**, **Faktura skickad** – status i listan (Ohanterad/Hanteras/Skickad/Faktura skickad) härleds automatiskt från dessa
+- **Redigera** (endast `admin`) – öppnar ordern i ett redigeringsläge där du kan ändra kunduppgifter, adresser, och alla orderrader (titel, antal, pris, variant). Du kan även lägga till en helt ny rad (t.ex. för rabatt eller frakt) eller ta bort en rad. Totalsumman räknas alltid om automatiskt utifrån raderna när du sparar.
+- **Generera faktura** (endast `admin`) – skapar en PDF-faktura med företagsuppgifterna från [Inställningar](#inställningar), Swish/bankgiro och orderns rader, och öppnar den i en ny flik. Fakturanumret (`F-2026-0001` osv.) sätts första gången du genererar fakturan för en order och är sedan detsamma varje gång du laddar ner den igen.
 - **Ta bort kundens uppladdade bild** – tar bort länken till en kunds designfil från ordern (t.ex. efter att den använts eller om den var olämplig)
 - **Ta bort** – raderar hela offerten permanent, går inte att ångra
 
@@ -103,6 +106,23 @@ Listar alla registrerade kundkonton (namn, e-post, om e-posten är verifierad, s
 
 Notera att den här sidan bara hanterar rollen `admin`. Rollen `editor` sätts i dagsläget direkt i databasen och finns inte som knapp i gränssnittet.
 
+## Inställningar
+
+**Sida:** `/admin/installningar` — kräver `admin`-roll
+
+Företagsuppgifterna som visas på genererade fakturor:
+
+| Fält                          | Beskrivning                                                     |
+| ----------------------------- | --------------------------------------------------------------- |
+| **Logga**                     | Laddas upp som bild (via UploadThing), visas överst på fakturan |
+| **Företagsnamn**              | Obligatoriskt                                                   |
+| **Organisationsnummer**       | Valfritt, visas under företagsnamnet på fakturan                |
+| **Adress / Postnummer / Ort** | Avsändaradressen på fakturan                                    |
+| **Swish-nummer**              | Visas i betalningsinformationen på fakturan                     |
+| **Bankgironummer**            | Visas i betalningsinformationen på fakturan                     |
+
+Fyll i dessa innan ni börjar generera fakturor på riktigt – saknas de blir betalningsinformationen tom på fakturan (inget kraschar, men kunden vet inte hur de ska betala).
+
 ## Vanliga frågor
 
 **Jag loggade in men kommer inte in på /admin.**
@@ -116,6 +136,12 @@ Kontrollera att exakt den kvantiteten finns som en egen rad under "Pris och anta
 
 **Var skickas orderbekräftelser och kontaktmeddelanden?**
 Via e-post (Nodemailer/SMTP), konfigurerat i `.env`. Kontaktformulärets meddelanden går till `lg.sweets10@gmail.com` med kundens e-post som svarsadress.
+
+**Jag är editor men ser inte "Redigera" eller "Generera faktura" på en offert.**
+Det är avsett – ordrredigering och fakturagenerering kräver `admin`-roll, eftersom det påverkar belopp och betalningsinformation. `editor` kan fortfarande se offertdetaljer och kryssa i status.
+
+**Jag genererade en faktura innan jag fyllt i Inställningar – blir den fel nu?**
+Nej. Fakturanumret sätts permanent första gången du genererar fakturan och ändras inte om du fyller i eller ändrar Inställningar efteråt – men innehållet i PDF:en (företagsnamn, Swish, bankgiro) hämtas på nytt varje gång du laddar ner den, så en ny nedladdning visar de aktuella uppgifterna under samma fakturanummer.
 
 ## Todos / framtida funktioner
 

@@ -114,8 +114,8 @@ model Product {
 }
 
 model Order {
-  id                    String   @id @default(uuid())
-  orderNumber           String   @unique
+  id                    String    @id @default(uuid())
+  orderNumber           String    @unique
   userId                String?  // Link to logged-in user
   customerName          String
   customerLastName      String?
@@ -131,14 +131,31 @@ model Order {
   invoiceCity           String?
   items                 Json     // Array of cart items
   totalPrice            Float
-  customerType          String   @default("private") // "private" (inkl. moms) eller "company" (exkl. moms)
-  status                String   @default("pending")
-  handled               Boolean  @default(false)
-  shipped               Boolean  @default(false)
-  invoiceSent           Boolean  @default(false)
-  notes                 String?  @db.Text
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  customerType          String    @default("private") // "private" (inkl. moms) eller "company" (exkl. moms)
+  status                String    @default("pending")
+  handled               Boolean   @default(false)
+  shipped               Boolean   @default(false)
+  invoiceSent           Boolean   @default(false)
+  invoiceNumber         String?   @unique // Löpnummer, sätts första gången fakturan genereras
+  invoiceGeneratedAt    DateTime?
+  notes                 String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   @@map("order")
+}
+
+model CompanySettings {
+  id             String   @id @default("company-settings")
+  companyName    String   @default("SweetTime UF")
+  orgNumber      String?
+  address        String?
+  postalCode     String?
+  city           String?
+  swishNumber    String?
+  bankgiroNumber String?
+  logoUrl        String?
+  updatedAt      DateTime @updatedAt
+
+  @@map("company_settings")
 }

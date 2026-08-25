@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.karamello.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.ufs.sh",
+      },
     ],
   },
 };

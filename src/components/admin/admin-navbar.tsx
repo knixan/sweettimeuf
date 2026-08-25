@@ -18,6 +18,7 @@ const links = [
   { href: "/admin/offerter", label: "Offerter", adminOnly: false },
   { href: "/admin/kunder", label: "Kunder", adminOnly: true },
   { href: "/admin/admins", label: "Admins", adminOnly: true },
+  { href: "/admin/installningar", label: "Inställningar", adminOnly: true },
 ];
 
 export function AdminNavbar({ isAdmin }: { isAdmin: boolean }) {
