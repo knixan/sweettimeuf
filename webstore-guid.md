@@ -1,10 +1,10 @@
-# Adminguide – SweetTime UF
+# Användarguide – SweetTime UF
 
-Den här guiden förklarar hur man använder admin-panelen på [sweettime-uf.se/admin](https://www.sweettime-uf.se/admin) för att hantera produkter, kategorier, offerter och kunder.
+Den här guiden förklarar hur ni använder admin-panelen på [sweettime-uf.se/admin](https://www.sweettime-uf.se/admin) för att sköta produkter, kategorier, offerter, kunder och fakturor – helt utan att kunna programmera.
 
 ## Innehåll
 
-- [Logga in och roller](#logga-in-och-roller)
+- [Logga in och behörigheter](#logga-in-och-behörigheter)
 - [Översikt](#översikt)
 - [Produkter](#produkter)
 - [Kategorier](#kategorier)
@@ -12,205 +12,191 @@ Den här guiden förklarar hur man använder admin-panelen på [sweettime-uf.se/
 - [Kunder](#kunder)
 - [Admins](#admins)
 - [Inställningar](#inställningar)
+- [Redigera texter på sajten (Sanity)](#redigera-texter-på-sajten-sanity)
 - [Vanliga frågor](#vanliga-frågor)
-- [Todos / framtida funktioner](#todos--framtida-funktioner)
+- [Idéer för framtiden](#idéer-för-framtiden)
 
 ---
 
-## Logga in och roller
+## Logga in och behörigheter
 
-Gå till [/logga-in](https://www.sweettime-uf.se/logga-in) och logga in med ditt konto. Kontot måste ha rollen `admin` eller `editor` för att komma åt `/admin` – vanliga kundkonton skickas tillbaka till startsidan.
+Gå till [/logga-in](https://www.sweettime-uf.se/logga-in) och logga in med ert konto. Vanliga kundkonton kommer inte in på admin-sidorna – bara konton som fått utökad behörighet.
 
-Det finns två rollnivåer:
+Det finns två nivåer:
 
-| Roll     | Kan hantera                           | Kan **inte** hantera   |
-| -------- | ------------------------------------- | ---------------------- |
-| `editor` | Produkter, kategorier, offerter       | Kunder, adminanvändare |
-| `admin`  | Allt ovan + kunder och adminanvändare | –                      |
+| Nivå | Kan göra |
+| --- | --- |
+| **Redaktör** | Hantera produkter, kategorier och offerter |
+| **Admin** | Allt en redaktör kan, plus hantera kunder, ge andra personer admin-behörighet, redigera ordrar och skapa fakturor |
 
-Nya konton på sidan får alltid rollen `user` (vanlig kund) och kan aldrig bli admin eller editor genom att registrera sig själva – det gör bara en befintlig admin via [Admins](#admins)-sidan.
+Ingen kan ge sig själv utökad behörighet genom att bara registrera ett konto – det måste göras av en admin, se [Admins](#admins). Vill ni ge någon redaktörs-behörighet räcker det i dagsläget inte att göra det själva på Admins-sidan – hör av er till utvecklaren.
 
 ## Översikt
 
-`/admin` visar en startsida med genvägar till varje sektion. Vad du ser beror på din roll – `editor` ser Produkter, Kategorier och Offerter; `admin` ser även Kunder och Admins.
+`/admin` visar en startsida med genvägar till varje del. Redaktörer ser Produkter, Kategorier och Offerter. Admins ser även Kunder, Admins och Inställningar.
 
 ## Produkter
 
 **Sida:** `/admin/produkter`
 
-Här listas alla produkter. Klicka på en produkt för att redigera den, eller på **"Ny produkt"** för att skapa en.
+Här listar ni alla produkter. Klicka på en produkt för att redigera den, eller på **"Ny produkt"** för att skapa en ny.
 
 ### Fält i produktformuläret
 
-| Fält                               | Beskrivning                                                                                                                                                                    |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Titel** \*                       | Produktens namn – visas överallt på sajten                                                                                                                                     |
-| **Kategori**                       | Valfri koppling till en kategori (styr var produkten dyker upp under `/kategori/...`)                                                                                          |
-| **Art. nummer**                    | Internt artikelnummer, valfritt                                                                                                                                                |
-| **Sammanfattning**                 | Kort text som visas i produktlistor/kort                                                                                                                                       |
-| **Om produkten**                   | Längre beskrivningstext på produktsidan                                                                                                                                        |
-| **Pris och antal**                 | En eller flera prisrader: `antal` + `pris (kr)`. Kunden väljer bland dessa rader i en dropdown vid köp – lägg till en rad per kvantitetssteg (t.ex. 100 st / 500 st / 1000 st) |
-| **Information / detaljer**         | Fritext för t.ex. minsta order, hållbarhet, leveranstid                                                                                                                        |
-| **Val av smak/färg**               | Valfritt. Ange en etikett (t.ex. "Välj smak") och lägg till alternativ med namn + ett eventuellt pristillägg i kr                                                              |
-| **Bilder (URL)**                   | En eller flera bild-URL:er. Första bilden används som huvudbild                                                                                                                |
-| **Tillåt kund att ladda upp bild** | Kryssruta – visar en riktig filuppladdningsknapp på produktsidan (bild eller PDF, via UploadThing) där kunden laddar upp sin egen design innan köp                             |
-| **Tryckfiler / mallar**            | Länkar till nedladdningsbara PDF-mallar som visas på produktsidan                                                                                                              |
+| Fält | Vad det gör |
+| --- | --- |
+| **Titel** \* | Produktens namn – visas överallt på sajten |
+| **Kategori** | Vilken kategori produkten hör till (styr var den dyker upp) |
+| **Art. nummer** | Ert eget artikelnummer, valfritt |
+| **Sammanfattning** | Kort text som syns i produktlistor |
+| **Om produkten** | Längre beskrivning på produktsidan |
+| **Pris och antal** | En rad per kvantitet ni säljer i, t.ex. 100 st / 500 st / 1000 st, med tillhörande pris. Kunden väljer bland dessa när de handlar |
+| **Information / detaljer** | Fritext, t.ex. minsta order, hållbarhet, leveranstid |
+| **Val av smak/färg** | Valfritt – lägg till alternativ kunden kan välja mellan, med ett eventuellt pristillägg |
+| **Bilder** | En eller flera bilder – första bilden blir huvudbild |
+| **Tillåt kund att ladda upp bild** | Kryssruta – visar en uppladdningsknapp på produktsidan där kunden kan ladda upp sin egen bild eller PDF innan de beställer |
+| **Tryckfiler / mallar** | Nedladdningsbara mallar som kunden kan hämta på produktsidan |
 
-> **Viktigt om priser:** Kassan litar aldrig på vad kunden skickar in – den slår alltid upp det verkliga priset (och ett eventuellt varianttillägg) från produktens prisrader i databasen. Det betyder att en beställning bara går igenom om kunden väljer **exakt** en av de antal-rader du har lagt in, och en variant som faktiskt finns i listan. Lägger du inte in rätt kvantitet som en egen rad kan kunden inte beställa det antalet.
+> **Viktigt:** Kunden kan bara beställa en kvantitet som faktiskt finns som en egen rad under "Pris och antal". Lägger ni inte in t.ex. 250 st som en rad, går det inte att beställa 250 st – oavsett vad kunden själv skriver in.
 
-Produkter får automatiskt en unik URL-slug baserat på titeln (t.ex. "Tablettaskar 7010-1" → `/produkt/tablettaskar-7010-1`). Byter du titel på en befintlig produkt genereras en ny slug.
-
-Ta bort en produkt via papperskorgs-knappen i listan – detta går inte att ångra.
+Ta bort en produkt via papperskorgs-knappen i listan – det går inte att ångra.
 
 ## Kategorier
 
 **Sida:** `/admin/kategorier`
 
-Skapa en kategori med ett **namn** och kryssrutan **"Visa i navigering"**, som styr om kategorin dyker upp i navbarens meny. Slug (t.ex. `/kategori/godis`) genereras automatiskt från namnet.
+Skapa en kategori med ett **namn** och kryssrutan **"Visa i navigering"**, som styr om kategorin syns i menyn högst upp på sajten.
 
-Kategorier kan redigeras och tas bort från listan. Om en kategori tas bort behåller dess produkter sin data men tappar kopplingen till kategorin.
+Kategorier kan redigeras och tas bort. Tar ni bort en kategori försvinner inte produkterna i den – de tappar bara sin koppling till kategorin.
 
 ## Offerter
 
 **Sida:** `/admin/offerter`
 
-Alla beställningar som kommer in via kassan hamnar här som "offerter" (fakturering sker manuellt, inte automatiskt).
+Alla beställningar som kommer in via kassan hamnar här som "offerter". Fakturering sker manuellt, inte automatiskt vid beställning.
 
 ### Filter
 
 Flikarna högst upp filtrerar listan: **Alla**, **Ohanterad**, **Hanterad**, **Skickad**, **Faktura skickad**.
 
-### Per offert
+### Vad ni kan göra på en offert
 
-- **Visa detaljer** – expanderar ordern och visar leverans-/fakturaadress, alla produkter med antal och pris, eventuell kunduppladdad design, och kundens övriga anteckningar
-- Tre kryssrutor styr status: **Hanterad**, **Skickad**, **Faktura skickad** – status i listan (Ohanterad/Hanteras/Skickad/Faktura skickad) härleds automatiskt från dessa
-- **Redigera** (endast `admin`) – öppnar ordern i ett redigeringsläge där du kan ändra kunduppgifter, adresser, och alla orderrader (titel, antal, pris, variant). Du kan även lägga till en helt ny rad (t.ex. för rabatt eller frakt) eller ta bort en rad. Totalsumman räknas alltid om automatiskt utifrån raderna när du sparar.
-- **Generera faktura** (endast `admin`) – skapar en PDF-faktura med företagsuppgifterna från [Inställningar](#inställningar), Swish/bankgiro och orderns rader, och öppnar den i en ny flik. Fakturanumret (`F-2026-0001` osv.) sätts första gången du genererar fakturan för en order och är sedan detsamma varje gång du laddar ner den igen.
-- **Ta bort kundens uppladdade bild** – tar bort länken till en kunds designfil från ordern (t.ex. efter att den använts eller om den var olämplig)
+- **Visa detaljer** – öppnar ordern och visar leverans-/fakturaadress, alla produkter med antal och pris, en eventuell bild kunden laddat upp, och kundens egna anteckningar
+- Tre kryssrutor styr status: **Hanterad**, **Skickad**, **Faktura skickad** – etiketten i listan (Ohanterad/Hanteras/Skickad/Faktura skickad) uppdateras automatiskt utifrån dessa
+- **Redigera** (kräver admin) – ändra kundens uppgifter, adresser, eller vad som helst i beställningen: antal, pris, lägg till en ny rad (t.ex. rabatt eller frakt) eller ta bort en rad. Totalsumman räknas alltid om automatiskt när ni sparar.
+- **Generera faktura** (kräver admin) – skapar en färdig PDF-faktura med era företagsuppgifter, Swish/bankgiro och allt som ingår i beställningen, och öppnar den i en ny flik. Fakturanumret sätts första gången ni genererar fakturan för en order och ändras aldrig efter det, även om ni laddar ner den igen senare.
+- **Ta bort kundens uppladdade bild** – tar bort en bild kunden laddat upp (t.ex. efter att den använts, eller om den var olämplig)
 - **Ta bort** – raderar hela offerten permanent, går inte att ångra
 
-> **Moms:** varje offert visar om kunden handlade som privatperson (inkl. 12% moms) eller företag/förening (exkl. moms) under totalsumman. Det styrs av väljaren högst upp på sajten och avgör vilket pris kunden fakturerades.
+> **Moms:** varje offert visar om kunden handlade som privatperson (inkl. 12 % moms) eller företag/förening (exkl. moms) – det styrs av väljaren högst upp på sajten och avgör vilket pris kunden fick.
 
 ## Kunder
 
-**Sida:** `/admin/kunder` — kräver `admin`-roll
+**Sida:** `/admin/kunder` — kräver admin
 
-Listar alla registrerade kundkonton (namn, e-post, om e-posten är verifierad, skapad-datum). Ett konto kan tas bort permanent härifrån – det raderar kontot men inte kundens tidigare offerter.
+Listar alla registrerade kundkonton. Ett konto kan tas bort permanent härifrån – det tar bort kontot, men inte kundens tidigare offerter.
 
 ## Admins
 
-**Sida:** `/admin/admins` — kräver `admin`-roll
+**Sida:** `/admin/admins` — kräver admin
 
-- **Lägg till admin** – ange e-postadressen till en befintlig användare för att göra kontot till admin. Personen måste redan ha ett konto (registrerat sig) på sajten.
-- **Ta bort admin** – tar bort adminrollen från ett konto (blir vanlig `user`) och skickas då tillbaka till att vara vanlig kund. Du kan inte ta bort din egen adminroll härifrån.
-
-Notera att den här sidan bara hanterar rollen `admin`. Rollen `editor` sätts i dagsläget direkt i databasen och finns inte som knapp i gränssnittet.
+- **Lägg till admin** – skriv in e-postadressen till en person som redan har ett konto på sajten (de måste ha registrerat sig först), så får kontot admin-behörighet.
+- **Ta bort admin** – tar bort admin-behörigheten från ett konto, personen blir då en vanlig kund igen. Ni kan inte ta bort er egen admin-behörighet härifrån.
 
 ## Inställningar
 
-**Sida:** `/admin/installningar` — kräver `admin`-roll
+**Sida:** `/admin/installningar` — kräver admin
 
-Företagsuppgifterna som visas på genererade fakturor:
+Företagsuppgifterna som visas på fakturor ni genererar:
 
-| Fält                          | Beskrivning                                                     |
-| ----------------------------- | --------------------------------------------------------------- |
-| **Logga**                     | Laddas upp som bild (via UploadThing), visas överst på fakturan |
-| **Företagsnamn**              | Obligatoriskt                                                   |
-| **Organisationsnummer**       | Valfritt, visas under företagsnamnet på fakturan                |
-| **Adress / Postnummer / Ort** | Avsändaradressen på fakturan                                    |
-| **Swish-nummer**              | Visas i betalningsinformationen på fakturan                     |
-| **Bankgironummer**            | Visas i betalningsinformationen på fakturan                     |
+| Fält | Vad det gör |
+| --- | --- |
+| **Logga** | Ladda upp en bildfil – visas överst på fakturan |
+| **Företagsnamn** | Obligatoriskt |
+| **Organisationsnummer** | Valfritt, visas under företagsnamnet |
+| **Adress / Postnummer / Ort** | Er avsändaradress på fakturan |
+| **Swish-nummer** | Visas som betalningsinformation på fakturan |
+| **Bankgironummer** | Visas som betalningsinformation på fakturan |
 
-Fyll i dessa innan ni börjar generera fakturor på riktigt – saknas de blir betalningsinformationen tom på fakturan (inget kraschar, men kunden vet inte hur de ska betala).
+Fyll i dessa innan ni börjar skicka fakturor på riktigt – annars blir betalningsinformationen tom och kunden vet inte hur de ska betala.
+
+## Redigera texter på sajten (Sanity)
+
+Texterna på förstasidan (Hero), Om oss-sidan, Köpvillkor och Integritetspolicy går att redigera själva, utan att röra kod. Produkter och kategorier redigeras fortfarande på vanligt sätt i admin-panelen som beskrivet ovan – det här gäller bara löptexterna på de sidorna.
+
+**Så gör ni:**
+
+1. Gå till **[er webbadress]/studio** (t.ex. `https://www.sweettime-uf.se/studio`)
+2. Logga in med samma konto som användes för att skapa sidan
+3. Under "Innehåll" i menyn hittar ni **Hero**, **Om oss-sida**, **Köpvillkor** och **Integritetspolicy** – redigera texten och klicka **Publicera**
+4. Ändringen syns på sajten inom några sekunder, ingen behöver göra något tekniskt för att den ska slå igenom
+
+Om en sida råkar sakna text i redigeringsverktyget visas samma text som fanns där från början – sidan blir aldrig tom eller trasig.
 
 ## Vanliga frågor
 
 **Jag loggade in men kommer inte in på /admin.**
-Kontot har rollen `user` (vanlig kund). Be en befintlig admin ge dig `editor`- eller `admin`-rollen.
+Kontot har ingen utökad behörighet ännu. Be en admin ge er redaktörs- eller admin-behörighet.
 
-**Jag är editor men ser inte Kunder eller Admins i menyn.**
-Det är avsett – de sidorna kräver `admin`-roll. Be en admin om hjälp med kund- eller adminhantering.
+**Jag är redaktör men ser inte Kunder eller Admins i menyn.**
+Det är avsett – de sidorna kräver admin-behörighet. Be en admin om hjälp med kund- eller adminhantering.
 
 **En kund kan inte beställa den kvantitet jag tänkt mig.**
-Kontrollera att exakt den kvantiteten finns som en egen rad under "Pris och antal" på produkten – kassan accepterar bara de exakta kvantiteter som är definierade där.
+Kontrollera att exakt den kvantiteten finns som en egen rad under "Pris och antal" på produkten.
 
 **Var skickas orderbekräftelser och kontaktmeddelanden?**
-Via e-post (Nodemailer/SMTP), konfigurerat i `.env`. Kontaktformulärets meddelanden går till `lg.sweets10@gmail.com` med kundens e-post som svarsadress.
+Via mejl, direkt till kundens och er inkorg. Kontaktformulärets meddelanden går till `lg.sweets10@gmail.com` med kundens mejladress som svarsadress.
 
-**Jag är editor men ser inte "Redigera" eller "Generera faktura" på en offert.**
-Det är avsett – ordrredigering och fakturagenerering kräver `admin`-roll, eftersom det påverkar belopp och betalningsinformation. `editor` kan fortfarande se offertdetaljer och kryssa i status.
+**Jag är redaktör men ser inte "Redigera" eller "Generera faktura" på en offert.**
+Det är avsett – att ändra belopp och skapa fakturor kräver admin-behörighet. Redaktörer kan fortfarande se offertdetaljer och markera status.
 
 **Jag genererade en faktura innan jag fyllt i Inställningar – blir den fel nu?**
-Nej. Fakturanumret sätts permanent första gången du genererar fakturan och ändras inte om du fyller i eller ändrar Inställningar efteråt – men innehållet i PDF:en (företagsnamn, Swish, bankgiro) hämtas på nytt varje gång du laddar ner den, så en ny nedladdning visar de aktuella uppgifterna under samma fakturanummer.
+Nej. Fakturanumret sätts en gång för alla första gången ni genererar fakturan och ändras aldrig efter det. Men innehållet på fakturan (företagsnamn, Swish, bankgiro) hämtas på nytt varje gång ni laddar ner den – så laddar ni ner samma faktura igen efter att ha fyllt i Inställningar, visas de rätta uppgifterna, med samma fakturanummer som innan.
 
-## Todos / framtida funktioner
+## Idéer för framtiden
 
-Saker som inte är byggda idag men som diskuterats. Ingen av dem är påbörjad – markera gärna vad ni vill prioritera.
+Saker som diskuterats men inte är byggda än. Markera gärna vad ni vill prioritera.
 
-### Ägarskap / överlämning av drift
+### Överlämning av drift
 
-Sajten körs idag på Josefines egna konton (Vercel, Neon, Gmail för SMTP). Innan sajten går i skarp drift under Sweet Time UF bör driften flyttas över till företagets egna konton:
+Sajten körs idag på Josefines egna konton hos de tjänster som håller sajten igång. Innan sajten går i skarp drift under Sweet Time UF bör dessa flyttas över till företagets egna konton:
 
-- **E-post (SMTP):** byt ut dagens app-lösenord (kopplat till Josefines privata Gmail) mot ett nytt app-lösenord kopplat till Ludvigs Gmail, knutet till den riktiga domänen – så att orderbekräftelser och kontaktmeddelanden går ut från rätt avsändare.
-- **Kod/GitHub:** överför ägarskapet av GitHub-repot till Sweet Time UF – kunden har redan ett eget GitHub-konto.
-- **Vercel:** driftsätt/flytta projektet till kundens eget Vercel-konto istället för Josefines – kunden har redan ett eget Vercel-konto.
-- **Databas (Neon):** kunden behöver skapa ett eget (gratis) Neon-konto och få databasen migrerad dit, så att Sweet Time UF äger sin egen data oberoende av Josefines konto.
-- **Sanity:** kunden behöver också skapa ett eget gratis Sanity-konto och få projektet överfört dit (se CMS-avsnittet nedan).
+- **Mejl:** byt ut dagens avsändaradress (kopplad till Josefines privata Gmail) mot en kopplad till er egen domän – så att orderbekräftelser och kontaktmeddelanden går ut från rätt avsändare.
+- **Koden:** överför ägarskapet av kodförrådet (GitHub) till Sweet Time UF – ni har redan ett eget konto där.
+- **Driften (Vercel):** flytta sajten till ert eget konto hos tjänsten som håller den igång dygnet runt – ni har redan ett eget konto där.
+- **Databasen (Neon):** ni behöver ett eget gratiskonto hos tjänsten som lagrar all data (produkter, kunder, ordrar), så att Sweet Time UF äger sin egen information oberoende av Josefines konto.
+- **Sanity:** ni behöver också ett eget gratiskonto för textredigeringsverktyget, och få det överfört dit (se avsnittet ovan om att redigera texter).
 
-### Stripe för privatpersoner
+### Kortbetalning för privatpersoner
 
-Idag går alla beställningar via kassan som en "offert" – ingen betalning sker på sajten, faktura skickas manuellt i efterhand. Ett alternativ är att lägga till Stripe för kortbetalning direkt i kassan, åtminstone för privatpersoner (företag/föreningar vill oftast ändå ha faktura mot betalningsvillkor, så den delen kan vara kvar som idag).
+Idag går alla beställningar via kassan som en "offert" – ingen betalning sker på sajten, faktura skickas manuellt i efterhand. Ett alternativ är att lägga till kortbetalning direkt i kassan, åtminstone för privatpersoner (företag/föreningar vill oftast ändå ha faktura mot betalningsvillkor, den delen kan vara kvar som idag).
 
-**Rekommendation: behåll faktura och lägg inte in Stripe just nu.** Inte för att integrationen i sig är programmeringsmässigt riskabel – Stripe Checkout är ett välkänt, lågriskmönster som inte skulle rota till den befintliga koden särskilt mycket. Den egentliga konflikten är att Stripe kräver ett exakt, färdigt belopp **innan** kunden betalar, medan er nuvarande modell bygger på att lägga till rörliga extrakostnader (expresstillägg, annan förpackning, klichékostnad) **efteråt** på fakturan. Med Stripe måste man antingen bygga in alla de variablerna i kassan innan betalning, eller ta en andra betalning i efterhand för sånt som tillkommer – båda är krångligare än dagens flöde. Utöver det kräver Stripe riktig företagsverifiering för att kunna betala ut pengar – värt att kolla om Sweet Time UF som UF-företag ens kan öppna ett fullständigt Stripe-konto innan man lägger tid på integrationen.
+**Rekommendation: behåll faktura och vänta med kortbetalning.** Anledningen är inte att det skulle vara riskabelt att bygga – det är ett välbeprövat, standardmässigt tillägg. Den egentliga konflikten är att kortbetalning kräver ett exakt, färdigt belopp **innan** kunden betalar, medan er nuvarande modell bygger på att lägga till kostnader som varierar (expresstillägg, annan förpackning, klichékostnad) **efteråt** på fakturan. Man skulle antingen behöva bygga in alla de valen i kassan innan betalning, eller ta en andra betalning i efterhand för sånt som tillkommer – båda krångligare än dagens flöde. Utöver det krävs en riktig företagsverifiering hos betaltjänsten för att kunna få utbetalningar – värt att kolla om Sweet Time UF som UF-företag ens kan öppna ett fullständigt konto där innan man lägger tid på det.
 
-- Kräver ett Stripe-konto och att man växlar mellan test- och livenycklar
 - Skulle sannolikt bara aktiveras när köparen valt "Privatperson" i väljaren – företag fortsätter få faktura
 - Påverkar orderflödet: en betald order bör markeras annorlunda än dagens "ohanterad/hanterad/skickad/faktura skickad"-status
 
-### Sanity CMS för redigerbara texter — ✅ klart
-
-Hero, Om oss, Köpvillkor och Integritetspolicy hämtar nu sin text från Sanity istället för att vara hårdkodade. Produkter och kategorier rörs inte – de hanteras fortfarande via det egna admingränssnittet, som tänkt.
-
-**Så redigerar du innehållet:**
-
-1. Starta appen som vanligt (`npm run dev`)
-2. Öppna [http://localhost:3000/studio](http://localhost:3000/studio) (eller `/studio` på produktionsdomänen) och logga in med samma Sanity-konto som skapade projektet
-3. Under "Innehåll" i menyn hittar du **Hero**, **Om oss-sida**, **Köpvillkor** och **Integritetspolicy** – redigera och klicka **Publicera**
-4. Ändringen syns på sajten inom några sekunder (ingen omdeploy behövs)
-
-**Tekniskt:**
-
-- Sanity-projektet (`plgh82e6`, dataset `production`) är **inbäddat** i Next.js-appen på `/studio` – körs på samma port/process som resten av sajten, ingen separat server. Detta valdes medvetet framför Sanitys rekommenderade fristående upplägg (som fanns tidigare i en egen `studio/`-mapp), för att kunna nå Studio på samma URL-mönster som andra Sanity-projekt (`/studio` på port 3000). Priset: Studio-uppdateringar (buggfixar, säkerhetspatchar från Sanity) kräver `npm install` + omdeploy av hela appen istället för att ske automatiskt, och Studio-relaterade byggen/dev är långsammare.
-- Så länge en sida saknar innehåll i Sanity (innan ni fyllt i något) visas samma text som fanns hårdkodad tidigare – inget blir tomt eller trasigt under övergången.
-- Kom ihåg [Ägarskap-sektionen](#ägarskap--överlämning-av-drift) ovan – Sanity-kontot behöver också flyttas till kundens egen organisation.
-
 ### Fraktkostnader
 
-**Just nu tillkommer ingen fraktkostnad någonstans i flödet** – varken i kassan eller på fakturan. Rekommendation: bestäm om frakt ska vara inräknad i priset (enklast för kunden, inga överraskningar) eller läggas på separat vid fakturering (mer rättvist om leveranser varierar mycket i vikt/storlek). Om ni vill ha en fraktavgift i kassan är det en förhållandevis liten ändring – en fast summa eller en trappa baserat på ordervärde, adderad till totalsumman på samma sätt som momsberäkningen görs idag.
+**Just nu tillkommer ingen fraktkostnad någonstans i flödet** – varken i kassan eller på fakturan. Bestäm om frakt ska vara inräknad i priset (enklast för kunden, inga överraskningar) eller läggas på separat vid fakturering (mer rättvist om leveranser varierar mycket i vikt/storlek). Att lägga till en fraktavgift i kassan är en förhållandevis liten ändring att bygga när ni bestämt er.
 
-### Synas på Google/Bing
+### Synas på Google och Bing
 
-Grunden finns redan – dynamisk `sitemap.xml`, `robots.txt` som pekar på den, sidspecifik metadata och JSON-LD på produktsidor. Det som återstår är mest verifiering och inskickning, inte kod:
+Grunden finns redan på plats sen tidigare – det som återstår är mest att verifiera och skicka in, inte att bygga något nytt:
 
-- **Verifiera domänen i Google Search Console.** Görs via en TXT-post i DNS (samma ställe som ni ändrar övrig DNS för domänen, t.ex. Loopia). Detta är det viktigaste steget – utan det vet Google inte att sajten eller sitemapen finns, oavsett hur bra den är.
-- **Verifiera i Bing Webmaster Tools** på samma sätt (Bing kan även importera direkt från en verifierad Google Search Console-koppling).
-- **Skicka in `sitemap.xml` manuellt** i båda verktygen efter verifiering – snabbar upp den första indexeringen istället för att vänta på att crawlers hittar den själva.
-- **Google Business-profil** – separat från sajten, kräver inget kodarbete, men avgörande för att synas i Google Maps/lokala sökningar (t.ex. "godis Mjölby"). Bara ett gratiskonto att skapa.
+- **Verifiera domänen i Google Search Console.** Görs via en inställning hos er domänleverantör (t.ex. Loopia). Detta är det viktigaste steget – utan det vet Google inte att sajten finns, oavsett hur bra den är.
+- **Verifiera i Bing Webmaster Tools** på samma sätt.
+- **Skicka in sajtens sidkarta manuellt** i båda verktygen efter verifiering – snabbar upp att sajten börjar synas i sökresultat.
+- **Skapa en Google Business-profil** – separat från sajten, kräver inget byggande, men avgörande för att synas i Google Maps och lokala sökningar (t.ex. "godis Mjölby"). Bara ett gratiskonto att skapa.
+- Kontrollera att favicon-ikonen (den lilla ikonen i webbläsarfliken) faktiskt är Sweet Time-loggan.
 
-Mindre kodluckor värda att fixa när ni ändå är där:
+### Koppling till Fortnox
 
-- Ingen Twitter Card-metadata idag, bara Open Graph – påverkar hur länkar ser ut när de delas på X/Twitter.
-- Inget Organization/LocalBusiness-schema (JSON-LD) utöver Product-schemat som redan finns på produktsidor – hjälper Google visa rätt företagsinfo (kontaktuppgifter, logotyp) i sökresultat.
-- Kolla att `favicon.ico` faktiskt är Sweet Time-loggan och inte Next.js standardikon.
+Om ni har eller skaffar Fortnox går det att koppla ihop sajten så att en beställning kan skickas över som ett fakturautkast till Fortnox med en knapptryckning, istället för att skriva av allt för hand. Ni fyller fortfarande i det som varierar (klichékostnad, expresstillägg) och skickar iväg fakturan från Fortnox som vanligt – ni behåller alltså den mänskliga kontrollen men slipper dubbelarbetet med att skriva av ordern.
 
-### Fortnox-integration
-
-Fortnox har ett publikt REST-API som stödjer att skapa kunder och fakturor programmatiskt. Skulle passa den nuvarande modellen bra som ett mellanting – istället för att en admin skriver av ordern för hand i Fortnox, skickas orderdatan (kund, produkter, pris, moms) som ett **fakturautkast** till Fortnox via en knapp i offert-vyn. Admin fyller bara i det som varierar (klichékostnad, expresstillägg) och skickar iväg fakturan från Fortnox, istället för att skriva av allt manuellt – man behåller alltså den mänskliga kontrollen men slipper dubbelarbetet.
-
-- Kräver att kunden har ett Fortnox-abonnemang med API-åtkomst aktiverad (ofta en liten extra månadskostnad utöver vanligt abonnemang)
-- Kräver en registrerad integration i Fortnox utvecklarportal för att få API-nycklar (OAuth 2.0-flöde)
-- Inte trivialt men väldokumenterat API – en rimlig storlek på jobb, inte en stor omskrivning
+- Kräver att ert Fortnox-abonnemang har utökad åtkomst påslagen (ofta en liten extra kostnad utöver vanligt abonnemang)
+- En rimlig storlek på jobb att bygga, inte en stor ombyggnad av sajten
 
 ### Klichékostnad – automatisera eller inte?
 
-Idag är klichékostnaden (1000 kr/design, 500 kr vid repetitionsorder) bara en **varningstext** på produktsidan och i kassan – den räknas inte in i totalsumman utan läggs på manuellt när fakturan skapas. Rekommendation: **behåll det manuella flödet tills vidare.** Att automatisera det helt kräver att systemet vet om en design är ny eller en repetition av en tidigare beställning – det betyder att jämföra den uppladdade bildlänken mot kundens tidigare ordrar, vilket inte är trivialt (kunder kan ladda upp samma design till olika URL:er, byta url-tjänst, etc.). Om ni ändå vill automatisera det som en förenkling: lägg alltid till "ny design"-kostnaden (1000 kr) automatiskt när `customImageUrl` finns på en orderrad, och hantera repetitionsrabatten manuellt vid fakturering – det täcker det vanligaste fallet utan att bygga historikjämförelse.
+Idag är klichékostnaden (1000 kr/design, 500 kr vid repetitionsorder) bara en varningstext på produktsidan och i kassan – den räknas inte in i totalsumman utan läggs på manuellt när fakturan skapas. **Rekommendation: behåll det manuella flödet tills vidare.** Att automatisera det helt kräver att systemet vet om en design är ny eller en upprepning av en tidigare beställning, vilket är svårt att avgöra tillförlitligt automatiskt. Vill ni ändå förenkla lite: lägg alltid till "ny design"-kostnaden automatiskt så fort en kund laddat upp en bild till en order, och hantera bara repetitionsrabatten manuellt vid fakturering – det täcker det vanligaste fallet.
