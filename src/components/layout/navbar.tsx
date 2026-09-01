@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <nav className="sticky top-0 z-50 w-full  bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4">
-        <div className="flex md:grid md:grid-cols-3 h-20 pt-4 items-center justify-between">
+        <div className="flex xl:grid xl:grid-cols-3 h-20 pt-4 items-center justify-between">
           {/* Logo/Titel */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation länkar – centrerade */}
-          <div className="hidden md:flex md:items-center md:justify-center md:gap-6">
+          <div className="hidden xl:flex xl:items-center xl:justify-center xl:gap-6">
             {links.map((link, index) =>
               link.href === "/produkt" ? (
                 <DropdownMenu key={index}>
@@ -129,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop höger sektion: Cart + Theme toggle + auth knappar */}
-          <div className="hidden md:flex md:items-center md:justify-end md:gap-3">
+          <div className="hidden xl:flex xl:items-center xl:justify-end xl:gap-3">
             <CartDropdown />
             {showThemeToggle && <ModeToggle />}
 
@@ -183,7 +183,7 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Mobile: cart + theme + hamburger */}
-          <div className="flex items-center gap-1 md:hidden">
+          <div className="flex items-center gap-1 xl:hidden">
             <CartDropdown />
             {showThemeToggle && <ModeToggle />}
             <button
@@ -202,7 +202,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t">
+          <div className="xl:hidden py-4 border-t">
             <div className="flex flex-col gap-4">
               {/* Mobile länkar */}
               {links.map((link, index) => (
