@@ -64,15 +64,17 @@ En Next.js e-handelsapplikation byggd för SweetTime UF. Hanterar produktkatalog
 
 ## Säkerhet
 
-- `/admin/*` – skyddad via layout-nivå sessionscheck (omdirigerar till `/logga-in` om ej autentiserad, till `/` om ej admin), samt varje enskild server action gör sin egen roll-kontroll (`requireAdmin` / `requireAdminOrEditor` i `src/lib/server-auth.ts`) så att åtgärder inte kan anropas direkt förbi UI:t
+- `/admin/*` – skyddad i tre lager: `src/proxy.ts` (backstop), gemensam layout-nivå sessionscheck (`requireAdminOrEditor` i `src/app/(site)/admin/layout.tsx`) och varje enskild server action gör sin egen roll-kontroll (`requireAdmin` / `requireAdminOrEditor` i `src/lib/server-auth.ts`) så att åtgärder inte kan anropas direkt förbi UI:t
 - `role`-fältet på användaren kan aldrig sättas av klienten vid registrering (`input: false` i BetterAuth-konfigurationen) – nya konton får alltid rollen `user`, oavsett vad som skickas i requesten
 - Endast `admin`-roll (inte `editor`) kan hantera adminanvändare eller radera kundkonton – `editor` är begränsad till produkter, kategorier och ordrar
 - `/mina-sidor` – skyddad via sidnivå sessionscheck, och visar bara den inloggade användarens egna ordrar
 - Alla formulär valideras med React Hook Form + Zod, inklusive URL-validering vid bilduppladdning
-- Servervalidering av varukorgen i `createOrder` – priser och varianttillägg slås upp mot produkten i databasen (klientens pris litas aldrig på), totalpriset räknas om server-side, och okända kvantiteter/varianter avvisas
+- Servervalidering av varukorgen i `createOrder` – hela payloaden valideras med Zod (längdgränser på alla fält), priser/varianttillägg/titlar/bilder slås upp mot produkten i databasen (klientens värden litas aldrig på), totalpriset räknas om server-side, och okända kvantiteter/varianter avvisas
+- Uppladdade fil-URL:er (`customImageUrl`) låses till UploadThing-värdar (`src/lib/uploads.ts`) både vid validering och vid rendering i adminpanelen, så en manipulerad beställning inte kan smuggla in t.ex. `javascript:`-länkar
+- All användarinmatning som interpoleras i utgående mejl escapas (`src/lib/html.ts`, `src/lib/emails.ts`)
 - Lösenord kräver minst 8 tecken (konsekvent i formulär, Zod-scheman och BetterAuth-konfiguration)
 - Rate limiting:
-  - `src/middleware.ts` – max 10 försök per 15 minuter och IP på inloggning, registrering och lösenordsåterställning (returnerar `429 Too Many Requests`)
+  - BetterAuth-konfigurationens `rateLimit` – striktare regler per endpoint på inloggning (10/15 min), registrering (10/15 min), lösenordsåterställning (5/15 min) och verifieringsmejl (5/15 min)
   - `src/lib/rate-limit.ts` – samma princip för kontaktformuläret (5/15 min) och kassan (10/15 min) per IP, för att skydda mot spam mot e-postutskicken
 - JSON-LD på produktsidor escapas för att undvika att bryta ut ur `<script>`-taggen
 - Adminrutter och privata sidor exkluderade från sökmotorindexering via `robots.txt`
@@ -168,16 +170,20 @@ npx sanity typegen generate
 
 ```bash
 npm run dev      # Starta utvecklingsserver
-npm run build    # Bygg för produktion (kör prisma generate automatiskt)
+npm run build    # Bygg för produktion (kör prisma generate + prisma db push automatiskt)
 npm run start    # Starta produktionsserver
 npm run lint     # Kör ESLint
 ```
 
 ```bash
 npx prisma studio     # Öppna Prisma Studio (visuell databaseditor)
-npx prisma db push    # Pusha schema till databas (dev)
+npx prisma db push    # Pusha schema till databas
 npx prisma generate   # Generera Prisma-klient
 ```
+
+> Projektet använder `prisma db push` (inte `prisma migrate`) för schemaändringar –
+> både lokalt och i `npm run build`. Mappen `prisma/migrations/` är historik från
+> tidigare och används inte längre; kör **inte** `prisma migrate deploy`.
 
 ```bash
 npx sanity schemas extract     # Extrahera Sanity-schemat (schema.json)
@@ -235,18 +241,21 @@ src/
 │   ├── cart-context.tsx         # Global kundvagnskontext
 │   └── buyer-type-context.tsx   # Privatperson/företag-val (moms-visning)
 ├── lib/
-│   ├── auth.ts / auth-client.ts / auth-server.ts
+│   ├── auth.ts / auth-client.ts
 │   ├── server-auth.ts           # requireAdmin / requireAdminOrEditor – rollkontroll för admin-actions
 │   ├── rate-limit.ts            # Delad rate limiter för kontaktformulär och kassa
 │   ├── pricing.ts                # Momsberäkning (privatperson/företag)
 │   ├── email.ts                  # Nodemailer-transport + sendEmail
+│   ├── emails.ts                 # HTML-mallar för utgående mejl (orderbekräftelse, kontakt)
+│   ├── html.ts                   # escapeHtml för användarinmatning i mejl
+│   ├── uploads.ts                # Validering av uppladdade fil-URL:er (låst till UploadThing)
 │   ├── uploadthing.ts            # UploadThing filrouter (customDesign + companyLogo, admin-gated)
 │   ├── invoice-pdf.tsx           # @react-pdf/renderer-mall för fakturor
 │   ├── prisma.ts
 │   ├── slug.ts
 │   └── schema/zod-schemas.ts
 ├── sanity/                      # Sanity-klient, GROQ-queries, bildhjälpare, schema + structure (Studio)
-├── middleware.ts                # Rate limiting på auth-endpoints
+├── proxy.ts                     # Backstop-rollkontroll för /admin/*
 └── types/
 ```
 

@@ -1,7 +1,5 @@
-import { auth } from "@/lib/auth";
+import { requireAdminOrEditor } from "@/lib/server-auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   Card,
@@ -39,6 +37,8 @@ async function getDashboardData() {
     allOrderItems,
     customerCount,
     productCount,
+    pendingOrders,
+    invoicedOrders,
   ] = await Promise.all([
     prisma.order.findMany({
       orderBy: { createdAt: "desc" },
@@ -58,14 +58,13 @@ async function getDashboardData() {
       where: { createdAt: { gte: previousPeriodStart } },
       select: { totalPrice: true, createdAt: true },
     }),
+    // Behövs i sin helhet – topplistan aggregeras från JSON-fältet `items`.
     prisma.order.findMany({ select: { items: true } }),
     prisma.user.count({ where: { role: "user" } }),
     prisma.product.count(),
+    prisma.order.count({ where: { handled: false, shipped: false } }),
+    prisma.order.count({ where: { invoiceSent: true } }),
   ]);
-
-  const allOrders = await prisma.order.findMany({
-    select: { handled: true, shipped: true, invoiceSent: true },
-  });
 
   const currentPeriodOrders = ordersLast60Days.filter(
     (o) => o.createdAt >= periodStart,
@@ -105,11 +104,6 @@ async function getDashboardData() {
       revenue: Math.round((revenueByDay.get(key) ?? 0) * 100) / 100,
     };
   });
-
-  const pendingOrders = allOrders.filter(
-    (o) => !o.handled && !o.shipped,
-  ).length;
-  const invoicedOrders = allOrders.filter((o) => o.invoiceSent).length;
 
   // Populäraste produkterna, sorterat på totalt sålt antal
   const countMap: Record<string, { title: string; quantity: number }> = {};
@@ -172,20 +166,8 @@ function getOrderStatusLabel(order: {
 }
 
 export default async function AdminPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/logga-in");
-  }
-
-  const userRole = (session.user as { role?: string }).role ?? "user";
-  const isAdmin = userRole === "admin";
-
-  if (!(isAdmin || userRole === "editor")) {
-    redirect("/");
-  }
+  const session = await requireAdminOrEditor();
+  const isAdmin = (session.user.role ?? "user") === "admin";
 
   const data = await getDashboardData();
 

@@ -44,8 +44,8 @@ Detta skapar `category`-tabellen i din PostgreSQL-databas med följande kolumner
 
 Kategorier med `showInNavbar = true` visas automatiskt i en dropdown under "Produkter" i huvudnavigationen. Dropdown-menyn innehåller:
 
-- "Alla produkter" (länk till `/produkter`)
+- "Alla produkter" (länk till `/produkt`)
 - Separator
-- Alla kategorier som är markerade att visas (länkar till `/produkter?category=<id>`)
+- Alla kategorier som är markerade att visas (länkar till `/kategori/<slug>`)
 
 Navbar uppdateras automatiskt när kategorier skapas, redigeras eller tas bort tack vare `revalidatePath()`.

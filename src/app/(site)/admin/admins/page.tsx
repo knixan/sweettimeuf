@@ -1,13 +1,9 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/server-auth";
 import { prisma } from "@/lib/prisma";
 import { AdminList } from "./admin-list";
 
 export default async function AdminsPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) redirect("/logga-in");
-  if ((session.user as { role?: string }).role !== "admin") redirect("/");
+  const session = await requireAdmin();
 
   const admins = await prisma.user.findMany({
     where: { role: "admin" },

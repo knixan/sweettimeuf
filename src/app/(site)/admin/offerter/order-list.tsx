@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { updateOrderFlags, removeCustomerImage, deleteOrder } from "./actions";
+import { isAllowedUploadUrl } from "@/lib/uploads";
 import { toast } from "sonner";
 
 type Order = {
@@ -385,14 +386,20 @@ export function OrderList({ orders }: { orders: Order[] }) {
                                     <p className="text-sm font-semibold text-primary mb-2">
                                       Kundens design:
                                     </p>
-                                    <a
-                                      href={item.customImageUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-sm text-primary hover:underline break-all"
-                                    >
-                                      {item.customImageUrl}
-                                    </a>
+                                    {isAllowedUploadUrl(item.customImageUrl) ? (
+                                      <a
+                                        href={item.customImageUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-primary hover:underline break-all"
+                                      >
+                                        {item.customImageUrl}
+                                      </a>
+                                    ) : (
+                                      <p className="text-sm text-muted-foreground break-all">
+                                        {item.customImageUrl}
+                                      </p>
+                                    )}
                                   </div>
                                   <Button
                                     variant="destructive"

@@ -88,7 +88,7 @@ export function CheckoutForm() {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground mb-4">Din kassa är tom</p>
-        <Button onClick={() => router.push("/produkter")}>
+        <Button onClick={() => router.push("/produkt")}>
           Fortsätt handla
         </Button>
       </div>

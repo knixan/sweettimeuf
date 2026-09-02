@@ -24,6 +24,12 @@ export async function removeAdmin(id: string) {
   if (id === session.user.id) {
     return { ok: false, error: "Du kan inte ta bort din egen adminroll" };
   }
+
+  const adminCount = await prisma.user.count({ where: { role: "admin" } });
+  if (adminCount <= 1) {
+    return { ok: false, error: "Det måste finnas minst en admin kvar" };
+  }
+
   await prisma.user.update({ where: { id }, data: { role: "user" } });
   revalidatePath("/admin/admins");
   return { ok: true };

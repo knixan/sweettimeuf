@@ -96,7 +96,7 @@ export default async function MinaSidorPage() {
                 Du har inga beställningar ännu.
               </p>
               <Link
-                href="/produkter"
+                href="/produkt"
                 className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
                 Se produkter

@@ -2,30 +2,19 @@
 
 import { sendEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { contactMessageEmail } from "@/lib/emails";
 import { z } from "zod";
 
 const ContactSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  message: z.string().min(1),
+  name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(200),
+  phone: z.string().trim().max(50).optional(),
+  message: z.string().trim().min(1).max(5000),
 });
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+const CONTACT_RECIPIENT = "lg.sweets10@gmail.com";
 
-export async function sendContactMessage(values: {
-  name: string;
-  email: string;
-  phone?: string;
-  message: string;
-}) {
+export async function sendContactMessage(values: unknown) {
   const parsed = ContactSchema.safeParse(values);
   if (!parsed.success) {
     throw new Error("Ogiltiga uppgifter");
@@ -36,19 +25,10 @@ export async function sendContactMessage(values: {
 
   try {
     await sendEmail({
-      to: "lg.sweets10@gmail.com",
+      to: CONTACT_RECIPIENT,
       replyTo: email,
       subject: `Nytt meddelande från ${name} – Kontaktformulär`,
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-          <h2>Nytt meddelande via kontaktformuläret</h2>
-          <p><strong>Namn:</strong> ${escapeHtml(name)}</p>
-          <p><strong>E-post:</strong> ${escapeHtml(email)}</p>
-          ${phone ? `<p><strong>Telefon:</strong> ${escapeHtml(phone)}</p>` : ""}
-          <p style="margin-top:16px"><strong>Meddelande:</strong></p>
-          <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
-        </div>
-      `,
+      html: contactMessageEmail({ name, email, phone, message }),
     });
   } catch (error) {
     console.error("Kunde inte skicka kontaktmeddelande:", error);

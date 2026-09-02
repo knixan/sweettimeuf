@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAdminOrEditor, requireAdmin } from "@/lib/server-auth";
+import { uploadUrlSchema } from "@/lib/uploads";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -43,13 +44,14 @@ export async function deleteOrder(orderId: string) {
 }
 
 const OrderItemSchema = z.object({
-  productId: z.string().min(1),
-  title: z.string().min(1),
+  productId: z.string().min(1).max(100),
+  title: z.string().min(1).max(300),
   quantity: z.number().int().positive().max(10000),
   price: z.number().min(0).max(1_000_000),
-  image: z.string().optional(),
-  customImageUrl: z.string().optional(),
-  selectedVariant: z.string().optional(),
+  image: z.string().max(2000).optional(),
+  // Ogiltiga/otillåtna URL:er droppas i stället för att blockera hela sparningen.
+  customImageUrl: uploadUrlSchema.optional().catch(undefined),
+  selectedVariant: z.string().max(200).optional(),
 });
 
 const UpdateOrderSchema = z.object({

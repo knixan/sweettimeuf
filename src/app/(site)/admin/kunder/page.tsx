@@ -1,13 +1,9 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/server-auth";
 import { prisma } from "@/lib/prisma";
 import { CustomerList } from "./customer-list";
 
 export default async function KunderPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) redirect("/logga-in");
-  if ((session.user as { role?: string }).role !== "admin") redirect("/");
+  await requireAdmin();
 
   const users = await prisma.user.findMany({
     where: { role: "user" },

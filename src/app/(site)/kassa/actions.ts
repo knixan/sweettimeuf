@@ -1,93 +1,83 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sendEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { orderConfirmationEmail } from "@/lib/emails";
 import { getDisplayPrice, type BuyerType } from "@/lib/pricing";
+import { uploadUrlSchema } from "@/lib/uploads";
 import { z } from "zod";
 
-const BuyerTypeSchema = z.enum(["private", "company"]);
-
+// `title`, `price` och `image` från klienten valideras för form men används
+// aldrig – de slås upp mot databasen nedan. `customImageUrl` kommer alltid
+// från UploadThing och låses till den värden.
 const CartItemSchema = z.object({
-  productId: z.string().min(1),
-  title: z.string().min(1),
+  productId: z.string().min(1).max(100),
+  title: z.string().min(1).max(300),
   quantity: z.number().int().positive().max(10000),
   price: z.number().positive().max(1_000_000),
-  image: z.string().optional(),
-  customImageUrl: z.string().optional(),
-  selectedVariant: z.string().optional(),
+  // Otillåtna URL:er droppas tyst – en manipulerad order går igenom utan
+  // designbild i stället för att kunna smuggla in t.ex. `javascript:`-länkar.
+  customImageUrl: uploadUrlSchema.optional().catch(undefined),
+  selectedVariant: z.string().max(200).optional(),
 });
 
 const CartItemsSchema = z.array(CartItemSchema).min(1).max(100);
 
+// Fri text som sparas i ordern – begränsad längd så en manipulerad
+// beställning inte kan fylla databasen eller mejlmallen.
+const shortText = z.string().trim().min(1).max(200);
+const optionalShortText = z.string().trim().max(200).optional();
+
+const CreateOrderSchema = z.object({
+  firstName: shortText,
+  lastName: shortText,
+  email: z.string().trim().email().max(200),
+  phone: optionalShortText,
+  company: optionalShortText,
+  orgNumber: optionalShortText,
+  address: shortText,
+  postalCode: shortText,
+  city: shortText,
+  invoiceAddress: optionalShortText,
+  invoicePostalCode: optionalShortText,
+  invoiceCity: optionalShortText,
+  notes: z.string().trim().max(2000).optional(),
+  items: CartItemsSchema,
+  buyerType: z.enum(["private", "company"]).catch("private"),
+});
+
+export type CreateOrderInput = z.input<typeof CreateOrderSchema>;
+
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const random = randomUUID().replace(/-/g, "").slice(0, 6).toUpperCase();
   return `ORD-${timestamp}-${random}`;
 }
 
-export async function createOrder(values: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  orgNumber?: string;
-  address: string;
-  postalCode: string;
-  city: string;
-  invoiceAddress?: string;
-  invoicePostalCode?: string;
-  invoiceCity?: string;
-  notes?: string;
-  items: unknown;
-  buyerType: BuyerType;
-}) {
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    company,
-    orgNumber,
-    address,
-    postalCode,
-    city,
-    invoiceAddress,
-    invoicePostalCode,
-    invoiceCity,
-    notes,
-    items,
-  } = values;
-
-  if (!firstName || !lastName || !email || !address || !postalCode || !city) {
-    throw new Error("Alla obligatoriska fält måste fyllas i");
-  }
-
-  const parsedBuyerType = BuyerTypeSchema.safeParse(values.buyerType);
-  const buyerType: BuyerType = parsedBuyerType.success
-    ? parsedBuyerType.data
-    : "private";
-
+export async function createOrder(values: unknown) {
   await checkRateLimit("order", { windowMs: 15 * 60 * 1000, max: 10 });
 
-  const parsedItems = CartItemsSchema.safeParse(items);
-  if (!parsedItems.success) {
-    throw new Error("Ogiltiga varor i beställningen");
+  const parsed = CreateOrderSchema.safeParse(values);
+  if (!parsed.success) {
+    throw new Error("Ogiltiga uppgifter i beställningen");
   }
+  const data = parsed.data;
+  const buyerType: BuyerType = data.buyerType;
 
-  // Priser sätts aldrig av klienten – slå upp produktens faktiska
-  // pris/tillägg i databasen så att en manipulerad beställning inte kan
-  // ge en annan totalsumma än den riktiga.
+  // Priser och produktinfo sätts aldrig av klienten – slå upp produktens
+  // faktiska pris/tillägg i databasen så att en manipulerad beställning inte
+  // kan ge en annan totalsumma eller titel än den riktiga.
   const products = await prisma.product.findMany({
-    where: { id: { in: parsedItems.data.map((item) => item.productId) } },
+    where: { id: { in: data.items.map((item) => item.productId) } },
   });
   const productsById = new Map(products.map((p) => [p.id, p]));
 
-  const validatedItems = parsedItems.data.map((item) => {
+  const validatedItems = data.items.map((item) => {
     const product = productsById.get(item.productId);
     if (!product) {
       throw new Error(`Produkten "${item.title}" finns inte längre`);
@@ -114,8 +104,13 @@ export async function createOrder(values: {
     }
 
     return {
-      ...item,
+      productId: product.id,
+      title: product.title,
+      quantity: item.quantity,
       price: getDisplayPrice(tier.price + surcharge, buyerType),
+      image: product.images[0] ?? undefined,
+      customImageUrl: item.customImageUrl,
+      selectedVariant: item.selectedVariant,
     };
   });
 
@@ -124,106 +119,74 @@ export async function createOrder(values: {
     0,
   );
 
-  // Check if there's a logged-in user
+  // Koppla ordern till en inloggad användare om det finns en session.
   let userId: string | null = null;
   try {
     const session = await auth.api.getSession({ headers: await headers() });
-    if (session?.user?.id) {
-      userId = session.user.id;
-    }
+    userId = session?.user?.id ?? null;
   } catch {
-    // Not logged in — that's fine
+    // Gästbeställning – helt okej.
   }
 
+  let order;
   try {
-    const orderNumber = generateOrderNumber();
-    const customerName = `${firstName} ${lastName}`.trim();
-
-    const order = await prisma.order.create({
+    order = await prisma.order.create({
       data: {
-        orderNumber,
-        userId: userId ?? null,
-        customerName,
-        customerLastName: lastName,
-        customerEmail: email,
-        customerPhone: phone || null,
-        customerCompany: company || null,
-        orgNumber: orgNumber || null,
-        customerAddress: address,
-        customerPostalCode: postalCode,
-        customerCity: city,
-        invoiceAddress: invoiceAddress || null,
-        invoicePostalCode: invoicePostalCode || null,
-        invoiceCity: invoiceCity || null,
+        orderNumber: generateOrderNumber(),
+        userId,
+        customerName: `${data.firstName} ${data.lastName}`.trim(),
+        customerLastName: data.lastName,
+        customerEmail: data.email,
+        customerPhone: data.phone || null,
+        customerCompany: data.company || null,
+        orgNumber: data.orgNumber || null,
+        customerAddress: data.address,
+        customerPostalCode: data.postalCode,
+        customerCity: data.city,
+        invoiceAddress: data.invoiceAddress || null,
+        invoicePostalCode: data.invoicePostalCode || null,
+        invoiceCity: data.invoiceCity || null,
         items: validatedItems,
         totalPrice,
         customerType: buyerType,
-        notes: notes || null,
+        notes: data.notes || null,
         status: "pending",
         handled: false,
         shipped: false,
         invoiceSent: false,
       },
     });
-
-    revalidatePath("/admin/offerter");
-
-    const itemRows = validatedItems
-      .map(
-        (item) =>
-          `<tr>
-            <td style="padding:6px 12px;border-bottom:1px solid #eee">${item.title}${item.selectedVariant ? ` – ${item.selectedVariant}` : ""}</td>
-            <td style="padding:6px 12px;border-bottom:1px solid #eee;text-align:center">${item.quantity}</td>
-            <td style="padding:6px 12px;border-bottom:1px solid #eee;text-align:right">${(item.price * item.quantity).toFixed(2)} kr</td>
-          </tr>`,
-      )
-      .join("");
-
-    try {
-      await sendEmail({
-        to: email,
-        subject: `Orderbekräftelse ${order.orderNumber} – SweetTime UF`,
-        html: `
-          <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-            <h2>Tack för din beställning!</h2>
-            <p>Hej ${firstName},</p>
-            <p>Vi har tagit emot din beställning och återkommer så snart vi har hanterat den.</p>
-            <h3>Ordernummer: ${order.orderNumber}</h3>
-            <table style="width:100%;border-collapse:collapse;margin:16px 0">
-              <thead>
-                <tr style="background:#f5f5f5">
-                  <th style="padding:8px 12px;text-align:left">Produkt</th>
-                  <th style="padding:8px 12px;text-align:center">Antal</th>
-                  <th style="padding:8px 12px;text-align:right">Pris</th>
-                </tr>
-              </thead>
-              <tbody>${itemRows}</tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="2" style="padding:8px 12px;font-weight:bold">Totalt</td>
-                  <td style="padding:8px 12px;text-align:right;font-weight:bold">${totalPrice.toFixed(2)} kr</td>
-                </tr>
-              </tfoot>
-            </table>
-            <p style="color:#666;font-size:14px">${buyerType === "private" ? "Priserna ovan är inkl. 12% moms." : "Priserna ovan är exkl. moms."}</p>
-            <p style="color:#666;font-size:14px">Leveransadress: ${address}, ${postalCode} ${city}</p>
-            <p style="margin-top:24px">Med vänliga hälsningar,<br/>SweetTime UF</p>
-          </div>
-        `,
-      });
-    } catch (emailError) {
-      console.error("Kunde inte skicka orderbekräftelse:", emailError);
-    }
-
-    return {
-      success: true,
-      orderNumber: order.orderNumber,
-      orderId: order.id,
-    };
   } catch (error) {
     console.error("Error creating order:", error);
-    throw error instanceof Error
-      ? error
-      : new Error("Kunde inte skapa beställning");
+    throw new Error("Kunde inte skapa beställning");
   }
+
+  revalidatePath("/admin/offerter");
+
+  try {
+    await sendEmail({
+      to: data.email,
+      subject: `Orderbekräftelse ${order.orderNumber} – SweetTime UF`,
+      html: orderConfirmationEmail({
+        firstName: data.firstName,
+        orderNumber: order.orderNumber,
+        items: validatedItems,
+        totalPrice,
+        buyerType,
+        deliveryAddress: {
+          address: data.address,
+          postalCode: data.postalCode,
+          city: data.city,
+        },
+      }),
+    });
+  } catch (emailError) {
+    console.error("Kunde inte skicka orderbekräftelse:", emailError);
+  }
+
+  return {
+    success: true,
+    orderNumber: order.orderNumber,
+    orderId: order.id,
+  };
 }

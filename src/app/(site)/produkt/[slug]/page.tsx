@@ -106,7 +106,7 @@ export default async function ProductPage({ params }: Props) {
                 href={
                   product.category.slug
                     ? `/kategori/${product.category.slug}`
-                    : "/produkter"
+                    : "/produkt"
                 }
                 className="hover:underline"
               >
@@ -116,7 +116,7 @@ export default async function ProductPage({ params }: Props) {
             </>
           ) : (
             <>
-              <Link href="/produkter" className="hover:underline">
+              <Link href="/produkt" className="hover:underline">
                 Produkter
               </Link>
               {" / "}

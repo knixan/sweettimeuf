@@ -20,11 +20,10 @@ export const ourFileRouter = {
   })
     .middleware(async ({ req }) => {
       const session = await auth.api.getSession({ headers: req.headers });
-      const role = (session?.user as { role?: string } | undefined)?.role;
-      if (role !== "admin") {
+      if (!session?.user || session.user.role !== "admin") {
         throw new UploadThingError("Endast admin kan ladda upp logga");
       }
-      return { userId: session!.user.id };
+      return { userId: session.user.id };
     })
     .onUploadComplete(async ({ file }) => {
       return { url: file.ufsUrl };

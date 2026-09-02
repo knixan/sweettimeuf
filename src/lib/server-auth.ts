@@ -3,37 +3,30 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
 
-export async function requireAdminOrEditor() {
-  const hdrs = await headers();
-
-  const session = await auth.api.getSession({ headers: hdrs });
-
+async function getSessionOrRedirect() {
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
     redirect("/logga-in");
   }
-
-  const role = (session.user as { role?: string })?.role ?? "user";
-  if (!(role === "admin" || role === "editor")) {
-    redirect("/");
-  }
-
   return session;
 }
 
-export async function requireAdmin() {
-  const hdrs = await headers();
-
-  const session = await auth.api.getSession({ headers: hdrs });
-
-  if (!session?.user) {
-    redirect("/logga-in");
-  }
-
-  const role = (session.user as { role?: string })?.role ?? "user";
-  if (role !== "admin") {
+/** Kräver att den inloggade användaren är `admin` eller `editor`. */
+export async function requireAdminOrEditor() {
+  const session = await getSessionOrRedirect();
+  const role = session.user.role ?? "user";
+  if (role !== "admin" && role !== "editor") {
     redirect("/");
   }
+  return session;
+}
 
+/** Kräver att den inloggade användaren är `admin`. */
+export async function requireAdmin() {
+  const session = await getSessionOrRedirect();
+  if ((session.user.role ?? "user") !== "admin") {
+    redirect("/");
+  }
   return session;
 }
 
